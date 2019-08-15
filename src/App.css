@@ -13,6 +13,13 @@
     --sidebar-hv-color: rgb(0, 150, 255);
 }
 
+div.placeholderComponent {
+    background-color: red;
+    padding: 3px;
+    display: block;
+    border: 1px dashed yellow;
+}
+
 body {
     margin: 0px;
     background-color: var(--bg-color);
