@@ -1,0 +1,7 @@
+div.trendingView {
+    display: flex;
+}
+
+div.postList {
+    width: 300px;
+}
