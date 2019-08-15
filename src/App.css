@@ -1,33 +1,48 @@
-.App {
-  text-align: center;
+@font-face {
+    font-family: 'Contemporary';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Contemporary'), local('Contemporary-Regular'), url('https://vicr123.com/typeface/Contemporary-Regular.ttf');
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+:root {
+    --bg-color: rgb(40, 40, 40);
+    --fg-color: white;
+    
+    --sidebar-bg-color: rgb(60, 60, 60);
+    --sidebar-hv-color: rgb(0, 150, 255);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+body {
+    margin: 0px;
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+    
+    font-family: Contemporary;
 }
 
-.App-link {
-  color: #61dafb;
+.padded {
+    padding: 9px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+div.appContainer {
+    display: flex;
+    height: 100vh;
+}
+
+div.sidebar {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--fg-color);
+    background-color: var(--sidebar-bg-color);
+}
+
+div.listItem {
+    padding: 9px;
+    
+}
+
+div.sidebar div.listItem:hover {
+    background-color: var(--sidebar-hv-color);
 }
