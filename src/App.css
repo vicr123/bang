@@ -53,3 +53,7 @@ div.listItem {
 div.sidebar div.listItem:hover {
     background-color: var(--sidebar-hv-color);
 }
+
+div.sidebar div.listItem.selected {
+    background-color: var(--sidebar-hv-color);
+}
