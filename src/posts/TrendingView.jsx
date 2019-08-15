@@ -3,10 +3,12 @@ import Component from '../Component'
 import PostList from './PostList';
 import Post from './Post';
 
+import "./TrendingView.css";
+
 class TrendingView extends Component {
     render() {
-        return <div>
-            <PostList />
+        return <div className="trendingView">
+            <PostList extraClassNames="postList" />
             <Post />
         </div>
     }
