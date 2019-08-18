@@ -1,8 +1,12 @@
 import React from 'react';
 import Component from './Component';
+import placeholderLogo from './assets/placeholderLogo.png';
 
 class SidebarHeader extends Component {
-    
+
+    render(){
+        return (<img className="placeholderLogo" src={placeholderLogo} alt="logo"></img>);
+    }
 }
 
 class SidebarItem extends Component {

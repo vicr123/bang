@@ -73,3 +73,7 @@ div.sidebar div.listItem.selected {
     color: red; 
     transform: scale(1.05);
 }
+
+.placeholderLogo{
+    width: 75%;
+}
