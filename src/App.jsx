@@ -4,6 +4,7 @@ import './App.css';
 
 import Sidebar from './Sidebar';
 import TrendingView from './posts/TrendingView';
+import Leaderboard from './leaderboard/Leaderboard';
 
 class App extends Component {
     constructor(props) {
@@ -18,6 +19,8 @@ class App extends Component {
         switch (this.state.currentView) {
             case "trending":
                 return <TrendingView />;
+            case "leaderboard":
+                return <Leaderboard /> 
             default:
                 return <Component />
         }
