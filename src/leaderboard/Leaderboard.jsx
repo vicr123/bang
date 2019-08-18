@@ -10,11 +10,11 @@ class Leaderboard extends Component {
     return (
       <div>
         <h1>THIS WILL DISPLAY THE TOP USERS OF THE SITE BASED ON A SPECIFIC METRIC AND TIME FRAME</h1>
-        <div>PlaceHolder USER #1</div>
-        <div>PlaceHolder USER #2</div>
-        <div>PlaceHolder USER #3</div>
-        <div>...</div>
-        <div>PlaceHolder USER #N</div>
+        <div className="userPlaceholder">PlaceHolder USER #1</div>
+        <div className="userPlaceholder">PlaceHolder USER #2</div>
+        <div className="userPlaceholder">PlaceHolder USER #3</div>
+        <div className="userPlaceholder">...</div>
+        <div className="userPlaceholder">PlaceHolder USER #N</div>
       </div>
       ); 
   }

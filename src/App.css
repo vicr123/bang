@@ -57,3 +57,19 @@ div.sidebar div.listItem:hover {
 div.sidebar div.listItem.selected {
     background-color: var(--sidebar-hv-color);
 }
+
+/* THE BELOW STYLING IS PLACEHOLDER */
+
+.userPlaceholder{
+    text-align: center;
+    margin: 25px 50px;;
+    color: black;
+    background: white; 
+    border-radius: 15px 50px 30px; 
+    padding: 50px;
+}
+
+.userPlaceholder:hover {
+    color: red; 
+    transform: scale(1.05);
+}
