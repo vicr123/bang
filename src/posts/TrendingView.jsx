@@ -7,7 +7,7 @@ import "./TrendingView.css";
 
 class TrendingView extends Component {
     render() {
-        return <div className="trendingView">
+        return <div className="trendingView scrollable">
             <PostList extraClassNames="postList" />
             <Post />
         </div>

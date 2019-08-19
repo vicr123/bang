@@ -8,7 +8,7 @@ class Leaderboard extends Component {
   // Placeholder divs will have to be replaced with components for user/account summaries 
   render(){
     return (
-      <div>
+      <div className="scrollable">
         <h1>THIS WILL DISPLAY THE TOP USERS OF THE SITE BASED ON A SPECIFIC METRIC AND TIME FRAME</h1>
         <div className="userPlaceholder">PlaceHolder USER #1</div>
         <div className="userPlaceholder">PlaceHolder USER #2</div>

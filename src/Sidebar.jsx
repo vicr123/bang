@@ -39,7 +39,7 @@ class Sidebar extends Component {
             }
         };
         
-        return <div className="sidebar">
+        return <div className="sidebar scrollable">
             <SidebarHeader />
             <SidebarItem text="Trending" stateName="trending" selected={isSelected("trending")} onClick={() => this.props.onChangeView("trending")} />
             <SidebarItem text="Leaderboard" stateName="leaderboard" selected={isSelected("leaderboard")} onClick={() => this.props.onChangeView("leaderboard")} />
