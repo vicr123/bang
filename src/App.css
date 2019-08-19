@@ -32,6 +32,11 @@ body {
     padding: 9px;
 }
 
+/* Scrollable boxes */
+.scrollable {
+    overflow: auto;
+}
+
 div.appContainer {
     display: flex;
     height: 100vh;
