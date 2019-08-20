@@ -2,6 +2,8 @@ import React from 'react';
 import Component from './Component';
 import placeholderLogo from './assets/placeholderLogo.png';
 
+
+// Component that renders the logo 
 class SidebarHeader extends Component {
 
     render(){
@@ -9,7 +11,12 @@ class SidebarHeader extends Component {
     }
 }
 
+// Sidebar elements 
 class SidebarItem extends Component {
+    /* 
+    * Maintains CSS classes for the Component
+    * @return {String} string containing CSS classes separated by spaces
+    */
     className() {
         let classes = [];
         classes.push("listItem");
@@ -28,7 +35,9 @@ class SidebarItem extends Component {
     }
 }
 
+// Renders sidebar elements 
 class Sidebar extends Component {
+
     render() {
         let isSelected = (stateName) => {
             if (this.props.currentState === stateName) {
