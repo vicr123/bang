@@ -13,7 +13,7 @@ class SidebarHeader extends Component {
 
 // Sidebar elements 
 class SidebarItem extends Component {
-    /* 
+    /** 
     * Maintains CSS classes for the Component
     * @return {String} string containing CSS classes separated by spaces
     */
