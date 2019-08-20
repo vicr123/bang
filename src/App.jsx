@@ -15,6 +15,10 @@ class App extends Component {
         };
     }
     
+    /**
+     * Gets the view required depending on the state
+     * @returns {import('@babel/types').JSXElement} The element to render in the main view
+     */
     currentMainView() {
         switch (this.state.currentView) {
             case "trending":
