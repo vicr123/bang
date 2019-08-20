@@ -52,6 +52,8 @@ class Sidebar extends Component {
             <SidebarHeader />
             <SidebarItem text="Trending" stateName="trending" selected={isSelected("trending")} onClick={() => this.props.onChangeView("trending")} />
             <SidebarItem text="Leaderboard" stateName="leaderboard" selected={isSelected("leaderboard")} onClick={() => this.props.onChangeView("leaderboard")} />
+            <div style={{"flex-grow": "1"}} />
+            <SidebarItem text="User" stateName="user" selected={isSelected("user")} onClick={() => this.props.onChangeView("user")} style={{"align-self": "flex-end"}} />
         </div>
     }
 }
