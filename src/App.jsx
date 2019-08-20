@@ -25,6 +25,10 @@ class App extends Component {
                 return <TrendingView />;
             case "leaderboard":
                 return <Leaderboard /> 
+            case "about":
+                return <div className="padded">
+                    !Bang v0.1
+                </div>;
             default:
                 return <Component />
         }
