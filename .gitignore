@@ -5,6 +5,8 @@
 /react/.pnp
 /react/.pnp.js
 
+/express/node_modules
+
 # testing
 /react/coverage
 
