@@ -56,10 +56,19 @@ router.post("/create", function(req, res) {
         });
     } else {
         db.insert("Users", {
-            id: 1,
             username: req.body.username,
             password: req.body.password,
             salt: "salty"
+        }).then(function() {
+            return db.lastInsertId();
+        }).then(function(id) {
+            res.status(200).send({
+                "token": "toking",
+                "id": id
+            });
+        }).catch(function() {
+            //Internal Server Error
+            res.status(500);
         });
     }
 });
