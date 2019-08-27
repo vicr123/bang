@@ -1,5 +1,9 @@
 const express = require('express');
 const db = require('../db/db');
+const bcrypt = require('bcrypt');
+
+//bcrypt options
+const saltRounds = 12;
 
 let router = express.Router();
 router.use(express.json());
@@ -55,10 +59,13 @@ router.post("/create", function(req, res) {
             "error": "Missing fields"
         });
     } else {
-        db.insert("Users", {
-            username: req.body.username,
-            password: req.body.password,
-            salt: "salty"
+        //Hash (and salt) the password
+        bcrypt.hash(req.body.password, saltRounds).then(function(passwordHash) {
+            //Insert the user details into the database
+            return db.insert("Users", {
+                username: req.body.username,
+                password: passwordHash
+            });
         }).then(function() {
             return db.lastInsertId();
         }).then(function(id) {
@@ -68,7 +75,7 @@ router.post("/create", function(req, res) {
             });
         }).catch(function() {
             //Internal Server Error
-            res.status(500);
+            res.status(500).send();
         });
     }
 });

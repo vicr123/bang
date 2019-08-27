@@ -6,7 +6,7 @@ db.configure("trace", function(text) {
 
 //Create tables if required
 db.serialize(function() {
-    db.run(`CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT, username, password, salt)`);
+    db.run(`CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT, username, password)`);
 });
 
 module.exports = {
