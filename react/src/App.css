@@ -44,6 +44,7 @@ div.appContainer {
 
 div.sidebar {
     width: 300px;
+    min-width: 300px;
     display: flex;
     flex-direction: column;
     border-right: 1px solid var(--fg-color);

@@ -1,6 +1,6 @@
 import React from 'react';
 // Placeholder component that appears when a component is yet to be implemented
-class Component extends React.Component {
+class Error extends React.Component {
     /* 
     * Initializes the styling for the component 
     * @return {String} of class names  
@@ -18,4 +18,4 @@ class Component extends React.Component {
     }
 }
 
-export default Component;
+export default Error;

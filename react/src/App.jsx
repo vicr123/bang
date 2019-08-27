@@ -1,12 +1,12 @@
 import React from 'react';
-import Component from './Component';
+import Error from './Error';
 import './App.css';
 
 import Sidebar from './Sidebar';
 import TrendingView from './posts/TrendingView';
 import Leaderboard from './leaderboard/Leaderboard';
 
-class App extends Component {
+class App extends Error {
     constructor(props) {
         super(props);
         
@@ -30,7 +30,7 @@ class App extends Component {
                     !Bang v0.1
                 </div>;
             default:
-                return <Component />
+                return <Error />
         }
     }
     
