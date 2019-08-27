@@ -1,7 +1,7 @@
 import React from 'react';
-import Component from '../Component'
+import Error from '../Error'
 
-class Post extends Component {
+class Post extends Error {
     render() {
         return <div>
             <p>This is where a post will go. Reactions and "Bottles" will appear under this post. A flag option will also appear for reporting posts for inappropriate content.</p>

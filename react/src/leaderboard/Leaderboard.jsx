@@ -1,8 +1,8 @@
 import React from 'react';
-import Component from '../Component'
+import Error from '../Error'
 
 // Displays the top accounts on the site 
-class Leaderboard extends Component {
+class Leaderboard extends Error {
 
 
   // Placeholder divs will have to be replaced with components for user/account summaries 

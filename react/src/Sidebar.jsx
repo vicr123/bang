@@ -1,10 +1,10 @@
 import React from 'react';
-import Component from './Component';
+import Error from './Error';
 import placeholderLogo from './assets/placeholderLogo.png';
 
 
 // Component that renders the logo 
-class SidebarHeader extends Component {
+class SidebarHeader extends Error {
 
     render(){
         return (<img className="placeholderLogo" src={placeholderLogo} alt="logo"></img>);
@@ -12,7 +12,7 @@ class SidebarHeader extends Component {
 }
 
 // Sidebar elements 
-class SidebarItem extends Component {
+class SidebarItem extends Error {
     /** 
     * Maintains CSS classes for the Component
     * @return {String} string containing CSS classes separated by spaces
@@ -36,7 +36,7 @@ class SidebarItem extends Component {
 }
 
 // Renders sidebar elements 
-class Sidebar extends Component {
+class Sidebar extends Error {
 
     render() {
         let isSelected = (stateName) => {

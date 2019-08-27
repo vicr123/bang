@@ -1,7 +1,7 @@
 import React from 'react';
-import Component from '../Component'
+import Error from '../Error'
 
-class PostList extends Component {
+class PostList extends Error {
     
 }
 
