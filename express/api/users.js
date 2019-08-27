@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../db/db');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 //bcrypt options
 const saltRounds = 12;
@@ -9,22 +10,37 @@ let router = express.Router();
 router.use(express.json());
 module.exports = router;
 
+async function generateTokenForUser(userId) {
+    do {
+        let token = crypto.randomBytes(64).toString('hex');
+        //Ensure this token doesn't exist
+        
+        let rows = await db.select("Tokens", ["userId"], "TOKEN = ?", [token]);
+        if (rows.length == 0) {
+            await db.insert("Tokens", {
+                token: token,
+                userId: userId,
+                date: (new Date()).getTime()
+            });
+            return token;
+        }
+    } while (true);
+}
+
 /**
  * POST /getToken
  * Retrieve a user's token
  * 
- * Body: JSON Object
- *       {
+ * Body: JSON Object {
  *           "username": Username of the user of which to retrieve a token,
  *           "password": Password of the user of which to retrieve a token,
  *           "totpCode": Time-based OTP passcode for the user (optional)
  *       }
  *
- * Returns: 200: JSON Object
- *       {
- *           "token": Token of the user,
- *           "id": User ID
- *       }
+ * Returns: 200: JSON Object {
+ *              "token": Token of the user,
+ *              "id": User ID
+ *          }
  *
  * Returns: 403: null
  */
@@ -53,10 +69,10 @@ router.post("/getToken", function(req, res) {
             }
             
             //Generate a token
-            //TODO
+            let token = await generateTokenForUser(row.id);
             
             res.status(200).send({
-                "token": "toking",
+                "token": token,
                 "id": row.id
             });
         })();
@@ -67,22 +83,19 @@ router.post("/getToken", function(req, res) {
  * POST /create
  * Create a user account
  * 
- * Body: JSON Object
- *       {
+ * Body: JSON Object {
  *           "username": Username of the new user,
  *           "password": Password of the new user,
  *       }
  *
- * Returns: 200: JSON Object
- *       {
- *           "token": Token of the user,
- *           "id": User ID
- *       }
+ * Returns: 200: JSON Object {
+ *              "token": Token of the user,
+ *              "id": User ID
+ *          }
  *
- * Returns: 400: JSON Object
- *       {
- *           "error": Description of the error
- *       }
+ * Returns: 400: JSON Object {
+ *              "error": Description of the error
+ *          }
  */
 router.post("/create", function(req, res) {
     if (!req.body.username || !req.body.password) {
@@ -90,21 +103,25 @@ router.post("/create", function(req, res) {
             "error": "Missing fields"
         });
     } else {
-        //Hash (and salt) the password
-        bcrypt.hash(req.body.password, saltRounds).then(function(passwordHash) {
-            //Insert the user details into the database
-            return db.insert("Users", {
+        (async function() {
+            //Hash and salt the password
+            let passwordHash = await bcrypt.hash(req.body.password, saltRounds);
+            await db.insert("Users", {
                 username: req.body.username,
                 password: passwordHash
             });
-        }).then(function() {
-            return db.lastInsertId();
-        }).then(function(id) {
-            res.status(200).send({
-                "token": "toking",
+            
+            //Get the user ID
+            let id = await db.lastInsertId();
+            
+            //Get the token
+            let token = await generateTokenForUser(id);
+            
+            await res.status(200).send({
+                "token": token,
                 "id": id
             });
-        }).catch(function() {
+        })().catch(function() {
             //Internal Server Error
             res.status(500).send();
         });

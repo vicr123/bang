@@ -6,7 +6,8 @@ db.configure("trace", function(text) {
 
 //Create tables if required
 db.serialize(function() {
-    db.run(`CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT, username, password)`);
+    db.run(`CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT)`);
+    db.run(`CREATE TABLE IF NOT EXISTS Tokens(token TEXT PRIMARY KEY, userId INTEGER, date INTEGER, FOREIGN KEY (userId) REFERENCES Users(id))`);
 });
 
 module.exports = {
