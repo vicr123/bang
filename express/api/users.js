@@ -29,7 +29,38 @@ module.exports = router;
  * Returns: 403: null
  */
 router.post("/getToken", function(req, res) {
-    req.send("Endpoint to retrieve a token");
+    if (!req.body.username || !req.body.password) {
+        res.status(400).send({
+            "error": "Missing fields"
+        });
+    } else {
+        (async function() {
+            //Retrieve the user from the database
+            let rows = await db.select("Users", ["id", "password"], "USERNAME = ?", [req.body.username]);
+            if (rows.length == 0) {
+                res.status(403).send();
+                return;
+            }
+            
+            let row = rows[0];
+            let hashedPassword = row.password;
+            
+            //Verify the password
+            let isPasswordCorrect = await bcrypt.compare(req.body.password, hashedPassword);
+            if (!isPasswordCorrect) {
+                res.status(403).send();
+                return;
+            }
+            
+            //Generate a token
+            //TODO
+            
+            res.status(200).send({
+                "token": "toking",
+                "id": row.id
+            });
+        })();
+    }
 });
 
 /**

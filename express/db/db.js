@@ -32,6 +32,18 @@ module.exports = {
             });
         });
     },
+    "select": function(tableName, columns, whereString, parameters) {
+        let colString = columns.join(", ");
+        return new Promise(function(res, rej) {
+            db.all(`SELECT ${columns} FROM ${tableName} WHERE ${whereString}`, parameters, function(err, rows) {
+                if (err) {
+                    rej(err);
+                } else {
+                    res(rows);
+                }
+            });
+        });
+    },
     "lastInsertId": function() {
         return new Promise(function(res, rej) {
             db.get(`SELECT last_insert_rowid()`, [], function(err, row) {
