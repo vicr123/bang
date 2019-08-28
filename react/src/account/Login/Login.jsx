@@ -49,8 +49,10 @@ class Login extends Error {
                 <p>Username:</p>
                 <input type="text" username="uname" value={this.state.currentUsername} onChange={usernameChange}/>
                 <p>Password:</p>
-                <input type="password" password="pword" value={this.state.currentPassword} onChange={passwordChange} />
-                <button classname="button" onClick={this.logInButtonHandler.bind(this)}>Log In</button>
+                <input type="password" password="pword" value={this.state.currentPassword} onChange={passwordChange}/>
+                <button classname="button" onClick={this.logInButtonHandler.bind(this)} >Log In</button>
+                <h2>Don't have an account yet? Create one!</h2>
+                <button className="button">Create Account</button>
             </div>
         );
     }
