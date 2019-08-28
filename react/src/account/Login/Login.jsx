@@ -7,12 +7,12 @@ class Login extends Error {
     render() {
         return (
             <div classname="logIn">
-                <h2>Login</h2>
+                <h1>Log In</h1>
                 <p>Username:</p>
                 <input type="text" username="uname"/>
                 <p>Password:</p>
                 <input type="password" password="pword"/>
-                <button />
+                <button classname="button">Log In</button>
             </div>
         );
     }
