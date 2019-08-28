@@ -1,5 +1,6 @@
 div.logIn {
     display: flex;
+    flex-direction: column;
 }
 
 input[type="text"], input[type="password"] {
