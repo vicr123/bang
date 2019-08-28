@@ -3,6 +3,9 @@ div.logIn {
     flex-direction: column;
     padding-left: 9px;
     align-items: stretch;
+    
+    width: 40%;
+    min-width: 300px;
 }
 
 input[type="text"], input[type="password"] {

@@ -43,6 +43,10 @@ class Login extends Error {
             });
         }
         
+        let createAccount = () => {
+            this.props.onPaneChange("createAccount");
+        }
+        
         return (
             <div className="logIn">
                 <h1>Log In</h1>
@@ -52,7 +56,7 @@ class Login extends Error {
                 <input type="password" password="pword" value={this.state.currentPassword} onChange={passwordChange}/>
                 <button classname="button" onClick={this.logInButtonHandler.bind(this)} >Log In</button>
                 <h2>Don't have an account yet? Create one!</h2>
-                <button className="button">Create Account</button>
+                <button className="button" onClick={createAccount.bind(this)}>Create Account</button>
             </div>
         );
     }
