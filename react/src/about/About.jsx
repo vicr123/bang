@@ -10,3 +10,5 @@ class About extends Error {
         );
     }
 }
+
+export default About;

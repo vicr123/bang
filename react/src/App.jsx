@@ -5,6 +5,8 @@ import './App.css';
 import Sidebar from './Sidebar';
 import TrendingView from './posts/TrendingView';
 import Leaderboard from './leaderboard/Leaderboard';
+import About from './about/About';
+import Login from './account/Login';
 
 class App extends Error {
     constructor(props) {
@@ -24,13 +26,13 @@ class App extends Error {
             case "trending":
                 return <TrendingView />;
             case "leaderboard":
-                return <Leaderboard /> 
+                return <Leaderboard />;
             case "about":
-                return <div className="padded">
-                    !Bang v0.1
-                </div>;
+                return <About />;
+            case "user":
+                return <Login />;
             default:
-                return <Error />
+                return <Error />;
         }
     }
     
