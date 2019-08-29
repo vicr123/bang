@@ -6,6 +6,7 @@ import Sidebar from './Sidebar';
 import TrendingView from './posts/TrendingView';
 import Leaderboard from './leaderboard/Leaderboard';
 import About from './about/About';
+import Account from './account/Account';
 
 class App extends Error {
     constructor(props) {
@@ -25,11 +26,13 @@ class App extends Error {
             case "trending":
                 return <TrendingView />;
             case "leaderboard":
-                return <Leaderboard /> 
+                return <Leaderboard />;
             case "about":
-                return <About />
+                return <About />;
+            case "user":
+                return <Account />;
             default:
-                return <Error />
+                return <Error />;
         }
     }
     

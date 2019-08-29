@@ -43,8 +43,8 @@ div.appContainer {
 }
 
 div.sidebar {
-    width: 300px;
-    min-width: 300px;
+    width: 250px;
+    min-width: 250px;
     display: flex;
     flex-direction: column;
     border-right: 1px solid var(--fg-color);
@@ -80,6 +80,9 @@ div.sidebar div.listItem.selected {
     transform: scale(1.05);
 }
 
-.placeholderLogo{
+.logo{
     width: 75%;
+    display: block;
+    margin-left: 15%;
+    margin-right: 0%;
 }

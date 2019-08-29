@@ -6,6 +6,7 @@
 /react/.pnp.js
 
 /express/node_modules
+/express/database.db
 
 # testing
 /react/coverage

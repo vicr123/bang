@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "bcrypt": "^3.0.6",
+    "express": "^4.17.1",
+    "sqlite3": "^4.1.0"
   }
 }

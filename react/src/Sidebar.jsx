@@ -1,13 +1,13 @@
 import React from 'react';
 import Error from './Error';
-import placeholderLogo from './assets/placeholderLogo.png';
+import Logo from './assets/logo.PNG';
 
 
 // Component that renders the logo 
 class SidebarHeader extends Error {
 
     render(){
-        return (<img className="placeholderLogo" src={placeholderLogo} alt="logo"></img>);
+        return (<img className="logo" src={Logo} alt="logo"></img>);
     }
 }
 
