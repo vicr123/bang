@@ -22,7 +22,7 @@ class Account extends Error {
     render() {
         switch (this.state.currentPane) {
             case "login":
-                return <Login onPaneChange={this.onPaneChange.bind(this)} />
+                return <Login onPaneChange={this.onPaneChange.bind(this)} onLoginChanged={this.props.onLoginChanged} />
             case "createAccount":
                 return <CreateAccount />
         }

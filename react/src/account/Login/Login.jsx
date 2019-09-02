@@ -25,7 +25,10 @@ class Login extends Error {
             })
         }).then((response) => {
             if (!response.ok) throw new Error();
-            alert(`Hello ${this.state.currentUsername}`);
+            return response.json();
+        }).then((json) => {
+            localStorage.setItem("loginToken", json.token)
+            this.props.onLoginChanged();
         }).catch(function() {
             alert("error Error!");
         })

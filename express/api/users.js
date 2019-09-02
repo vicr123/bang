@@ -79,6 +79,33 @@ router.post("/getToken", function(req, res) {
     }
 });
 
+router.get("/whoami", function(req, res) {
+    (async function() {
+        let token = req.get("Authorization");
+        if (!token.startsWith("Token ")) {
+            res.status(403).send();
+            return;
+        }
+        token = token.substr(6);
+        
+        //Retrieve the user ID from the database
+        let rows = await db.select("Tokens", ["userId"], "TOKEN = ?", [token]);
+        if (rows.length == 0) {
+            res.status(403).send();
+            return;
+        }
+        
+        let row = rows[0];
+        
+        //Retrieve the user from the database
+        let userRows = await db.select("Users", ["username"], "ID = ?", [row.userId]);
+        
+        res.status(200).send({
+            "username": userRows[0].username
+        });
+    })();
+});
+
 /**
  * POST /create
  * Create a user account
