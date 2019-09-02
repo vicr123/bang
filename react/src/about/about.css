@@ -1,3 +1,12 @@
-.footer {
-  position: relative; 
+.Rules {
+  display: flex;
+  flex-direction: column;
+}
+
+.ContactUs button {
+  border-radius: 15px;
+  padding: 50px;
+}
+
+.ContactUs button:hover {
 }
