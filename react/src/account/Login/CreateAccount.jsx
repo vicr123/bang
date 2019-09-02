@@ -25,9 +25,11 @@ class CreateAccount extends Error {
             })
         }).then((response) => {
             if (!response.ok) throw new Error();
-            alert("Your user account has been registered!");
-            
-            //TODO: Automatically log in the user given the token
+            return response.json();
+        }).then((json) => {
+            //Log the user in given the token
+            localStorage.setItem("loginToken", json.token)
+            this.props.onLoginChanged();
         }).catch(function() {
             alert("error Error!");
         })

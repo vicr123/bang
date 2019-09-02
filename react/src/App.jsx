@@ -16,6 +16,9 @@ class App extends Error {
             currentView: "trending",
             login: {}
         };
+        
+        //Log the user in if we have a token stored
+        this.loginChanged();
     }
     
     loginChanged() {
@@ -30,7 +33,7 @@ class App extends Error {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Token: ' + token
+                    'Authorization': 'Token ' + token
                 }
             }).then((response) => {
                 if (!response.ok) throw new Error()
@@ -42,6 +45,10 @@ class App extends Error {
                     }
                 });
             }).catch(function() {
+                localStorage.removeItem("loginToken");
+                
+                //TODO: Inform the user that we couldn't log them back in
+                
                 this.setState({
                     login: {}
                 });
@@ -62,7 +69,7 @@ class App extends Error {
             case "about":
                 return <About />;
             case "user":
-                return <Account onLoginChanged={this.loginChanged.bind(this)} />;
+                return <Account currentLogin={this.state.login} onLoginChanged={this.loginChanged.bind(this)} />;
             default:
                 return <Error />;
         }
