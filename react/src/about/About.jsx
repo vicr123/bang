@@ -18,8 +18,4 @@ class About extends Error {
     }
 }
 
-<<<<<<< HEAD
 export default About; 
-=======
-export default About;
->>>>>>> 7061588b2c64222caccfc128ca8491f84a51b1dc
