@@ -1,23 +1,25 @@
 import React from "react";
 import Error from "../Error";
 
-import "./about.css";
+import "../App.css";
 
 class About extends Error {
   render() {
     return (
-      <div className="container">
-        <h1>Image Only Fun</h1>
-        <p>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Adipisci,
-          aliquam inventore. Alias id dolorum explicabo. Lorem ipsum dolor sit
-          amet consectetur adipisicing elit. Ipsa repellendus deserunt, esse
-          nostrum quasi sunt. Lorem ipsum dolor sit amet, consectetur
-          adipisicing elit. Consectetur voluptatibus ratione ducimus
-          perferendis. Illo nesciunt voluptas sapiente, eaque praesentium
-          aperiam.
-        </p>
-        <div className="Rules">
+      <div>
+        <div className="padded">
+          <h1>Image Only Fun</h1>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Adipisci,
+            aliquam inventore. Alias id dolorum explicabo. Lorem ipsum dolor sit
+            amet consectetur adipisicing elit. Ipsa repellendus deserunt, esse
+            nostrum quasi sunt. Lorem ipsum dolor sit amet, consectetur
+            adipisicing elit. Consectetur voluptatibus ratione ducimus
+            perferendis. Illo nesciunt voluptas sapiente, eaque praesentium
+            aperiam.
+          </p>
+        </div>
+        <div className="Rules padded">
           <h2>Global Rules</h2>
           <ol>
             <li>All posts are images ONLY</li>
@@ -29,8 +31,7 @@ class About extends Error {
             <li>No spamming is allowed</li>
           </ol>
         </div>
-        <hr />
-        <div className="ContactUs">
+        <div className="ContactUs padded">
           <h1>Contact Us</h1>
           <button>Email</button>
         </div>

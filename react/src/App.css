@@ -110,3 +110,56 @@ div.sidebar div.listItem.selected {
     transform: translateY(-10px);
   }
 }
+
+/* BELOW IS COPIED FROM about.css. THEY LIVE HERE NOW */
+
+.Rules {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+}
+
+.ContactUs button {
+  border-radius: 15px;
+  padding: 50px;
+}
+
+.ContactUs button:hover {
+}
+
+/* BELOW IS COPIED FROM Login.css. THEY LIVE HERE NOW */
+
+div.logIn {
+  display: flex;
+  flex-direction: column;
+  padding-left: 9px;
+  align-items: stretch;
+  
+  width: 40%;
+  min-width: 300px;
+}
+
+input[type="text"], input[type="password"] {
+  padding: 12px 20px;
+  margin: 8px;
+  display: inline-block;
+
+}
+
+button {
+  color: white;
+  background-color: rgb(60, 60, 60);
+  padding: 12px 20px;
+  margin: 8px;
+  border-color: rgb(0, 150, 255);
+  border-style: solid;
+  border-width: 1px;
+  text-align: center;
+  font-family: Contemporary;
+  font-size: 16px; 
+}
+
+button:hover {
+  background-color: rgb(0, 150, 255);
+}
