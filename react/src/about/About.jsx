@@ -1,8 +1,6 @@
 import React from "react";
 import Error from "../Error";
 
-import "../App.css";
-
 class About extends Error {
   render() {
     return (
@@ -23,7 +21,7 @@ class About extends Error {
           <h2>Global Rules</h2>
           <ol>
             <li>All posts are images ONLY</li>
-            <li>Reactions are images ONLY</li>
+            <li>Reactions are emojis ONLY</li>
             <li>Attempts to post text are NOT permitted</li>
             <li>Posting of illegal content is NOT permitted</li>
             <li>Impersonating a moderator is strictly prohibited</li>

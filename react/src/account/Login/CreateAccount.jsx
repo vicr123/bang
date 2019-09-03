@@ -1,8 +1,6 @@
 import React from 'react';
 import Error from '../../Error'
 
-import "./Login.css";
-
 class CreateAccount extends Error {
     constructor(props) {
         super(props);
