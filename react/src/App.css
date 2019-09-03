@@ -121,11 +121,12 @@ div.sidebar div.listItem.selected {
 }
 
 .ContactUs button {
-  border-radius: 15px;
+  /*border-radius: 15px;*/
   padding: 50px;
 }
 
 .ContactUs button:hover {
+
 }
 
 /* BELOW IS COPIED FROM Login.css. THEY LIVE HERE NOW */
