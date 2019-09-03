@@ -1,7 +1,7 @@
 import React from 'react';
 import Error from '../../Error'
 
-import "./Login.css";
+import "../../App.css";
 
 class Login extends Error {
     constructor(props) {
