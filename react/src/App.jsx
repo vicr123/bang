@@ -9,16 +9,42 @@ import About from './about/About';
 import Account from './account/Account';
 
 class App extends Error {
+    urlStates = {
+        "leaderboard": "/leaderboard",
+        "about": "/about",
+        "user": "/me",
+        "trending": "/"
+    }
+    
     constructor(props) {
         super(props);
         
         this.state = {
-            currentView: "trending",
+            currentView: this.stateForCurrentUrl(),
             login: {}
         };
         
         //Log the user in if we have a token stored
         this.loginChanged();
+    }
+    
+    componentDidMount() {
+         window.addEventListener("popstate", this.popState.bind(this));
+    }
+    
+    stateForCurrentUrl() {
+        for (let [key, value] of Object.entries(this.urlStates)) {
+            if (document.location.pathname.startsWith(value)) {
+                return key;
+            }
+        }
+    }
+    
+    popState(e) {
+        let state = this.stateForCurrentUrl();
+        if (state != null) this.setState({
+            currentView: state
+        });
     }
     
     loginChanged() {
@@ -61,7 +87,7 @@ class App extends Error {
      * @returns {import('@babel/types').JSXElement} The element to render in the main view
      */
     currentMainView() {
-        switch (this.state.currentView) {
+            switch (this.state.currentView) {
             case "trending":
                 return <TrendingView />;
             case "leaderboard":
@@ -75,11 +101,17 @@ class App extends Error {
         }
     }
     
+    pushView(view) {
+        window.history.pushState({}, "", this.urlStates[view]);
+    }
+    
     render() {
         let changeView = (view) => {
             this.setState({
                 currentView: view
             });
+            
+            this.pushView(view);
         };
         
         return <div className="appContainer">

@@ -53,7 +53,7 @@ div.sidebar {
 
 div.listItem {
     padding: 9px;
-    
+    cursor: pointer;
 }
 
 div.sidebar div.listItem:hover {

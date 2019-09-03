@@ -50,7 +50,7 @@ class Sidebar extends Error {
         
         let userItemText;
         if (this.props.currentLogin.username == null) {
-            userItemText = "User";
+            userItemText = "Account";
         } else {
             userItemText = this.props.currentLogin.username;
         }

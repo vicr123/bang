@@ -16,6 +16,10 @@ app.use(express.static(path.normalize(`${process.cwd()}/../react/build/`), {
     //options go here
 }));
 
+app.get('*', function(request, response) {
+    response.sendFile(path.normalize(`${process.cwd()}/../react/build/index.html`));
+});
+
 app.listen(port, () => {
     console.log(`Locked and loaded! Head to http://127.0.0.1:${port}/ to get started!`)
 });
