@@ -11,6 +11,7 @@ db.serialize(function() {
     
     db.run(`CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT)`);
     db.run(`CREATE TABLE IF NOT EXISTS Tokens(token TEXT PRIMARY KEY, userId INTEGER, date INTEGER, FOREIGN KEY (userId) REFERENCES Users(id))`);
+    db.run(`CREATE TABLE IF NOT EXISTS Resources(id INTEGER PRIMARY KEY, filename TEXT)`);
 });
 
 module.exports = {

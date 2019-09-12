@@ -1,9 +1,11 @@
 const express = require('express');
-const db = require('../db/db');
+const db = require('../../db/db');
 
 module.exports = {
-    getUser: async function(token) {
-        if (!token.startsWith("Token ")) {
+    getUser: async function(req) {
+        let token = req.get("Authorization");
+        
+        if (!token || !token.startsWith("Token ")) {
             throw new Error("Invalid Token");
         }
         token = token.substr(6);

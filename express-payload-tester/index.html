@@ -40,15 +40,20 @@
                     <input id="urlBar" type="url" style="flex-grow: 1;" value="http://127.0.0.1:3000/api/users/getToken" />
                     <button onclick="makeRequest('GET')">GET</button>
                     <button onclick="makeRequest('POST')">POST</button>
+                    <button onclick="makeRequest('PATCH')">PATCH</button>
                     <button onclick="makeRequest('DELETE')">DELETE</button>
                 </div>
                 <label for="headers">Request Headers:</label>
-                <textarea id="headers" style="flex-grow: 1;" onkeydown="payloadOnKeyDown(event, this)">{
+                <textarea id="headers" style="flex-grow: 1; white-space: pre; overflow: auto;" onkeydown="payloadOnKeyDown(event, this)">{
     "Content-Type": "application/json"
 }</textarea>
                 <label for="payload">POST Payload:</label>
-                <textarea id="payload" style="flex-grow: 1;" onkeydown="payloadOnKeyDown(event, this)"></textarea>
-                <span for="scratchpad">Scratchpad:</span>
+                <textarea id="payload" style="flex-grow: 1; white-space: pre; overflow: auto;" onkeydown="payloadOnKeyDown(event, this)"></textarea>
+                <span>Utilities:</span>
+                <div class="address">
+                    <button onClick="insertbase64()">Insert base64 encoded file</button>
+                </div>
+                <label for="scratchpad">Scratchpad:</label>
                 <textarea id="scratchpad" onchange="scratchpadEdit(event, this)" style="flex-grow: 1;"></textarea>
             </div>
             <div class="container" id="responseContainer">
@@ -60,8 +65,13 @@
             </div>
         </div>
         
+        <input type="file" id="b64file" style="display: none" onchange="performInsertBase64(event, this)"/>
+        
         <script>
             const fs = require('fs');
+            const crypto = require('crypto');
+            
+            let payloadVars = {};
             
             class ResponseError extends Error {
                 response;
@@ -85,6 +95,12 @@
                 let payload = null;
                 if (method == 'POST') {
                     payload = document.getElementById("payload").value;
+                    
+                    //Replace payload variables
+                    for (let key in payloadVars) {
+                        payload = payload.replace(`[$${key}]`, payloadVars[key]);
+                    }
+                    
                     let showAlert = false;
                     try {
                         let json = JSON.parse(payload);
@@ -126,12 +142,16 @@
             }
             
             function payloadOnKeyDown(e, box) {
-                if(e.keyCode==9) {
+                if(e.keyCode == 9) {
                     e.preventDefault();
-                    var s = box.selectionStart;
-                    box.value = box.value.substring(0,box.selectionStart) + "    " + box.value.substring(box.selectionEnd);
-                    box.selectionEnd = s+4; 
+                    insertIntoBox("    ", box)
                 }
+            }
+            
+            function insertIntoBox(text, box) {
+                let s = box.selectionStart;
+                box.value = box.value.substring(0,box.selectionStart) + text + box.value.substring(box.selectionEnd);
+                box.selectionEnd = s + text.length; 
             }
             
             function setResponseShow(show) {
@@ -164,6 +184,29 @@
                     
                     scratchpad.value = data;
                 })
+            }
+            
+            function insertbase64() {
+                document.getElementById("b64file").click();
+            }
+            
+            function performInsertBase64(event, fileElement) {
+                let box = document.getElementById("payload");
+                let file = fileElement.files[0];
+                let reader = new FileReader();
+                reader.addEventListener("load", function() {
+                    let result = reader.result;
+                    result = result.substr(result.indexOf(',') + 1);
+                    
+                    let hash = crypto.createHash('sha256');
+                    hash.update(result);
+                    
+                    let hexHash = hash.digest('hex').substr(0, 6);
+                    payloadVars[hexHash] = result;
+                    
+                    insertIntoBox(`[$${hexHash}]`, box);
+                })
+                reader.readAsDataURL(file);
             }
             
             loadScratchpad();

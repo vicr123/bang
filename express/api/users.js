@@ -2,7 +2,7 @@ const express = require('express');
 const db = require('../db/db');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const tokens = require('./token');
+const tokens = require('./helpers/token');
 
 //bcrypt options
 const saltRounds = 12;
@@ -14,8 +14,8 @@ module.exports = router;
 async function generateTokenForUser(userId) {
     do {
         let token = crypto.randomBytes(64).toString('hex');
-        //Ensure this token doesn't exist
         
+        //Ensure this token doesn't exist
         let rows = await db.select("Tokens", ["userId"], "TOKEN = ?", [token]);
         if (rows.length == 0) {
             await db.insert("Tokens", {
@@ -94,7 +94,7 @@ router.post("/getToken", function(req, res) {
 router.get("/whoami", function(req, res) {
     (async function() {
         try {
-            let userRows = await tokens.getUser(req.get("Authorization"));
+            let userRows = await tokens.getUser(req);
             
             res.status(200).send({
                 "username": userRows[0].username

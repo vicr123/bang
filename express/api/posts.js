@@ -1,8 +1,11 @@
 const express = require('express');
+const fs = require('fs');
 const db = require('../db/db');
+const settings = require('../settings');
+const tokens = require('./helpers/token');
+const resources = require('./helpers/resources');
 
 let router = express.Router();
-router.use(express.json());
 module.exports = router;
 
 /**
@@ -24,15 +27,15 @@ module.exports = router;
 /**
  * POST /posts/create
  * Create a new post
+ * Requires authentication
  * 
  * Body: JSON Object {
- *           "username": Username of the new user,
- *           "password": Password of the new user,
+ *           "image": base64 encoded image data,
+ *           "mime": MIME type of encoded image data
  *       }
  *
  * Returns: 200: JSON Object {
- *              "token": Token of the user,
- *              "id": User ID
+ *              "id": Post ID
  *          }
  *
  * Returns: 400: JSON Object {
@@ -40,7 +43,36 @@ module.exports = router;
  *          }
  */
 router.post("/create", function(req, res) {
-    
+    if (!req.body.image || !req.body.mime) {
+        res.status(400).send({
+            "error": "Missing fields"
+        });
+    } else {
+        (async function() {
+            try {
+                let userRows = await tokens.getUser(req);
+                
+                //Put the resource into the filesystem
+                let resource = resources.putResource(Buffer.from(req.body.image, 'base64'), req.body.mime);
+                
+                res.status(200).send({
+                    id: 5
+                });
+            } catch (e) {
+                if (e.message == "Invalid Token") {
+                    //Invalid token or no one logged in
+                    res.status(403).send();
+                } else if (e.message == "Mimetype not resolvable") {
+                    res.status(400).send({
+                        "error": "Invalid Mimetype"
+                    });
+                } else {
+                    console.log(e);
+                    res.status(500).send();
+                }
+            }
+        })();
+    }
 });
 
 /**
@@ -48,7 +80,7 @@ router.post("/create", function(req, res) {
  * Gets information about a specific post
  *
  * Returns: 200: JSON Object {
-                
+                "image": URL to image located on the server
  *          }
  *
  * Returns: 404 (Not Found): Post not found
@@ -56,6 +88,7 @@ router.post("/create", function(req, res) {
  */
  router.get("/:id", function(req, res) {
      res.status(200).send({
-         "ok": "ok"
+         "ok": `${settings.get('resourcesPublicDir')}/image.jpg`,
+         "id": req.params.id
      });
  });

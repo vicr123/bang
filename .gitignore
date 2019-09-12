@@ -7,6 +7,7 @@
 
 /express/node_modules
 /express/database.db
+/express/resources
 
 # testing
 /react/coverage
