@@ -22,8 +22,18 @@ prepareExpress() {
     echo "[EXPRS] Express is ready.";
 }
 
+prepareBackendTester() {
+    cd express-payload-texter;
+    
+    echo "[BTEST] Installing npm dependencies for the backend tester. This could take a very long while."
+    npm install > /dev/null 2>&1
+    
+    echo "[EXPRS] The Backend tester is ready.";
+}
+
 prepareReact &
 prepareExpress &
+prepareBackendTester &
 
 wait
 echo "Bootstrap complete"

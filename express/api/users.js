@@ -29,7 +29,7 @@ async function generateTokenForUser(userId) {
 }
 
 /**
- * POST /getToken
+ * POST /users/getToken
  * Retrieve a user's token
  * 
  * Body: JSON Object {
@@ -80,6 +80,17 @@ router.post("/getToken", function(req, res) {
     }
 });
 
+/**
+ * GET /users/whoami
+ * Get information about the currently logged in user
+ * Requires authentication
+ *
+ * Returns: 200: JSON Object {
+ *              "username": Username of the logged in user
+ *          }
+ *
+ * Returns: 403 (Unauthorized)
+ */
 router.get("/whoami", function(req, res) {
     (async function() {
         try {
@@ -96,7 +107,7 @@ router.get("/whoami", function(req, res) {
 });
 
 /**
- * POST /create
+ * POST /users/create
  * Create a user account
  * 
  * Body: JSON Object {

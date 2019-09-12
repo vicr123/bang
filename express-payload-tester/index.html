@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            body {
+                margin: 0px;
+            }
+            
+            div.mainContainer {
+                display: flex;
+                height: 100vh;
+                width: 100vw;
+                
+                flex-direction: row;
+                justify-content: stretch;
+            }
+            
+            div.container {
+                margin: 9px;
+                
+                display: flex;
+                flex-grow: 1;
+                flex-basis: 50%;
+                
+                flex-direction: column;
+                justify-content: stretch;
+            }
+            
+            div.address {
+                display: flex;
+                
+            }
+        </style>
+    </head>
+    <body>
+        <div class="mainContainer">
+            <div class="container">
+                <div class="address">
+                    <label for="urlBar">Request location&nbsp;</label>
+                    <input id="urlBar" type="url" style="flex-grow: 1;" value="http://127.0.0.1:3000/api/users/getToken" />
+                    <button onclick="makeRequest('GET')">GET</button>
+                    <button onclick="makeRequest('POST')">POST</button>
+                    <button onclick="makeRequest('DELETE')">DELETE</button>
+                </div>
+                <label for="headers">Request Headers:</label>
+                <textarea id="headers" style="flex-grow: 1;" onkeydown="payloadOnKeyDown(event, this)">{
+    "Content-Type": "application/json"
+}</textarea>
+                <label for="payload">POST Payload:</label>
+                <textarea id="payload" style="flex-grow: 1;" onkeydown="payloadOnKeyDown(event, this)"></textarea>
+                <span for="scratchpad">Scratchpad:</span>
+                <textarea id="scratchpad" onchange="scratchpadEdit(event, this)" style="flex-grow: 1;"></textarea>
+            </div>
+            <div class="container" id="responseContainer">
+                <div class="address">
+                    <span style="flex-grow: 1;">Server response:</span>
+                    <button onclick="setResponseShow(false)">Close</button>
+                </div>
+                <textarea readonly="true" id="responseArea" style="flex-grow: 1; white-space: pre; overflow: auto;"></textarea>
+            </div>
+        </div>
+        
+        <script>
+            const fs = require('fs');
+            
+            class ResponseError extends Error {
+                response;
+                
+                constructor(response) {
+                    super("Response returned unexpected HTTP code");
+                    this.response = response;
+                }
+            }
+            
+            async function makeRequest(method) {
+                let headers = document.getElementById("headers").value;
+                let responseArea = document.getElementById("responseArea");
+                try {
+                    headers = JSON.parse(headers);
+                } catch (err) {
+                    alert("Headers are invalid");
+                    return;
+                }
+                
+                let payload = null;
+                if (method == 'POST') {
+                    payload = document.getElementById("payload").value;
+                    let showAlert = false;
+                    try {
+                        let json = JSON.parse(payload);
+                        if (!json) showAlert = true;
+                    } catch (err) {
+                        showAlert = true;
+                    }
+                    if (showAlert && !confirm("Payload JSON is not valid. Make the request anyway?")) return;
+                }
+                
+                setResponseShow(true);
+                responseArea.value = "Pending...";
+                
+                try {
+                    let response = await fetch(document.getElementById("urlBar").value, {
+                        method: method,
+                        headers: headers,
+                        body: payload
+                    });
+                    
+                    if (!response.ok) throw new ResponseError(response);
+                    let json = await response.json();
+                    
+                    responseArea.value = JSON.stringify(json, null, 4);
+                } catch (err) {
+                    let text = "An error occurred:\n\n";
+                    
+                    if (err.response) {
+                        let body = await err.response.text();
+                        if (body == "") body = "[no body]";
+                        
+                        text += `Server responded with status code: ${err.response.status} (${err.response.statusText})\n\n`;
+                        text += `Response body:\n${body}`
+                    } else {
+                        text += err.stack;
+                    }
+                    responseArea.value = text;
+                }
+            }
+            
+            function payloadOnKeyDown(e, box) {
+                if(e.keyCode==9) {
+                    e.preventDefault();
+                    var s = box.selectionStart;
+                    box.value = box.value.substring(0,box.selectionStart) + "    " + box.value.substring(box.selectionEnd);
+                    box.selectionEnd = s+4; 
+                }
+            }
+            
+            function setResponseShow(show) {
+                let response = document.getElementById("responseContainer");
+                if (show) {
+                    response.style.display = "flex";
+                } else {
+                    response.style.display = "none";
+                }
+            }
+            
+            function scratchpadEdit(event, scratchpad) {
+                fs.writeFile("scratchpad.txt", scratchpad.value, {
+                    "encoding": "utf8"
+                }, (err) => {
+                    
+                });
+            }
+            
+            function loadScratchpad() {
+                let scratchpad = document.getElementById("scratchpad");
+                fs.readFile("scratchpad.txt", {
+                    "encoding": "utf8"
+                }, (err, data) => {
+                    if (err) {
+                        console.log("Can't load scratchpad");
+                    }
+                    
+                    if (data == null) return;
+                    
+                    scratchpad.value = data;
+                })
+            }
+            
+            loadScratchpad();
+            setResponseShow(false);
+        </script>
+    </body>
+</html>
