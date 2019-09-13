@@ -4,6 +4,7 @@ import './App.css';
 
 import Sidebar from './Sidebar';
 import TrendingView from './posts/TrendingView';
+import NewView from './posts/NewView';
 import Leaderboard from './leaderboard/Leaderboard';
 import About from './about/About';
 import Account from './account/Account';
@@ -13,7 +14,8 @@ class App extends Error {
         "leaderboard": "/leaderboard",
         "about": "/about",
         "user": "/me",
-        "trending": "/"
+        "trending": "/",
+        "new": "/new"
     }
     
     constructor(props) {
@@ -90,6 +92,8 @@ class App extends Error {
             switch (this.state.currentView) {
             case "trending":
                 return <TrendingView />;
+            case "new":
+                return <NewView />;
             case "leaderboard":
                 return <Leaderboard />;
             case "about":
