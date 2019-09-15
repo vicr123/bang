@@ -63,6 +63,12 @@ class Sidebar extends Error {
                     selected={isSelected("trending")}
                     onClick={() => this.props.onChangeView("trending")}
                 />
+                <SidebarItem 
+                    text="New"
+                    stateName="new"
+                    selected={isSelected("new")}
+                    onClick={() => this.props.onChangeView("new")}
+                />
                 <SidebarItem
                     text="Leaderboard"
                     stateName="leaderboard"
