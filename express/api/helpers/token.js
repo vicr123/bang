@@ -19,6 +19,6 @@ module.exports = {
         let row = rows[0];
         
         //Retrieve the user from the database
-        return await db.select("Users", ["username"], "ID = ?", [row.userId]);
+        return await db.select("Users", ["id", "username"], "ID = ?", [row.userId]);
     }
 }

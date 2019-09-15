@@ -60,6 +60,7 @@ router.post("/create", async function(req, res) {
             
             //Add a new post to the database
             await db.insert("posts", {
+                userId: userRows[0].id,
                 image: resource.id
             });
             
@@ -87,14 +88,16 @@ router.post("/create", async function(req, res) {
  * Gets information about a specific post
  *
  * Returns: 200: JSON Object {
-                "image": URL to image located on the server
+ *              "user": ID of the user associated with this post
+ *              "image": URL to image located on the server
+ *              "id": ID of this post
  *          }
  *
  * Returns: 404 (Not Found): Post not found
  * 
  */
  router.get("/:id", async function(req, res) {
-     let posts = await db.select("Posts", ["image"], "id = ?", [req.params.id]);
+     let posts = await db.select("Posts", ["userId", "image"], "id = ?", [req.params.id]);
      if (posts.length == 0) {
          res.status(404).send();
          return;
@@ -109,6 +112,7 @@ router.post("/create", async function(req, res) {
      //TODO: Also send back comments and reactions
      
      res.status(200).send({
+         "user": post.userId,
          "image": `${settings.get('resourcesPublicDir')}/${resource}`,
          "id": req.params.id
      });
