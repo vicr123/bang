@@ -45,38 +45,36 @@ async function generateTokenForUser(userId) {
  *
  * Returns: 403: null
  */
-router.post("/getToken", function(req, res) {
+router.post("/getToken", async function(req, res) {
     if (!req.body.username || !req.body.password) {
         res.status(400).send({
             "error": "Missing fields"
         });
     } else {
-        (async function() {
-            //Retrieve the user from the database
-            let rows = await db.select("Users", ["id", "password"], "USERNAME = ?", [req.body.username]);
-            if (rows.length == 0) {
-                res.status(403).send();
-                return;
-            }
-            
-            let row = rows[0];
-            let hashedPassword = row.password;
-            
-            //Verify the password
-            let isPasswordCorrect = await bcrypt.compare(req.body.password, hashedPassword);
-            if (!isPasswordCorrect) {
-                res.status(403).send();
-                return;
-            }
-            
-            //Generate a token
-            let token = await generateTokenForUser(row.id);
-            
-            res.status(200).send({
-                "token": token,
-                "id": row.id
-            });
-        })();
+        //Retrieve the user from the database
+        let rows = await db.select("Users", ["id", "password"], "USERNAME = ?", [req.body.username]);
+        if (rows.length == 0) {
+            res.status(403).send();
+            return;
+        }
+        
+        let row = rows[0];
+        let hashedPassword = row.password;
+        
+        //Verify the password
+        let isPasswordCorrect = await bcrypt.compare(req.body.password, hashedPassword);
+        if (!isPasswordCorrect) {
+            res.status(403).send();
+            return;
+        }
+        
+        //Generate a token
+        let token = await generateTokenForUser(row.id);
+        
+        res.status(200).send({
+            "token": token,
+            "id": row.id
+        });
     }
 });
 
@@ -91,19 +89,17 @@ router.post("/getToken", function(req, res) {
  *
  * Returns: 403 (Unauthorized)
  */
-router.get("/whoami", function(req, res) {
-    (async function() {
-        try {
-            let userRows = await tokens.getUser(req);
-            
-            res.status(200).send({
-                "username": userRows[0].username
-            });
-        } catch (e) {
-            //Invalid token or no one logged in
-            res.status(403).send();
-        }
-    })();
+router.get("/whoami", async function(req, res) {
+    try {
+        let userRows = await tokens.getUser(req);
+        
+        res.status(200).send({
+            "username": userRows[0].username
+        });
+    } catch (e) {
+        //Invalid token or no one logged in
+        res.status(403).send();
+    }
 });
 
 /**

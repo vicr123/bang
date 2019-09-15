@@ -12,6 +12,7 @@ db.serialize(function() {
     db.run(`CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT)`);
     db.run(`CREATE TABLE IF NOT EXISTS Tokens(token TEXT PRIMARY KEY, userId INTEGER, date INTEGER, FOREIGN KEY (userId) REFERENCES Users(id))`);
     db.run(`CREATE TABLE IF NOT EXISTS Resources(id INTEGER PRIMARY KEY, filename TEXT)`);
+    db.run(`CREATE TABLE IF NOT EXISTS Posts(id INTEGER PRIMARY KEY AUTOINCREMENT, image INTEGER, FOREIGN KEY (image) REFERENCES Resources(id))`);
 });
 
 module.exports = {
@@ -37,10 +38,10 @@ module.exports = {
             });
         });
     },
-    "select": function(tableName, columns, whereString, parameters) {
+    "select": function(tableName, columns, whereString, parameters, extraArgs = "") {
         let colString = columns.join(", ");
         return new Promise(function(res, rej) {
-            db.all(`SELECT ${columns} FROM ${tableName} WHERE ${whereString}`, parameters, function(err, rows) {
+            db.all(`SELECT ${columns} FROM ${tableName} WHERE ${whereString} ${extraArgs}`, parameters, function(err, rows) {
                 if (err) {
                     rej(err);
                 } else {

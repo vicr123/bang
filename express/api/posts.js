@@ -18,10 +18,14 @@ module.exports = router;
  *
  */
 
- router.get("/trending", function(req, res) {
-     res.status(200).send([
-         0, 1, 2, 3
-     ]);
+ router.get("/trending", async function(req, res) {
+     let rows = await db.select("Posts", ["id"], "1=1", [], "ORDER BY id DESC");
+     
+     let response = [];
+     for (let row of rows) {
+         response.push(row.id);
+     }
+     res.status(200).send(response);
  });
  
 /**
@@ -42,36 +46,39 @@ module.exports = router;
  *              "error": Description of the error
  *          }
  */
-router.post("/create", function(req, res) {
+router.post("/create", async function(req, res) {
     if (!req.body.image || !req.body.mime) {
         res.status(400).send({
             "error": "Missing fields"
         });
     } else {
-        (async function() {
-            try {
-                let userRows = await tokens.getUser(req);
-                
-                //Put the resource into the filesystem
-                let resource = resources.putResource(Buffer.from(req.body.image, 'base64'), req.body.mime);
-                
-                res.status(200).send({
-                    id: 5
+        try {
+            let userRows = await tokens.getUser(req);
+            
+            //Put the resource into the filesystem
+            let resource = await resources.putResource(Buffer.from(req.body.image, 'base64'), req.body.mime);
+            
+            //Add a new post to the database
+            await db.insert("posts", {
+                image: resource.id
+            });
+            
+            res.status(200).send({
+                id: await db.lastInsertId()
+            });
+        } catch (e) {
+            if (e.message == "Invalid Token") {
+                //Invalid token or no one logged in
+                res.status(403).send();
+            } else if (e.message == "Mimetype not resolvable") {
+                res.status(400).send({
+                    "error": "Invalid Mimetype"
                 });
-            } catch (e) {
-                if (e.message == "Invalid Token") {
-                    //Invalid token or no one logged in
-                    res.status(403).send();
-                } else if (e.message == "Mimetype not resolvable") {
-                    res.status(400).send({
-                        "error": "Invalid Mimetype"
-                    });
-                } else {
-                    console.log(e);
-                    res.status(500).send();
-                }
+            } else {
+                console.log(e);
+                res.status(500).send();
             }
-        })();
+        }
     }
 });
 
