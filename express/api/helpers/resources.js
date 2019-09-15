@@ -34,5 +34,13 @@ module.exports = {
             id: await db.lastInsertId(),
             filename: randomFileName
         };
+    },
+    getResource: async function(id) {
+        let rows = await db.select("Resources", ["filename"], "id = ?", [id]);
+        if (rows.length == 0) {
+            return null;
+        } else {
+            return rows[0].filename;
+        }
     }
 }

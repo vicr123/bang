@@ -93,9 +93,23 @@ router.post("/create", async function(req, res) {
  * Returns: 404 (Not Found): Post not found
  * 
  */
- router.get("/:id", function(req, res) {
+ router.get("/:id", async function(req, res) {
+     let posts = await db.select("Posts", ["image"], "id = ?", [req.params.id]);
+     if (posts.length == 0) {
+         res.status(404).send();
+         return;
+     }
+     
+     let post = posts[0];
+     let resource = await resources.getResource(post.image);
+     if (resource == null) {
+         res.status(500).send();
+     }
+     
+     //TODO: Also send back comments and reactions
+     
      res.status(200).send({
-         "ok": `${settings.get('resourcesPublicDir')}/image.jpg`,
+         "image": `${settings.get('resourcesPublicDir')}/${resource}`,
          "id": req.params.id
      });
  });
