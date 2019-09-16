@@ -121,10 +121,22 @@
                         body: payload
                     });
                     
-                    if (!response.ok) throw new ResponseError(response);
-                    let json = await response.json();
-                    
-                    responseArea.value = JSON.stringify(json, null, 4);
+                    if (!response.ok) {
+                        throw new ResponseError(response);
+                    } else if (response.status == 200) {
+                        let json = await response.json();
+                        
+                        responseArea.value = JSON.stringify(json, null, 4);
+                    } else {
+                        let text = "The operation completed successfully:\n\n";
+                        
+                        let body = await response.text();
+                        if (body == "") body = "[no body]";
+                        
+                        text += `Server responded with status code: ${response.status} (${response.statusText})\n\n`;
+                        text += `Response body:\n${body}`
+                        responseArea.value = text;
+                    }
                 } catch (err) {
                     let text = "An error occurred:\n\n";
                     

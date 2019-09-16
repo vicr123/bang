@@ -24,7 +24,8 @@ async function createPost(req, res, postId = null) {
             //Add a new post to the database
             await db.insert("posts", {
                 userId: userRows[0].id,
-                image: resource.id
+                image: resource.id,
+                deleted: 0
             });
             
             let newPostId = await db.lastInsertId();
@@ -124,26 +125,38 @@ router.post("/create", async function(req, res) {
  *
  * Returns: 200: JSON Object {
  *              "user": ID of the user associated with this post
- *              "image": URL to image located on the server
- *              "id": ID of this post
+ *              "image": URL to image located on the server, or null if the post has been deleted
+ *              "id": ID of this post,
+ *              "comments": JSON Array [
+ *                  Post IDs of each reply to this post
+ *              ],
+ *              "parent": Post ID of the parent for this post, or null if this is a top level post,
+ *              "deleted": true if deleted, false if not
  *          }
  *
  * Returns: 404 (Not Found): Post not found
  * 
+ * Returns: 410 (Gone): Post deleted by user
+ * 
  */
  router.get("/:id", async function(req, res) {
      try {
-         let posts = await db.select("Posts", ["userId", "image"], "id = ?", [req.params.id]);
+         let posts = await db.select("Posts", ["userId", "image", "deleted"], "id = ?", [req.params.id]);
          if (posts.length == 0) {
              res.status(404).send();
              return;
          }
          
          let post = posts[0];
+         let deleted = post.deleted != 0;
+         
          let resource = await resources.getResource(post.image);
          if (resource == null) {
              res.status(500).send();
+             return;
          }
+         let image = `${settings.get('resourcesPublicDir')}/${resource}`;
+         if (deleted) image = null;
          
          let comments = await db.select("Comments", ["id"], "replyTo = ?", [req.params.id]);
          let commentsReply = [];
@@ -158,10 +171,11 @@ router.post("/create", async function(req, res) {
          
          res.status(200).send({
              "user": post.userId,
-             "image": `${settings.get('resourcesPublicDir')}/${resource}`,
+             "image": image,
              "id": req.params.id,
              "comments": commentsReply,
-             "parent": parentReply
+             "parent": parentReply,
+             "deleted": deleted
          });
      } catch (err) {
          console.log(err);
@@ -189,4 +203,63 @@ router.post("/create", async function(req, res) {
  */
 router.post("/:id", async function(req, res) {
     createPost(req, res, req.params.id);
+});
+
+/**
+ * DELETE /posts/:id
+ * Delete a post
+ * Requires authentication
+ *
+ * Returns: 204 (No Content): Success
+ *
+ * Returns: 403 (Unauthorized): Either the user is not the poster, or an invalid token was provided
+ *
+ * Returns: 404 (Not Found): Post not found
+ */
+router.delete("/:id", async function(req, res) {
+    let t = db.transaction();
+    try {
+        let userRows = await tokens.getUser(req);
+        let posts = await db.select("Posts", ["userId", "deleted"], "id = ?", [req.params.id]);
+        if (posts.length == 0) {
+             res.status(404).send();
+             t.discard();
+             return;
+        }
+        
+        if (posts[0].deleted != 0) {
+            res.status(404).send();
+            t.discard();
+            return;
+        }
+        
+        if (posts[0].userId != userRows[0].id) {
+            res.status(403).send();
+            t.discard();
+            return;
+        }
+        
+        let comments = await db.select("Comments", ["id"], "replyTo = ?", [req.params.id]);
+        if (comments.length == 0) {
+            //Just delete the post
+            db.delete("Posts", "id = ?", [req.params.id]);
+        } else {
+            //Modify the post to state that it is deleted
+            db.update("Posts", {
+                deleted: 1
+            }, "id = ?", [req.params.id]);
+        }
+        
+        t.commit();
+        res.status(204).send();
+    } catch (e) {
+        t.discard();
+        if (e.message == "Invalid Token") {
+            //Invalid token or no one logged in
+            res.status(403).send();
+        } else {
+            console.log(e);
+            res.status(500).send();
+        }
+    }
 });
