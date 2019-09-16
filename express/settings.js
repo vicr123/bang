@@ -1,5 +1,7 @@
 class Settings {
-    settingsObject = {}
+    constructor() {
+        this.settingsObject = {};
+    }
     
     set(key, value) {
         this.settingsObject[key] = value;

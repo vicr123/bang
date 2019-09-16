@@ -23,7 +23,7 @@ prepareExpress() {
 }
 
 prepareBackendTester() {
-    cd express-payload-texter;
+    cd express-payload-tester;
     
     echo "[BTEST] Installing npm dependencies for the backend tester. This could take a very long while."
     npm install > /dev/null 2>&1

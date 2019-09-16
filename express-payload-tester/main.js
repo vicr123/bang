@@ -13,7 +13,8 @@ function createWindow () {
     height: 600,
     title: "Backend Tester",
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      sandbox: false
     }
   })
 

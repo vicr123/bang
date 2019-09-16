@@ -16,6 +16,7 @@
 /react/build
 
 /express-payload-tester/node_modules
+/express-payload-tester/scratchpad.txt
 
 # misc
 .DS_Store

@@ -17,8 +17,26 @@ module.exports = router;
  *          ]
  *
  */
-
  router.get("/trending", async function(req, res) {
+     let rows = await db.select("Posts", ["id"], "1=1", [], "ORDER BY id DESC");
+     
+     let response = [];
+     for (let row of rows) {
+         response.push(row.id);
+     }
+     res.status(200).send(response);
+ });
+ 
+/**
+ * GET /posts/new
+ * Gets posts ordered by date
+ *
+ * Returns: 200: JSON Array [
+ *              Post IDs for each new post
+ *          ]
+ *
+ */
+ router.get("/new", async function(req, res) {
      let rows = await db.select("Posts", ["id"], "1=1", [], "ORDER BY id DESC");
      
      let response = [];
