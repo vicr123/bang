@@ -92,6 +92,26 @@ div.sidebar div.listItem.selected {
 	animation: bounce 1s;
 }
 
+div.loaderContainer {
+    position: fixed;
+    width: 0px;
+    height: 0px;
+}
+
+div.loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
 @keyframes bounce {
 	0%,
 	20%,

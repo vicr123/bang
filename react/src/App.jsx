@@ -132,7 +132,9 @@ class App extends Error {
 		};
 
 		return (
-			<div className="appContainer">
+            <div className="appContainer">
+                <div id="loaderContainer">
+    		    </div>
 				<Sidebar
 					currentState={this.state.currentView}
 					onChangeView={changeView}

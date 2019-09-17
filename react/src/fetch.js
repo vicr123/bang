@@ -1,19 +1,44 @@
+import Loader from './Loader';
+
 class Fetch {
-    static post(url, data) {
+    static headers() {
         let headers = {
             "Content-Type": "application/json"
         };
-
+        
         let token = localStorage.getItem("loginToken");
         if (token != null) {
             headers["Authorization"] = "Token " + token;
         }
-
-        return fetch(url, {
+        
+        return headers;
+    }
+    
+    static async performRequest(method, url, showLoader) {
+        if (showLoader) Loader.mount();
+        let result = await fetch(url, {
+            method: "method",
+            headers: Fetch.headers()
+        });
+        if (showLoader) Loader.unmount();
+        
+        return result;
+    }
+    
+    static async post(url, data, showLoader = true) {
+        if (showLoader) Loader.mount();
+        let result = await fetch(url, {
             method: "POST",
-            headers: headers,
+            headers: Fetch.headers(),
             body: JSON.stringify(data)
         });
+        if (showLoader) Loader.unmount();
+        
+        return result;
+    }
+    
+    static get(url, showLoader = true) {
+        return Loader.performRequest("GET", url, showLoader);
     }
 }
 
