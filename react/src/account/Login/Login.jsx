@@ -11,7 +11,7 @@ class Login extends Error {
         };
     }
     
-    logInButtonHandler() {
+    logInButtonHandler() {  
         fetch("/api/users/getToken", {
             method: 'POST',
             headers: {
