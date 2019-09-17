@@ -1,5 +1,0 @@
-Username: "victor"
-User token: "4aff1e0ab3e168dbdd85cb62e08aed55380a8548cd7c7d2a28ddeb404e5266aa2cb186664cac343f2ceaf6b647be3e6aadee2390a165b1cea9f7abed0d56bd8c"
-
-Username: "danny"
-User token: "aeebc381f262f18f7fdd08a667614224a44f950ee857a70b4c68cdc5fc0f3247592c2ee2b74394df215a85a3ee4cc690b2f614698c32c3c7b338ffa9ed141183"
