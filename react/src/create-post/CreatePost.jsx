@@ -26,7 +26,6 @@ class CreatePost extends Error {
 		reader.readAsDataURL(file);
 
 	}
-	
 	render() {
 		return (
 			<React.Fragment>

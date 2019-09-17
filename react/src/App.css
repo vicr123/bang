@@ -195,3 +195,7 @@ button:hover {
 .moreSpace {
 	margin: 0 auto;
 }
+
+.list {
+	border: 1px solid white; 
+}

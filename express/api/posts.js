@@ -89,7 +89,6 @@ async function createPost(req, res, postId = null) {
  */
  router.get("/new", async function(req, res) {
      let rows = await db.select("Posts", ["id"], "1=1", [], "ORDER BY id DESC");
-     
      let response = [];
      for (let row of rows) {
          response.push(row.id);
