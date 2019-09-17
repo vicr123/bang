@@ -16,7 +16,7 @@ class Fetch {
     
     static async performRequest(method, url, showLoader) {
         if (showLoader) Loader.mount();
-        let result = await fetch(url, {
+        let result = await fetch("/api" + url, {
             method: "method",
             headers: Fetch.headers()
         });
@@ -27,7 +27,7 @@ class Fetch {
     
     static async post(url, data, showLoader = true) {
         if (showLoader) Loader.mount();
-        let result = await fetch(url, {
+        let result = await fetch("/api" + url, {
             method: "POST",
             headers: Fetch.headers(),
             body: JSON.stringify(data)

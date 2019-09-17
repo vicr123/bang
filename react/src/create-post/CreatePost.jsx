@@ -18,7 +18,7 @@ class CreatePost extends Error {
 			let mimetype = result.substr(5, result.indexOf(';') - 5);
 			result = result.substr(result.indexOf(',') + 1);
 
-			Fetch.post("/api/posts/create", {
+			Fetch.post("/posts/create", {
 				"image": result,
 				"mime": mimetype
 			});

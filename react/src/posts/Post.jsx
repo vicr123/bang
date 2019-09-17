@@ -1,5 +1,6 @@
 import React from 'react';
-import Error from '../Error'
+import Error from '../Error';
+import Fetch from "../fetch";
 
 class Post extends Error {
     render() {
@@ -8,6 +9,8 @@ class Post extends Error {
         </div>
         
     }
+
+    
 }
 
 export default Post;
