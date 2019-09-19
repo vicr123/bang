@@ -46,7 +46,7 @@ async function createPost(req, res, postId = null) {
             t.discard();
             if (e.message == "Invalid Token") {
                 //Invalid token or no one logged in
-                res.status(403).send();
+                res.status(401).send();
             } else if (e.message == "Mimetype not resolvable") {
                 res.status(400).send({
                     "error": "Invalid Mimetype"
@@ -103,10 +103,6 @@ async function createPost(req, res, postId = null) {
  * Requires authentication
  * 
  * Body: JSON Object {
-    if (!req.body.image || !req.body.mime) {
-        res.status(400).send({
-            "error": "Missing fields"
-        });
  *           "image": base64 encoded image data,
  *           "mime": MIME type of encoded image data
  *       }
@@ -135,12 +131,6 @@ router.post("/create", async function(req, res) {
  *                  Post IDs of each reply to this post
  *              ],
  *              "parent": Post ID of the parent for this post, or null if this is a top level post,
- *              "reactions": JSON Array [
- *                  JSON Object {
- *                      "reaction": Emoji of the reaction,
- *                      "count": Number of people to react with this reaction
- *                  } for each emoji this post has been reacted with
- *              ]
  *              "deleted": true if deleted, false if not
  *          }
  *
@@ -177,14 +167,7 @@ router.post("/create", async function(req, res) {
          let parent = await db.select("Comments", ["replyTo"], "Comments.id = ?", [req.params.id])
          let parentReply = parent.length == 0 ? null : parent[0].replyTo;
          
-         let reactions = await db.select("Reactions", ["COUNT(*) AS c", "emoji"], "postId = ?", [req.params.id], "GROUP BY emoji");
-         let reactionsReply = [];
-         for (let reaction of reactions) {
-             reactionsReply.push({
-                 "reaction": reaction.emoji,
-                 "count": reaction.c
-             });
-         }
+         //TODO: Also send back comments and reactions
          
          res.status(200).send({
              "user": post.userId,
@@ -192,7 +175,6 @@ router.post("/create", async function(req, res) {
              "id": req.params.id,
              "comments": commentsReply,
              "parent": parentReply,
-             "reactions": reactionsReply,
              "deleted": deleted
          });
      } catch (err) {
@@ -230,7 +212,7 @@ router.post("/:id", async function(req, res) {
  *
  * Returns: 204 (No Content): Success
  *
- * Returns: 403 (Unauthorized): Either the user is not the poster, or an invalid token was provided
+ * Returns: 401 (Unauthorized): Either the user is not the poster, or an invalid token was provided
  *
  * Returns: 404 (Not Found): Post not found
  */
@@ -252,7 +234,7 @@ router.delete("/:id", async function(req, res) {
         }
         
         if (posts[0].userId != userRows[0].id) {
-            res.status(403).send();
+            res.status(401).send();
             t.discard();
             return;
         }
@@ -274,85 +256,10 @@ router.delete("/:id", async function(req, res) {
         t.discard();
         if (e.message == "Invalid Token") {
             //Invalid token or no one logged in
-            res.status(403).send();
+            res.status(401).send();
         } else {
             console.log(e);
             res.status(500).send();
-        }
-    }
-});
-
-/**
- * POST /posts/:id/reactions
- * React to a post
- * Requires authentication
- * 
- * Body: JSON Object {
- *           "reaction": Reaction to edit,
- *           "add": true to add the reaction, false to remove
- *       }
- *
- * Returns: 204 (No Content): Success
- *
- * Returns: 400: JSON Object {
- *              "error": Description of the error
- *          }
- */
-router.post("/:id/reactions", async function(req, res) {
-    if (!req.body.reaction || !req.body.add) {
-        res.status(400).send({
-            "error": "Missing fields"
-        });
-    } else {
-        let t = db.transaction();
-        try {
-            let userRows = await tokens.getUser(req);
-            let posts = await db.select("Posts", ["id", "userId", "deleted"], "id = ?", [req.params.id]);
-            if (posts.length == 0) {
-                 res.status(404).send();
-                 t.discard();
-                 return;
-            }
-            
-            if (posts[0].deleted != 0) {
-                res.status(404).send();
-                t.discard();
-                return;
-            }
-            
-            //TODO: Ensure the reaction is a valid emoji
-            
-            if (req.body.add) {
-                let reactions = await db.select("Reactions", ["emoji"], "postId = ? AND userId = ? AND emoji = ?", [posts[0].id, userRows[0].id, req.body.reaction]);
-                if (reactions.length != 0) {
-                    res.status(400).send({
-                        error: "Reaction already exists"
-                    });
-                }
-                
-                db.insert("Reactions", {
-                    postId: posts[0].id,
-                    userId: userRows[0].id,
-                    emoji: req.body.reaction
-                });
-            } else {
-                //TODO: Delete reactions
-                res.status(501).send();
-                t.discard();
-                return;
-            }
-            
-            t.commit();
-            res.status(204).send();
-        } catch (e) {
-            t.discard();
-            if (e.message == "Invalid Token") {
-                //Invalid token or no one logged in
-                res.status(403).send();
-            } else {
-                console.log(e);
-                res.status(500).send();
-            }
         }
     }
 });

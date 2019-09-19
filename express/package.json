@@ -12,6 +12,8 @@
     "bcrypt": "^3.0.6",
     "express": "^4.17.1",
     "mime-to-extensions": "^1.0.2",
-    "sqlite3": "^4.1.0"
+    "mocha": "^6.2.0",
+    "sqlite3": "^4.1.0",
+    "supertest": "^4.0.2"
   }
 }
