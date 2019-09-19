@@ -52,10 +52,6 @@
                 <span>Utilities:</span>
                 <div class="address">
                     <button onClick="insertbase64()">Insert base64 encoded file</button>
-                    <button onClick="insertIntoBox('🙂')">🙂</button>
-                    <button onClick="insertIntoBox('😡')">😡</button>
-                    <button onClick="insertIntoBox('💣')">💣</button>
-                    <button onClick="insertIntoBox('🍔')">🍔</button>
                 </div>
                 <label for="scratchpad">Scratchpad:</label>
                 <textarea id="scratchpad" onchange="scratchpadEdit(event, this)" style="flex-grow: 1;"></textarea>
@@ -164,7 +160,7 @@
                 }
             }
             
-            function insertIntoBox(text, box = document.getElementById("payload")) {
+            function insertIntoBox(text, box) {
                 let s = box.selectionStart;
                 box.value = box.value.substring(0,box.selectionStart) + text + box.value.substring(box.selectionEnd);
                 box.selectionEnd = s + text.length; 

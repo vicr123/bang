@@ -63,7 +63,6 @@ describe('Backend', function() {
             await supertest(app).get("/api/users/whoami").set('Content-Type', 'application/json')
                 .set('Authorization', 'Token 05f23a40e8a97251d69397da6f7e49489252e85981be0c391f64c22241b6ef14d12fef0f360d0366929c2bc4caf06916b833dd21daebc8c279be691fa4e7eb9f')
                 .expect(401);
-            
         })
     })
 });
