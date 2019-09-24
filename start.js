@@ -1,5 +1,6 @@
 const blessed = require('blessed');
 const child = require('child_process');
+const os = require('os');
 
 let processes = {};
 
@@ -159,6 +160,9 @@ function build() {
         //Terminate the old process and clear the log
         processes.info.kill();
     }
+    
+    let npm = "npm";
+    if (os.platform() == 'win32') npm = "npm.cmd";
     
     status.setContent("Building React...");
     processes.info = child.spawn("npm", ["run", "build"], {
