@@ -30,6 +30,7 @@ class CreatePost extends Error {
 		return (
 			<React.Fragment>
 				<div className="padded moreSpace postContainer">
+					<div>&#128140;</div>
 					<h2>Upload a photo to get started!</h2>
 					<button className="button" onClick={this.uploadPhotoButtonHandler.bind(this)}>📸 Upload Photo</button>
 					<input type="file"  style={{"display": "none"}} id="inputFileSelect" onChange={this.performUpload.bind(this)} />
