@@ -151,3 +151,31 @@ router.post("/create", function(req, res) {
         });
     }
 });
+
+/**
+ * GET /users/:id
+ * Gets information about a specific user
+ *
+ * Returns: 200: JSON Object {
+ *              "username": Username of the user
+ *          }
+ *
+ * Returns: 404 (Not Found): User not found
+ * 
+ */
+ router.get("/:id", async function(req, res) {
+     try {
+         let users = await db.select("Users", ["username"], "id = ?", [req.params.id]);
+         if (users.length == 0) {
+             res.status(404).send();
+             return;
+         }
+         
+         res.status(200).send({
+             "username": users[0].username
+         });
+     } catch (err) {
+         console.log(err);
+         res.status(500).send();
+     }
+ });
