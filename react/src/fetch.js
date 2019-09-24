@@ -17,12 +17,12 @@ class Fetch {
     static async performRequest(method, url, showLoader) {
         if (showLoader) Loader.mount();
         let result = await fetch("/api" + url, {
-            method: "method",
+            method: method,
             headers: Fetch.headers()
         });
         if (showLoader) Loader.unmount();
         
-        return result;
+        return await result.json();
     }
     
     static async post(url, data, showLoader = true) {
@@ -38,7 +38,7 @@ class Fetch {
     }
     
     static get(url, showLoader = true) {
-        return Loader.performRequest("GET", url, showLoader);
+        return Fetch.performRequest("GET", url, showLoader);
     }
 }
 

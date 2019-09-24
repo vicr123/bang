@@ -8,7 +8,7 @@ import "./TrendingView.css";
 class NewView extends Error {
     render() {
         return <div className="trendingView scrollable">
-            <PostList extraClassNames="postList" />
+            <PostList endpoint="new" extraClassNames="postList" />
             <Post />
         </div>
     }

@@ -6,9 +6,13 @@ import Post from './Post';
 import "./TrendingView.css";
 
 class TrendingView extends Error {
+    onShowPost(post) {
+        console.log(post);
+    }
+
     render() {
         return <div className="trendingView scrollable">
-            <PostList extraClassNames="postList" />
+            <PostList onShowPost={this.onShowPost.bind(this)} endpoint="trending" extraClassNames="postList" />
             <Post />
         </div>
     }
