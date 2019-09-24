@@ -165,7 +165,7 @@ function build() {
     if (os.platform() == 'win32') npm = "npm.cmd";
     
     status.setContent("Building React...");
-    processes.info = child.spawn("npm", ["run", "build"], {
+    processes.info = child.spawn(npm, ["run", "build"], {
         cwd: process.cwd() + "/react"
     });
     attachInfoLog(processes.info, "Build");
