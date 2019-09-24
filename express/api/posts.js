@@ -46,7 +46,7 @@ async function createPost(req, res, postId = null) {
             t.discard();
             if (e.message == "Invalid Token") {
                 //Invalid token or no one logged in
-                res.status(403).send();
+                res.status(401).send();
             } else if (e.message == "Mimetype not resolvable") {
                 res.status(400).send({
                     "error": "Invalid Mimetype"
@@ -211,7 +211,7 @@ router.post("/:id", async function(req, res) {
  *
  * Returns: 204 (No Content): Success
  *
- * Returns: 403 (Unauthorized): Either the user is not the poster, or an invalid token was provided
+ * Returns: 401 (Unauthorized): Either the user is not the poster, or an invalid token was provided
  *
  * Returns: 404 (Not Found): Post not found
  */
@@ -233,7 +233,7 @@ router.delete("/:id", async function(req, res) {
         }
         
         if (posts[0].userId != userRows[0].id) {
-            res.status(403).send();
+            res.status(401).send();
             t.discard();
             return;
         }
@@ -255,7 +255,7 @@ router.delete("/:id", async function(req, res) {
         t.discard();
         if (e.message == "Invalid Token") {
             //Invalid token or no one logged in
-            res.status(403).send();
+            res.status(401).send();
         } else {
             console.log(e);
             res.status(500).send();
