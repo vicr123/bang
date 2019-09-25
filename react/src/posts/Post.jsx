@@ -53,7 +53,7 @@ class Post extends Error {
     }
 
     render() {
-        return <div className="scrollable">
+        return <div className="scrollable" style={{'flex-grow': '1'}}>
             {this.renderContent()}
         </div>
         
