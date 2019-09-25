@@ -196,12 +196,96 @@ router.post("/create", async function(req, res) {
  *              "id": Post ID
  *          }
  *
- * Returns: 400: JSON Object {
+ * Returns: 400 (Bad Request): JSON Object {
  *              "error": Description of the error
  *          }
  */
 router.post("/:id", async function(req, res) {
     createPost(req, res, req.params.id);
+});
+
+/**
+ * PATCH /posts/:id
+ * Edit a post
+ * Requires authentication
+ *
+ * Body: JSON Object {
+ *           "image": base64 encoded image data,
+ *           "mime": MIME type of encoded image data
+ *       }
+ *
+ * Returns: 204 (No Content): Success
+ *
+ * Returns: 400 (Bad Request): JSON Object {
+ *              "error": Description of the error
+ *          }
+ *
+ * Returns: 401 (Unauthorized): Either the user is not the poster, or an invalid token was provided
+ *
+ * Returns: 404 (Not Found): Post not found
+ */
+router.patch("/:id", async function(req, res) {
+    if (!req.body.image || !req.body.mime) {
+        res.status(400).send({
+            "error": "Missing fields"
+        });
+        return;
+    }
+    
+    let t = db.transaction();
+    try {
+        let userRows = await tokens.getUser(req);
+        let posts = await db.select("Posts", ["userId", "deleted"], "id = ?", [req.params.id]);
+        if (posts.length == 0) {
+             res.status(404).send();
+             t.discard();
+             return;
+        }
+        
+        if (posts[0].deleted != 0) {
+            res.status(404).send();
+            t.discard();
+            return;
+        }
+        
+        if (posts[0].userId != userRows[0].id) {
+            res.status(401).send();
+            t.discard();
+            return;
+        }
+        
+        let comments = await db.select("Comments", ["id"], "replyTo = ?", [req.params.id]);
+        if (comments.length != 0) {
+            //This post has a comment so it can't be edited
+            res.status(400).send({
+                "error": "Post has been commented on"
+            });
+            t.discard();
+            return;
+        }
+
+        //TODO: Ensure there are no reactions
+        
+        //Put the resource into the filesystem
+        let resource = await resources.putResource(Buffer.from(req.body.image, 'base64'), req.body.mime);
+        
+        //Edit the post in the database
+        await db.update("posts", {
+            image: resource.id
+        }, "id = ?", [req.params.id]);
+        
+        t.commit();
+        res.status(204).send();
+    } catch (e) {
+        t.discard();
+        if (e.message == "Invalid Token") {
+            //Invalid token or no one logged in
+            res.status(401).send();
+        } else {
+            console.log(e);
+            res.status(500).send();
+        }
+    }
 });
 
 /**

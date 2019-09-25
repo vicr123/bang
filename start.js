@@ -98,6 +98,19 @@ let restartExpressButton = blessed.button({
 });
 screen.append(restartExpressButton);
 
+let startBackendTesterButton = blessed.button({
+    style: {
+        fg: 'yellow',
+        bg: 'blue'
+    },
+    content: '^T Backend Tester',
+    left: '100%-37',
+    width: 17,
+    height: 1,
+    top: '100%-1'
+});
+screen.append(startBackendTesterButton);
+
 let expressLog = blessed.log({
     left: 0,
     width: '100%',
@@ -165,7 +178,7 @@ function build() {
     if (os.platform() == 'win32') npm = "npm.cmd";
     
     status.setContent("Building React...");
-    processes.info = child.spawn("npm", ["run", "build"], {
+    processes.info = child.spawn(npm, ["run", "build"], {
         cwd: process.cwd() + "/react"
     });
     attachInfoLog(processes.info, "Build");
@@ -205,10 +218,20 @@ function startExpress() {
     status.setContent("Ready!");
 }
 
+function startBackendTester() {
+    let npm = "npm";
+    if (os.platform() == 'win32') npm = "npm.cmd";
+    
+    processes.info = child.spawn(npm, ["start"], {
+        cwd: process.cwd() + "/express-payload-tester"
+    });
+}
+
 screen.key(['q', 'C-c'], shutdown);
 screen.key(['C-b'], build);
 screen.key(['C-w'], bootstrap);
 screen.key(['C-r'], startExpress);
+screen.key(['C-t'], startBackendTester);
 screen.key(['C-z'], function() {
     infoLog.hide();
     screen.render();
@@ -229,6 +252,7 @@ closeButton.on('click', shutdown);
 buildButton.on('click', build);
 bootstrapButton.on('click', bootstrap);
 restartExpressButton.on('click', startExpress);
+startBackendTesterButton.on('click', startBackendTester);
 
 startExpress();
 

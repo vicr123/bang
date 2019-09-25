@@ -93,7 +93,7 @@
                 }
                 
                 let payload = null;
-                if (method == 'POST') {
+                if (method == 'POST' || method == 'PATCH') {
                     payload = document.getElementById("payload").value;
                     
                     //Replace payload variables
