@@ -77,14 +77,20 @@ class PostListItem extends Error {
         return classes.join(" ");
     }
 
+    styles() {
+        return {
+            background: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${this.props.postInfo.image}) center center/cover`,
+            height: '80px'
+        }
+    }
+
     onClick() {
         this.props.onShowPost(this.props.postInfo);
     }
 
     render() {
         return (
-            <div className={this.className()} onClick={this.onClick.bind(this)}>
-                A post of some sort to be populated
+            <div className={this.className()} onClick={this.onClick.bind(this)} style={this.styles()}>
             </div>
         );
     }

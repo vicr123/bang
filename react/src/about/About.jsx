@@ -17,7 +17,7 @@ class About extends Error {
             aperiam.
           </p>
         </div>
-        <div className="Rules padded">
+        <div className="HorizontalBox padded">
           <h2>Global Rules</h2>
           <ol>
             <li>All posts are images ONLY</li>
