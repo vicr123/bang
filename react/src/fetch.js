@@ -1,5 +1,7 @@
 import Loader from './Loader';
 
+let posts = {};
+
 class Fetch {
     static headers() {
         let headers = {
@@ -39,6 +41,13 @@ class Fetch {
     
     static get(url, showLoader = true) {
         return Fetch.performRequest("GET", url, showLoader);
+    }
+
+    static async getPost(id) {
+        if (!posts[id]) {
+            posts[id] = await Fetch.get(`/posts/${id}`);
+        }
+        return posts[id];
     }
 }
 

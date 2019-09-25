@@ -52,15 +52,10 @@ class PostList extends Error {
 
         let postArray = [];
         for (let post of posts) {
-            // console.log(post);
-            let jsPost = await Fetch.get(`/posts/${post}`);
-            // console.log(jsPost);
-            postArray.push(jsPost);
+            // let jsPost = await Fetch.get(`/posts/${post}`);
+            // postArray.push(jsPost);
+            postArray.push(await Fetch.getPost(post));
         }
-        // Fetch.get(`/users/id`)
-        // Fetch.get(`/users/username`)
-
-        console.log(postArray);
 
         this.setState({
             posts: postArray
@@ -73,7 +68,7 @@ class PostListItem extends Error {
 
     className() {
         let classes = [];
-        classes.push("listitem")
+        classes.push("listItem")
 
         if (this.props.selected) {
             classes.push("selected");
