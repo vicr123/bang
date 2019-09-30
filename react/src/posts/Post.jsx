@@ -42,6 +42,32 @@ class Post extends Error {
         </Modal>)
     }
 
+    uploadPhotoButtonHandler() {
+		document.getElementById("replyFileSelect").click();
+	}
+    
+    performUpload(event) {
+		let box = document.getElementById("replyFileSelect");
+		let file = box.files[0];
+		let reader = new FileReader();
+		reader.addEventListener("load", async () => {
+			let result = reader.result;
+			let mimetype = result.substr(5, result.indexOf(';') - 5);
+			result = result.substr(result.indexOf(',') + 1);
+
+			let response = await Fetch.post(`/posts/${this.props.postId}`, {
+				"image": result,
+				"mime": mimetype
+			});
+			// this.setState({
+			// 	newPostId: response.id
+            // })
+            alert("Replied. Post needs to be reloaded!");
+		})
+		reader.readAsDataURL(file);
+
+	}
+
     renderContent() {
         if (this.props.postId == -1) {
             return <div></div>
@@ -57,7 +83,8 @@ class Post extends Error {
                     <button>😂</button>
                     <div style={{'flex-grow': '1'}} />
                     <button onClick={this.showFlagDialog.bind(this)}>🚩</button>
-                    <button>Reply</button>
+                    <button onClick={this.uploadPhotoButtonHandler.bind(this)}>Reply</button>
+                    <input type="file" style={{"display": "none"}} id="replyFileSelect" onChange={this.performUpload.bind(this)} />
                 </div>
             </div>
         }
