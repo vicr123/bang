@@ -88,8 +88,7 @@ async function createPost(req, res, postId = null) {
  *
  */
  router.get("/new", async function(req, res) {
-     //SELECT * FROM Posts LEFT JOIN Comments ON Posts.id = Comments.replyTo WHERE Comments.id Is NULL;
-     let rows = await db.select("Posts LEFT JOIN Comments ON Posts.id = Comments.replyTo", ["Posts.id"], "Comments.id Is NULL", [], "ORDER BY Posts.id DESC");
+     let rows = await db.select("Posts", ["id"], "1=1", [], "ORDER BY id DESC");
      let response = [];
      for (let row of rows) {
          response.push(row.id);
