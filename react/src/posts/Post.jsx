@@ -59,7 +59,7 @@ class Post extends Error {
 			let mimetype = result.substr(5, result.indexOf(';') - 5);
 			result = result.substr(result.indexOf(',') + 1);
 
-			let response = await Fetch.post(`/posts/${this.props.postId}`, {
+			let response = await Fetch.post(`/posts/${this.state.currentPostId}`, {
 				"image": result,
 				"mime": mimetype
 			});
@@ -78,22 +78,35 @@ class Post extends Error {
         let replyDivs = [];
         for (let comment of this.state.metadata.comments) {
             let changeToPost = () => {
-                console.log("Change post tp " + comment);
+                console.log("Change post to " + comment.id);
                 this.setState({
-                    currentPostId: comment
+                    currentPostId: comment.id
                 });
             };
-            replyDivs.push(<div onClick={changeToPost}>This is Post ID #{comment}</div>);
+            replyDivs.push(<img onClick={changeToPost} src={comment.image} className="postImage"></img>);
         }
 
         return replyDivs;
+    }
+
+    renderBackButton() {
+        if (this.state.metadata.parent === null) {
+            return [];
+        } else {
+            let changeToPost = () => {
+                this.setState({
+                    currentPostId: this.state.metadata.parent
+                });
+            };
+            return <button onClick={changeToPost}>Back</button>
+        }
     }
 
     renderContent() {
         if (this.props.postId == -1) {
             return <div></div>
         } else {
-            return <div><img src={this.state.metadata.image} className="postImage"/>
+            return <div>{this.renderBackButton()}<img src={this.state.metadata.image} className="postImage"/>
                 <div className="HorizontalBox EmojiBox padded">
                     <button>👍</button>
                     <button>👎</button>
