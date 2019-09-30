@@ -43,7 +43,7 @@ async function generateTokenForUser(userId) {
  *              "id": User ID
  *          }
  *
- * Returns: 403: null
+ * Returns: 401: null
  */
 router.post("/getToken", async function(req, res) {
     if (!req.body.username || !req.body.password) {
@@ -54,7 +54,7 @@ router.post("/getToken", async function(req, res) {
         //Retrieve the user from the database
         let rows = await db.select("Users", ["id", "password"], "USERNAME = ?", [req.body.username]);
         if (rows.length == 0) {
-            res.status(403).send();
+            res.status(401).send();
             return;
         }
         
@@ -64,7 +64,7 @@ router.post("/getToken", async function(req, res) {
         //Verify the password
         let isPasswordCorrect = await bcrypt.compare(req.body.password, hashedPassword);
         if (!isPasswordCorrect) {
-            res.status(403).send();
+            res.status(401).send();
             return;
         }
         
@@ -87,7 +87,7 @@ router.post("/getToken", async function(req, res) {
  *              "username": Username of the logged in user
  *          }
  *
- * Returns: 403 (Unauthorized)
+ * Returns: 401 (Unauthorized)
  */
 router.get("/whoami", async function(req, res) {
     try {
@@ -98,7 +98,7 @@ router.get("/whoami", async function(req, res) {
         });
     } catch (e) {
         //Invalid token or no one logged in
-        res.status(403).send();
+        res.status(401).send();
     }
 });
 
@@ -151,3 +151,31 @@ router.post("/create", function(req, res) {
         });
     }
 });
+
+/**
+ * GET /users/:id
+ * Gets information about a specific user
+ *
+ * Returns: 200: JSON Object {
+ *              "username": Username of the user
+ *          }
+ *
+ * Returns: 404 (Not Found): User not found
+ * 
+ */
+ router.get("/:id", async function(req, res) {
+     try {
+         let users = await db.select("Users", ["username"], "id = ?", [req.params.id]);
+         if (users.length == 0) {
+             res.status(404).send();
+             return;
+         }
+         
+         res.status(200).send({
+             "username": users[0].username
+         });
+     } catch (err) {
+         console.log(err);
+         res.status(500).send();
+     }
+ });
