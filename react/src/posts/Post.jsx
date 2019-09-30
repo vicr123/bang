@@ -7,8 +7,6 @@ class Post extends Error {
     constructor(props) {
         super(constructor);
 
-
-
         this.state = {
             metadata: {
                 image: ""
@@ -17,7 +15,7 @@ class Post extends Error {
     }
 
     componentDidMount() {
-        this.componentDidUpdate(this.props);
+        this.componentDidUpdate({});;
     }
 
     componentDidUpdate(oldProps) {

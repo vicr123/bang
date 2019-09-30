@@ -36,7 +36,7 @@ class Fetch {
         });
         if (showLoader) Loader.unmount();
         
-        return result;
+        return await result.json();
     }
     
     static get(url, showLoader = true) {

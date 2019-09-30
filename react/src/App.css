@@ -249,3 +249,7 @@ html div.modalBox {
     border-left: 1px solid var(--fg-color);
 }
 
+.postListItems {
+	height: 80px;
+    min-height: 80px;
+}
