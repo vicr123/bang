@@ -135,6 +135,7 @@ class App extends Error {
             <div className="appContainer">
                 <div id="loaderContainer">
     		    </div>
+				<div id="modalContainer" />
 				<Sidebar
 					currentState={this.state.currentView}
 					onChangeView={changeView}

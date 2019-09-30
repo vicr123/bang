@@ -15,8 +15,6 @@ class TrendingView extends Error {
     }
     
     onShowPost(post) {
-        console.log(post);
-        //show post in Post section
         this.setState({
             currentPost: post.id
         });

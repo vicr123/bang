@@ -3,6 +3,10 @@ const child = require('child_process');
 const os = require('os');
 
 let processes = {};
+let port = "3000";
+if (process.argv.indexOf("--port") != -1) {
+    port = process.argv[process.argv.indexOf("--port") + 1];
+}
 
 let screen = blessed.screen({
     smartCSR: true
@@ -205,7 +209,7 @@ function startExpress() {
         expressLog.setContent("");
     }
     
-    processes.express = child.spawn("node", ["index.js"], {
+    processes.express = child.spawn("node", ["index.js", "--port", port], {
         cwd: process.cwd() + "/express"
     });
     processes.express.stdout.on('data', (data) => {

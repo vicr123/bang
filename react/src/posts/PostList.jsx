@@ -68,7 +68,8 @@ class PostListItem extends Error {
 
     className() {
         let classes = [];
-        classes.push("listItem")
+        classes.push("listItem");
+        classes.push("postListItems");
 
         if (this.props.selected) {
             classes.push("selected");
@@ -79,8 +80,7 @@ class PostListItem extends Error {
 
     styles() {
         return {
-            background: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${this.props.postInfo.image}) center center/cover`,
-            height: '80px'
+            background: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${this.props.postInfo.image}) center center/cover`
         }
     }
 

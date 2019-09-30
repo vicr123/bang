@@ -8,6 +8,7 @@
 
 :root {
 	--bg-color: rgb(40, 40, 40);
+	--bg-color-faded: rgba(40, 40, 40, 0.5);
 	--fg-color: white;
 
 	--sidebar-bg-color: rgb(60, 60, 60);
@@ -141,6 +142,11 @@ div.loader {
 	border-bottom: 1px solid white;
 }
 
+.VerticalBox {
+	display: flex;
+	flex-direction: column;
+}
+
 .EmojiBox {
 	flex-wrap: wrap;
 }
@@ -203,4 +209,47 @@ button:hover {
 
 .postImage {
 	width: 100%;
+}
+
+#modalContainer {
+    position: fixed;
+    top: 0px;
+    width: 0px;
+    height: 0px;
+}
+
+html[dir="LTR"] #modalContainer {
+    left: 0px;
+}
+
+html[dir="RTL"] #modalContainer {
+    right: 0px;
+}
+
+div.modalBackground {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    
+    display: flex;
+    justify-content: flex-end;
+    
+    background-color: var(--bg-color-faded);
+}
+
+div.modalBox {
+	padding-left: 9px;
+    height: 100%;
+    background-color: var(--bg-color);
+}
+
+html div.modalBox {
+    border-left: 1px solid var(--fg-color);
+}
+
+.postListItems {
+	height: 80px;
+    min-height: 80px;
 }
