@@ -33,7 +33,7 @@ class Post extends Error {
     }
 
     showFlagDialog() {
-        Modal.mount(<Modal title="Flag" style={{width: '400px'}}>
+        Modal.mount(<Modal title="Flag" cancelable={true} style={{width: '400px'}}>
             <div className="VerticalBox">
                 <span>What's wrong with this post?</span>
                 <button>Contains Text</button>
