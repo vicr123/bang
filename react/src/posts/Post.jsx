@@ -1,6 +1,7 @@
 import React from 'react';
 import Error from '../Error';
 import Fetch from "../fetch";
+import Modal from "../Modal";
 
 class Post extends Error {
     constructor(props) {
@@ -31,6 +32,18 @@ class Post extends Error {
         }
     }
 
+    showFlagDialog() {
+        Modal.mount(<Modal title="Flag" style={{width: '400px'}}>
+            <div className="VerticalBox">
+                <span>What's wrong with this post?</span>
+                <button>Contains Text</button>
+                <button>Contains Unfortunate Content</button>
+                <hr />
+                <span>This report will be sent to the administrators of this board; not the author of this post.</span>
+            </div>
+        </Modal>)
+    }
+
     renderContent() {
         if (this.props.postId == -1) {
             return <div></div>
@@ -45,7 +58,7 @@ class Post extends Error {
                     <button>😠</button>
                     <button>😂</button>
                     <div style={{'flex-grow': '1'}} />
-                    <button>🚩</button>
+                    <button onClick={this.showFlagDialog.bind(this)}>🚩</button>
                     <button>Reply</button>
                 </div>
             </div>

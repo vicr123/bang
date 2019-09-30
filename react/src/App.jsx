@@ -9,6 +9,7 @@ import Leaderboard from "./leaderboard/Leaderboard";
 import About from "./about/About";
 import Account from "./account/Account";
 import CreatePost from "./create-post/CreatePost";
+import Modal from "./Modal";
 
 class App extends Error {
 	urlStates = {
@@ -135,6 +136,7 @@ class App extends Error {
             <div className="appContainer">
                 <div id="loaderContainer">
     		    </div>
+				<div id="modalContainer" onClick={Modal.unmount} />
 				<Sidebar
 					currentState={this.state.currentView}
 					onChangeView={changeView}
