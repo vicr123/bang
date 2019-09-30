@@ -10,18 +10,22 @@ class Post extends Error {
         this.state = {
             metadata: {
                 image: ""
-            }
+            },
+            currentPostId: -1
         };
     }
 
     componentDidMount() {
-        this.componentDidUpdate({});;
+        this.componentDidUpdate({}, {});;
     }
 
-    componentDidUpdate(oldProps) {
+    componentDidUpdate(oldProps, oldState) {
         if (this.props.postId !== -1 && this.props.postId != oldProps.postId) {
-            console.log("get");
-            Fetch.getPost(this.props.postId).then((metadata) => {
+            this.setState({
+                currentPostId: this.props.postId
+            });
+        } else if (this.state.currentPostId !== -1 && oldState.currentPostId !== this.state.currentPostId) {
+            Fetch.getPost(this.state.currentPostId).then((metadata) => {
                 console.log("set");
                 this.setState({
                     metadata: metadata
@@ -66,7 +70,24 @@ class Post extends Error {
 		})
 		reader.readAsDataURL(file);
 
-	}
+    }
+    
+    renderReplies() {
+        if (!this.state.metadata.comments) return [];
+
+        let replyDivs = [];
+        for (let comment of this.state.metadata.comments) {
+            let changeToPost = () => {
+                console.log("Change post tp " + comment);
+                this.setState({
+                    currentPostId: comment
+                });
+            };
+            replyDivs.push(<div onClick={changeToPost}>This is Post ID #{comment}</div>);
+        }
+
+        return replyDivs;
+    }
 
     renderContent() {
         if (this.props.postId == -1) {
@@ -85,6 +106,9 @@ class Post extends Error {
                     <button onClick={this.showFlagDialog.bind(this)}>🚩</button>
                     <button onClick={this.uploadPhotoButtonHandler.bind(this)}>Reply</button>
                     <input type="file" style={{"display": "none"}} id="replyFileSelect" onChange={this.performUpload.bind(this)} />
+                </div>
+                <div>
+                    {this.renderReplies()}
                 </div>
             </div>
         }
