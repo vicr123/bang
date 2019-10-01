@@ -26,7 +26,6 @@ class Post extends Error {
             });
         } else if (this.state.currentPostId !== -1 && oldState.currentPostId !== this.state.currentPostId) {
             Fetch.getPost(this.state.currentPostId).then((metadata) => {
-                console.log("set");
                 this.setState({
                     metadata: metadata
                 });
@@ -78,7 +77,6 @@ class Post extends Error {
         let replyDivs = [];
         for (let comment of this.state.metadata.comments) {
             let changeToPost = () => {
-                console.log("Change post to " + comment.id);
                 this.setState({
                     currentPostId: comment.id
                 });
@@ -110,19 +108,27 @@ class Post extends Error {
         return classes.join(" ");
     }
 
+    getReaction(reaction) {
+        if (this.state.metadata.reactions) {
+            return this.state.metadata.reactions[reaction];
+        } else {
+            return "";
+        }
+    }
+
     renderContent() {
         if (this.props.postId == -1) {
             return <div></div>
         } else {
             return <div>{this.renderBackButton()}<img src={this.state.metadata.image} className="postImage"/>
                 <div className="HorizontalBox EmojiBox padded">
-                    <button>👍</button>
-                    <button>👎</button>
-                    <button>🙂</button>
-                    <button>💓</button>
-                    <button>🙁</button>
-                    <button>😠</button>
-                    <button>😂</button>
+                    <button>👍 {this.getReaction("👍")}</button>
+                    <button>👎 {this.getReaction("👎")}</button>
+                    <button>🙂 {this.getReaction("🙂")}</button>
+                    <button>💓 {this.getReaction("💓")}</button>
+                    <button>🙁 {this.getReaction("🙁")}</button>
+                    <button>😠 {this.getReaction("😠")}</button>
+                    <button>😂 {this.getReaction("😂")}</button>
                     <div style={{'flex-grow': '1'}} />
                     <button onClick={this.showFlagDialog.bind(this)}>🚩</button>
                     <button onClick={this.uploadPhotoButtonHandler.bind(this)}>Reply</button>

@@ -1,5 +1,4 @@
 import React from "react";
-import Fetch from '../fetch';
 import Error from "../Error";
 
 // rendered based on user profile on the leaderboard
@@ -14,13 +13,17 @@ class AccountLB extends Error {
 	}
 	render() {
 		if(this.state.userId !== -1)
-			return <React.Fragment>An Account should be here</React.Fragment>;
+			this.accountRender();
 		else 
 			this.defaultRender();
 	}
 
+	accountRender(){
+		return <React.Fragment>An Account should be here</React.Fragment>;
+	}
+
 	defaultRender(){
-		return <React.Fragment>This account is a mystery</React.Fragment>;
+		return <React.Fragment>No Accounts to be found :'(</React.Fragment>;
 	}
 
 }
