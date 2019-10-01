@@ -94,6 +94,7 @@ class Post extends Error {
     }
 
     showFlagDialog() {
+        if (!Modal.checkLoggedIn()) return;    
         Modal.mount(<Modal title="Flag" cancelable={true} style={{width: '400px'}}>
             <div className="VerticalBox">
                 <span>What's wrong with this post?</span>
@@ -105,6 +106,7 @@ class Post extends Error {
     }
 
     uploadPhotoButtonHandler() {
+        if (!Modal.checkLoggedIn()) return;
 		document.getElementById("replyFileSelect").click();
 	}
     

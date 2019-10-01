@@ -4,7 +4,7 @@ import Error from "../Error";
 class About extends Error {
   render() {
     return (
-      <div>
+      <div className="scrollable">
         <div className="padded">
           <h1>Image Only Fun</h1>
           <p>
