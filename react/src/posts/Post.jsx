@@ -90,16 +90,24 @@ class Post extends Error {
     }
 
     renderBackButton() {
-        if (this.state.metadata.parent === null) {
-            return [];
-        } else {
+        let buttons = [];
+        buttons.push(<button className="returnToPostListButton" onClick={this.props.onReturnToPostList}>Back to post list</button>);
+        if (this.state.metadata.parent !== null) {
             let changeToPost = () => {
                 this.setState({
                     currentPostId: this.state.metadata.parent
                 });
             };
-            return <button onClick={changeToPost}>Back</button>
+            buttons.push(<button onClick={changeToPost}>Back</button>);
         }
+        return buttons;
+    }
+    
+    className() {
+        let classes = [];
+        classes.push("scrollable");
+        if (!this.props.viewMobile) classes.push("mobileHide");
+        return classes.join(" ");
     }
 
     renderContent() {
@@ -128,10 +136,9 @@ class Post extends Error {
     }
 
     render() {
-        return <div className="scrollable" style={{'flex-grow': '1'}}>
+        return <div className={this.className()} style={{'flex-grow': '1'}}>
             {this.renderContent()}
         </div>
-        
     }
 
     

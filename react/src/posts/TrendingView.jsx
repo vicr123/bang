@@ -10,20 +10,28 @@ class TrendingView extends Error {
         super(props);
 
         this.state = {
-            currentPost: -1
+            currentPost: -1,
+            currentMobileViewList: true
         }
     }
     
     onShowPost(post) {
         this.setState({
-            currentPost: post.id
+            currentPost: post.id,
+            currentMobileViewList: false
+        });
+    }
+    
+    onReturnToPostList() {
+        this.setState({
+            currentMobileViewList: true
         });
     }
 
     render() {
         return <div className="trendingView scrollable">
-            <PostList onShowPost={this.onShowPost.bind(this)} endpoint="trending" extraClassNames="postList" />
-            <Post postId={this.state.currentPost}/>
+            <PostList viewMobile={this.state.currentMobileViewList} onShowPost={this.onShowPost.bind(this)} endpoint="trending" extraClassNames="postList" />
+            <Post viewMobile={!this.state.currentMobileViewList} postId={this.state.currentPost} onReturnToPostList={this.onReturnToPostList.bind(this)}/>
         </div>
     }
 }

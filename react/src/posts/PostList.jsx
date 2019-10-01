@@ -29,12 +29,21 @@ class PostList extends Error {
 
         return jsx;
     }
+    
+    className() {
+        let classes = [];
+        classes.push("postbar");
+        classes.push("scrollable");
+        if (!this.props.viewMobile) classes.push("mobileHide");
+        
+        return classes.join(" ");
+    }
 
     render() {
         
         // <p>Empty 😔</p>
         return (
-            <div className="sidebar scrollable">
+            <div className={this.className()}>
                 {this.renderPosts()}
             </div>
         );

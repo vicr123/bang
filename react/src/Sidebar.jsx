@@ -29,7 +29,7 @@ class SidebarItem extends Error {
 	render() {
 		return (
 			<div className={this.className()} onClick={this.props.onClick}>
-				{this.props.icon} {this.props.text}
+				{this.props.icon} <span class="sidebarText">{this.props.text}</span>
 			</div>
 		);
 	}

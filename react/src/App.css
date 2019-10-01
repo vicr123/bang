@@ -66,6 +66,23 @@ div.sidebar div.listItem.selected {
 	background-color: var(--sidebar-hv-color);
 }
 
+div.postbar {
+	width: 250px;
+	min-width: 250px;
+	display: flex;
+	flex-direction: column;
+	border-right: 1px solid var(--fg-color);
+	background-color: var(--sidebar-bg-color);
+}
+
+div.postbar div.listItem:hover {
+	background-color: var(--sidebar-hv-color);
+}
+
+div.postbar div.listItem.selected {
+	background-color: var(--sidebar-hv-color);
+}
+
 /* THE BELOW STYLING IS PLACEHOLDER */
 
 .userPlaceholder {
@@ -252,4 +269,32 @@ html div.modalBox {
 .postListItems {
 	height: 80px;
     min-height: 80px;
+}
+
+.returnToPostListButton {
+    display: none;
+}
+
+/* Media queries for smaller windows */
+@media (max-width: 600px) {
+    div.sidebar {
+        width: 32px;
+        min-width: 32px;
+    }
+    
+    span.sidebarText {
+        display: none;
+    }
+    
+    .mobileHide {
+        display: none !important;
+    }
+    
+    div.postbar {
+        flex-grow: 1;
+    }
+    
+    .returnToPostListButton {
+        display: block;
+    }
 }
