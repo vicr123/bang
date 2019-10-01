@@ -25,7 +25,7 @@ class EmojiButton extends Error {
 
     async setReaction(reaction) {
         if (!Modal.checkLoggedIn()) return;
-        
+
         try {
             let add = !this.hasUserReacted();
             
@@ -159,6 +159,15 @@ class Post extends Error {
         }
         return buttons;
     }
+
+    renderTrashButton() {
+        return <button onClick={this.uploadPhotoButtonHandler.bind(this)}>🗑</button>
+    }
+
+    renderEditButton() {
+        if (this.state.metadata.canEdit) return <button onClick={this.uploadPhotoButtonHandler.bind(this)}>✏</button>
+        return [];
+    }
     
     className() {
         let classes = [];
@@ -171,7 +180,9 @@ class Post extends Error {
         if (this.props.postId == -1) {
             return <div></div>
         } else {
-            return <div>{this.renderBackButton()}<img src={this.state.metadata.image} className="postImage"/>
+            return <div>
+                <div className="HorizontalBox">{this.renderBackButton()}</div>
+                <img src={this.state.metadata.image} className="postImage"/>
                 <div className="HorizontalBox EmojiBox padded">
                     <EmojiButton emoji="👍" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
                     <EmojiButton emoji="👎" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
@@ -181,9 +192,11 @@ class Post extends Error {
                     <EmojiButton emoji="😠" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
                     <EmojiButton emoji="😂" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
                     <div style={{'flex-grow': '1'}} />
-                    <p>Posted by: {this.state.userMetadata ? this.state.userMetadata.username : "A user"}</p>
+                    <p>Posted by: {this.state.userMetadata ? this.state.userMetadata.username : "Unidentified user"}</p>
                     <button onClick={this.showFlagDialog.bind(this)}>🚩</button>
-                    <button onClick={this.uploadPhotoButtonHandler.bind(this)}>Reply</button>
+                    {this.renderEditButton()}
+                    {this.renderTrashButton()}
+                    <button onClick={this.uploadPhotoButtonHandler.bind(this)}>📨</button>
                     <input type="file" style={{"display": "none"}} id="replyFileSelect" onChange={this.performUpload.bind(this)} />
                 </div>
                 <div>
