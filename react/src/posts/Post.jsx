@@ -102,19 +102,27 @@ class Post extends Error {
         }
     }
 
+    getReaction(reaction) {
+        if (this.state.metadata.reactions) {
+            return this.state.metadata.reactions[reaction];
+        } else {
+            return "";
+        }
+    }
+
     renderContent() {
         if (this.props.postId == -1) {
             return <div></div>
         } else {
             return <div>{this.renderBackButton()}<img src={this.state.metadata.image} className="postImage"/>
                 <div className="HorizontalBox EmojiBox padded">
-                    <button>👍</button>
-                    <button>👎</button>
-                    <button>🙂</button>
-                    <button>💓</button>
-                    <button>🙁</button>
-                    <button>😠</button>
-                    <button>😂</button>
+                    <button>👍 {this.getReaction("👍")}</button>
+                    <button>👎 {this.getReaction("👎")}</button>
+                    <button>🙂 {this.getReaction("🙂")}</button>
+                    <button>💓 {this.getReaction("💓")}</button>
+                    <button>🙁 {this.getReaction("🙁")}</button>
+                    <button>😠 {this.getReaction("😠")}</button>
+                    <button>😂 {this.getReaction("😂")}</button>
                     <div style={{'flex-grow': '1'}} />
                     <button onClick={this.showFlagDialog.bind(this)}>🚩</button>
                     <button onClick={this.uploadPhotoButtonHandler.bind(this)}>Reply</button>
