@@ -101,10 +101,27 @@ class Post extends Error {
     }
 
     getReaction(reaction) {
-        if (this.state.metadata.reactions) {
+        if (this.state.metadata.reactions && this.state.currentPostId != -1) {
             return this.state.metadata.reactions[reaction];
         } else {
             return "";
+        }
+    }
+
+    async setReaction(reaction) {
+        try {
+            await Fetch.post(`/posts/${this.state.currentPostId}/reactions`, {
+                reaction: reaction,
+                add: true
+            });
+    
+            let metadata = this.state.metadata;
+            metadata.reactions[reaction] += 1;
+            this.setState({
+                metadata: metadata
+            });
+        } catch (err) {
+            Modal.mount(<Modal dismissable={true}><div>An error occurred.</div></Modal>);
         }
     }
 
@@ -114,13 +131,13 @@ class Post extends Error {
         } else {
             return <div>{this.renderBackButton()}<img src={this.state.metadata.image} className="postImage"/>
                 <div className="HorizontalBox EmojiBox padded">
-                    <button>👍 {this.getReaction("👍")}</button>
-                    <button>👎 {this.getReaction("👎")}</button>
-                    <button>🙂 {this.getReaction("🙂")}</button>
-                    <button>💓 {this.getReaction("💓")}</button>
-                    <button>🙁 {this.getReaction("🙁")}</button>
-                    <button>😠 {this.getReaction("😠")}</button>
-                    <button>😂 {this.getReaction("😂")}</button>
+                    <button onClick={() => this.setReaction("👍")}>👍 {this.getReaction("👍")}</button>
+                    <button onClick={() => this.setReaction("👎")}>👎 {this.getReaction("👎")}</button>
+                    <button onClick={() => this.setReaction("🙂")}>🙂 {this.getReaction("🙂")}</button>
+                    <button onClick={() => this.setReaction("💓")}>💓 {this.getReaction("💓")}</button>
+                    <button onClick={() => this.setReaction("🙁")}>🙁 {this.getReaction("🙁")}</button>
+                    <button onClick={() => this.setReaction("😠")}>😠 {this.getReaction("😠")}</button>
+                    <button onClick={() => this.setReaction("😂")}>😂 {this.getReaction("😂")}</button>
                     <div style={{'flex-grow': '1'}} />
                     <button onClick={this.showFlagDialog.bind(this)}>🚩</button>
                     <button onClick={this.uploadPhotoButtonHandler.bind(this)}>Reply</button>
