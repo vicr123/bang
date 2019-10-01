@@ -15,5 +15,8 @@
     "mocha": "^6.2.0",
     "sqlite3": "^4.1.0",
     "supertest": "^4.0.2"
+  },
+  "devDependencies": {
+    "faker": "^4.1.0"
   }
 }
