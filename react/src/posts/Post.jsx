@@ -3,6 +3,63 @@ import Error from '../Error';
 import Fetch from "../fetch";
 import Modal from "../Modal";
 
+class EmojiButton extends Error {
+    constructor(props) {
+        super(props)
+    }
+ 
+    getReaction(reaction) {
+        if (this.props.metadata.reactions && this.props.postId != -1) {
+            let num = this.props.metadata.reactions[reaction];
+            if (num == 0) return "";
+            return num;
+        } else {
+            return "";
+        }
+    }
+    
+    hasUserReacted() {
+        if (!this.props.metadata.myReactions) return false;
+        return this.props.metadata.myReactions.indexOf(this.props.emoji) !== -1;
+    }
+
+    async setReaction(reaction) {
+        try {
+            let add = !this.hasUserReacted();
+            
+            await Fetch.post(`/posts/${this.props.postId}/reactions`, {
+                reaction: reaction,
+                add: add
+            });
+    
+            let metadata = this.props.metadata;
+            if (!metadata.reactions[reaction]) metadata.reactions[reaction] = 0;
+            metadata.reactions[reaction] += (add ? 1 : -1);
+            
+            if (add) {
+                metadata.myReactions.push(this.props.emoji);
+            } else {
+                metadata.myReactions.splice(metadata.myReactions.indexOf(this.props.emoji), 1);
+            }
+            
+            this.props.onStateChange({
+                metadata: metadata
+            });
+        } catch (err) {
+            Modal.mount(<Modal cancelable={true}><h1>Error</h1><div>We couldn't post your reaction. Give it another go.</div></Modal>);
+        }
+    }
+    
+    className() {
+        if (this.hasUserReacted()) return "selected";
+        return "";
+    }
+    
+    render() {
+        return <button className={this.className()} onClick={() => this.setReaction(this.props.emoji)}>{this.props.emoji} {this.getReaction(this.props.emoji)}</button>
+    }
+}
+
 class Post extends Error {
     constructor(props) {
         super(constructor);
@@ -108,44 +165,19 @@ class Post extends Error {
         return classes.join(" ");
     }
 
-    getReaction(reaction) {
-        if (this.state.metadata.reactions && this.state.currentPostId != -1) {
-            return this.state.metadata.reactions[reaction];
-        } else {
-            return "";
-        }
-    }
-
-    async setReaction(reaction) {
-        try {
-            await Fetch.post(`/posts/${this.state.currentPostId}/reactions`, {
-                reaction: reaction,
-                add: true
-            });
-    
-            let metadata = this.state.metadata;
-            metadata.reactions[reaction] += 1;
-            this.setState({
-                metadata: metadata
-            });
-        } catch (err) {
-            Modal.mount(<Modal dismissable={true}><div>An error occurred.</div></Modal>);
-        }
-    }
-
     renderContent() {
         if (this.props.postId == -1) {
             return <div></div>
         } else {
             return <div>{this.renderBackButton()}<img src={this.state.metadata.image} className="postImage"/>
                 <div className="HorizontalBox EmojiBox padded">
-                    <button onClick={() => this.setReaction("👍")}>👍 {this.getReaction("👍")}</button>
-                    <button onClick={() => this.setReaction("👎")}>👎 {this.getReaction("👎")}</button>
-                    <button onClick={() => this.setReaction("🙂")}>🙂 {this.getReaction("🙂")}</button>
-                    <button onClick={() => this.setReaction("💓")}>💓 {this.getReaction("💓")}</button>
-                    <button onClick={() => this.setReaction("🙁")}>🙁 {this.getReaction("🙁")}</button>
-                    <button onClick={() => this.setReaction("😠")}>😠 {this.getReaction("😠")}</button>
-                    <button onClick={() => this.setReaction("😂")}>😂 {this.getReaction("😂")}</button>
+                    <EmojiButton emoji="👍" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="👍" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="🙂" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="💓" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="🙁" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="😠" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="😂" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
                     <div style={{'flex-grow': '1'}} />
                     <p>Posted by: {this.state.userMetadata ? this.state.userMetadata.username : "A user"}</p>
                     <button onClick={this.showFlagDialog.bind(this)}>🚩</button>

@@ -99,9 +99,9 @@ class App extends Error {
 			case "createPost":
 				return <CreatePost />;
 			case "trending":
-				return <TrendingView />;
+				return <TrendingView type="trending" />;
 			case "new":
-				return <NewView />;
+				return <TrendingView type="new" />;
 			case "leaderboard":
 				return <Leaderboard />;
 			case "about":

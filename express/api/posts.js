@@ -137,6 +137,9 @@ router.post("/create", async function(req, res) {
  *                  "reaction": Emoji of the reaction,
  *                  "count": Number of people to react with this reaction
  *              },
+                "myReactions": JSON Array (optional) [
+                    Emoji that the user has reacted with
+                ],
  *              "deleted": true if deleted, false if not
  *          }
  *
@@ -147,6 +150,15 @@ router.post("/create", async function(req, res) {
  */
 router.get("/:id", async function(req, res) {
     try {
+        
+        let user = null;
+        try {
+            user = await tokens.getUser(req);
+            user = user[0];
+        } catch (err) {
+
+        }
+        
         let posts = await db.select("Posts", ["userId", "image", "deleted"], "id = ?", [req.params.id]);
         if (posts.length == 0) {
             res.status(404).send();
@@ -187,12 +199,15 @@ router.get("/:id", async function(req, res) {
         
         let reactions = await db.select("Reactions", ["COUNT(*) AS c", "emoji"], "postId = ?", [req.params.id], "GROUP BY emoji");
         let reactionsReply = {};
+        let myReactionsReply = [];
         for (let reaction of reactions) {
             reactionsReply[reaction.emoji] = reaction.c;
-            //  reactionsReply.push({
-            //      "reaction": reaction.emoji,
-            //      "count": reaction.c
-            //  });
+            
+            if (user !== null) {
+                if ((await db.select("Reactions", ["*"], "postId = ? AND userId = ? AND emoji = ?", [req.params.id, user.id, reaction.emoji])).length != 0) {
+                    myReactionsReply.push(reaction.emoji);
+                }
+            }
         }
         
         res.status(200).send({
@@ -202,6 +217,7 @@ router.get("/:id", async function(req, res) {
             "comments": commentsReply,
             "parent": parentReply,
             "reactions": reactionsReply,
+            "myReactions": myReactionsReply,
             "deleted": deleted
         });
     } catch (err) {
@@ -288,6 +304,93 @@ router.delete("/:id", async function(req, res) {
         } else {
             console.log(e);
             res.status(500).send();
+        }
+    }
+});
+
+/**
+ * POST /posts/:id/reactions
+ * React to a post
+ * Requires authentication
+ * 
+ * Body: JSON Object {
+ *           "reaction": Reaction to edit,
+ *           "add": true to add the reaction, false to remove
+ *       }
+ *
+ * Returns: 204 (No Content): Success
+ *
+ * Returns: 400: JSON Object {
+ *              "error": Description of the error
+ *          }
+ */
+router.post("/:id/reactions", async function(req, res) {
+    if (!req.body.reaction || !req.body.hasOwnProperty("add")) {
+        res.status(400).send({
+            "error": "Missing fields"
+        });
+    } else {
+        let t = db.transaction();
+        try {
+            let userRows = await tokens.getUser(req);
+            let posts = await db.select("Posts", ["id", "userId", "deleted"], "id = ?", [req.params.id]);
+            if (posts.length == 0) {
+                 res.status(404).send();
+                 t.discard();
+                 return;
+            }
+            
+            if (posts[0].deleted != 0) {
+                res.status(404).send();
+                t.discard();
+                return;
+            }
+            
+            //TODO: Ensure the reaction is a valid emoji
+            
+            if (req.body.add) {
+                let reactions = await db.select("Reactions", ["emoji"], "postId = ? AND userId = ? AND emoji = ?", [posts[0].id, userRows[0].id, req.body.reaction]);
+                if (reactions.length != 0) {
+                    res.status(400).send({
+                        error: "Reaction already exists"
+                    });
+                    t.discard();
+                    return;
+                }
+                
+                await db.insert("Reactions", {
+                    postId: posts[0].id,
+                    userId: userRows[0].id,
+                    emoji: req.body.reaction
+                });
+            } else {        
+                let reactions = await db.select("Reactions", ["emoji"], "postId = ? AND userId = ? AND emoji = ?", [posts[0].id, userRows[0].id, req.body.reaction]);
+                if (reactions.length == 0) {
+                    res.status(400).send({
+                        error: "Reaction does not exist"
+                    });
+                    t.discard();
+                    return;
+                }
+                        
+                await db.delete("Reactions", "postId = ? AND userId = ? AND emoji = ?", [
+                    posts[0].id,
+                    userRows[0].id,
+                    req.body.reaction
+                ]);
+            }
+            
+            t.commit();
+            res.status(204).send();
+        } catch (e) {
+            t.discard();
+            if (e.message == "Invalid Token") {
+                //Invalid token or no one logged in
+                res.status(403).send();
+            } else {
+                console.log(e);
+                res.status(500).send();
+            }
         }
     }
 });
