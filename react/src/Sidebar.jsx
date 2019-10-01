@@ -40,7 +40,6 @@ class Sidebar extends Error {
 	render() {
 		let isSelected = stateName => {
 			if (this.props.currentState === stateName) {
-				console.log("Got state");
 				return true;
 			} else {
 				return false;
