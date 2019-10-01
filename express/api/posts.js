@@ -135,12 +135,10 @@ router.post("/create", async function(req, res) {
  *                  "id": Post ID for this comment
  *              }],
  *              "parent": Post ID of the parent for this post, or null if this is a top level post,
- *              "reactions": JSON Array [
- *                  JSON Object {
- *                      "reaction": Emoji of the reaction,
- *                      "count": Number of people to react with this reaction
- *                  } for each emoji this post has been reacted with
- *              ]
+ *              "reactions": JSON Object {
+ *                  "reaction": Emoji of the reaction,
+ *                  "count": Number of people to react with this reaction
+ *              },
  *              "deleted": true if deleted, false if not
  *          }
  *
@@ -190,12 +188,13 @@ router.post("/create", async function(req, res) {
          let parentReply = parent.length == 0 ? null : parent[0].replyTo;
          
          let reactions = await db.select("Reactions", ["COUNT(*) AS c", "emoji"], "postId = ?", [req.params.id], "GROUP BY emoji");
-         let reactionsReply = [];
+         let reactionsReply = {};
          for (let reaction of reactions) {
-             reactionsReply.push({
-                 "reaction": reaction.emoji,
-                 "count": reaction.c
-             });
+             reactionsReply[reaction.emoji] = reaction.c;
+            //  reactionsReply.push({
+            //      "reaction": reaction.emoji,
+            //      "count": reaction.c
+            //  });
          }
          
          res.status(200).send({
