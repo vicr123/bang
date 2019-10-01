@@ -1,7 +1,6 @@
 import React from "react";
 import Error from "../Error";
 import Fetch from '../fetch';
-import { type } from "os";
 
 // Displays the top accounts on the site
 class Leaderboard extends Error {
@@ -22,7 +21,7 @@ class Leaderboard extends Error {
 
 	render() {
 		return (
-			<div className="scrollable">
+			<div className="scrollable padded">
 				<h1>
 					Leaderboard
 				</h1>
