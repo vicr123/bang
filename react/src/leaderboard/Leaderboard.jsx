@@ -25,9 +25,9 @@ class Leaderboard extends Error {
 				<h1>
 					Leaderboard
 				</h1>
-				<ol>
+				<div>
 					{this.mapLeaders()}
-				</ol>
+				</div>
 			</div>
 		);
 	}
@@ -40,8 +40,8 @@ class Leaderboard extends Error {
 	}
 
 	mapLeaders(){
-		return this.state.leaders.map(id => {
-			return <li>{id}</li>
+		return this.state.leaders.map(person => {
+			return <AccountLB person = {person}/>
 		});
 	}
 }

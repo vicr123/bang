@@ -10,8 +10,12 @@ class AccountLB extends Error {
 			userId: -1,
 			reacts: 0
 		};
+
+
 	}
 	render() {
+		console.log(this.props.person);
+
 		if(this.state.userId !== -1)
 			this.accountRender();
 		else 
@@ -19,11 +23,11 @@ class AccountLB extends Error {
 	}
 
 	accountRender(){
-		return <React.Fragment>An Account should be here</React.Fragment>;
+		return <React.Fragment>An Account should be here {this.props.person}</React.Fragment>;
 	}
 
 	defaultRender(){
-		return <React.Fragment>No Accounts to be found :'(</React.Fragment>;
+		return <React.Fragment>No Account to be found :'(</React.Fragment>;
 	}
 
 }
