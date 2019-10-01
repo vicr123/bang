@@ -44,6 +44,17 @@ module.exports = {
     "runQuery": function(query) {
         return db.run(query);
     },
+    "allQuery": function(query) {
+        return new Promise(function(res, rej) {
+            db.all(query, [], function(err, rows) {
+                if (err) {
+                    rej(err);
+                } else {
+                    res(rows);
+                }
+            });
+        });
+    },
     "insert": function(tableName, parameters) {
         let setString = [];
         let valueString = [];
