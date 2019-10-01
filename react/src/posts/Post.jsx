@@ -24,6 +24,8 @@ class EmojiButton extends Error {
     }
 
     async setReaction(reaction) {
+        if (!Modal.checkLoggedIn()) return;
+        
         try {
             let add = !this.hasUserReacted();
             
