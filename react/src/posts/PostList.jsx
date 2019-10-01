@@ -18,15 +18,11 @@ class PostList extends Error {
     renderPosts() {
         let jsx = [];
 
-        console.log("renderpost");
         let numberOfPosts = this.state.posts.length;
         if (numberOfPosts > 50) numberOfPosts = 50;
         for (let i = 0; i < numberOfPosts; i++) {
-            console.log("renderpostx");
             jsx.push(<PostListItem onShowPost={this.props.onShowPost} postInfo={this.state.posts[i]} />)
         }
-        console.log("renderposty");
-
         return jsx;
     }
 
