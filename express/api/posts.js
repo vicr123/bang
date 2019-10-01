@@ -150,9 +150,10 @@ router.post("/create", async function(req, res) {
  *                  "reaction": Emoji of the reaction,
  *                  "count": Number of people to react with this reaction
  *              },
-                "myReactions": JSON Array (optional) [
-                    Emoji that the user has reacted with
-                ],
+ *              "myReactions": JSON Array (optional) [
+ *                  Emoji that the user has reacted with
+ *              ],
+ *              "canEdit": true if the user can delete the image
  *              "deleted": true if deleted, false if not
  *          }
  *
@@ -223,6 +224,11 @@ router.get("/:id", async function(req, res) {
             }
         }
         
+        let canEdit = false;
+        if (user !== null) {
+            canEdit = await canPatch(req.params.id, user.id);
+        }
+        
         res.status(200).send({
             "user": post.userId,
             "image": image,
@@ -231,6 +237,7 @@ router.get("/:id", async function(req, res) {
             "parent": parentReply,
             "reactions": reactionsReply,
             "myReactions": myReactionsReply,
+            "canEdit": canEdit,
             "deleted": deleted
         });
     } catch (err) {
