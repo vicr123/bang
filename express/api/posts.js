@@ -8,6 +8,19 @@ const resources = require('./helpers/resources');
 let router = express.Router();
 module.exports = router;
 
+async function canPatch(postId, userId) {
+    let posts = await db.select("Posts", ["*"], "id = ?", postId);
+    if (posts.length == 0) return false;
+    
+    let reactions = await db.select("Reactions", ["*"], "postId = ?", posts[0].id);
+    if (reactions.length > 0) return false;
+    
+    let comments = await db.select("Comments", ["id"], "replyTo = ?", [posts[0].id]);
+    if (comments.length > 0) return false;
+
+    return true;
+}
+
 async function createPost(req, res, postId = null) {
     if (!req.body.image || !req.body.mime) {
         res.status(400).send({
@@ -307,6 +320,73 @@ router.delete("/:id", async function(req, res) {
         }
     }
 });
+
+/**
+ * PATCH /posts/:id
+ * Edit a post
+ * Requires authentication
+ *
+ * Returns: 204 (No Content): Success
+ *
+ * Returns: 401 (Unauthorized): Either the user is not the poster, or an invalid token was provided, or patching is unavailable.
+ *
+ * Returns: 404 (Not Found): Post not found
+ */
+ router.patch("/:id", async function(req, res) {
+    if (!req.body.image || !req.body.mime) {
+        res.status(400).send({
+            "error": "Missing fields"
+        });
+    } else {
+        let t = db.transaction();
+        try {
+            let userRows = await tokens.getUser(req);
+            
+            let posts = await db.select("Posts", ["userId", "deleted"], "id = ?", [req.params.id]);
+            if (posts.length == 0) {
+                 res.status(404).send();
+                 t.discard();
+                 return;
+            }
+            
+            if (posts[0].deleted != 0) {
+                res.status(404).send();
+                t.discard();
+                return;
+            }
+            
+            if (!(await canPatch(req.params.id, userRows[0].id))) {
+                t.discard();
+                res.status(401).send();
+                return;
+            }
+            
+            //Put the resource into the filesystem
+            let resource = await resources.putResource(Buffer.from(req.body.image, 'base64'), req.body.mime);
+            
+            //Edit the post in the database
+            await db.update("posts", {
+                image: resource.id
+            }, "id = ?", [req.params.id]);
+            
+            t.commit();
+            res.status(204).send();
+        } catch (e) {
+            t.discard();
+            if (e.message == "Invalid Token") {
+                //Invalid token or no one logged in
+                res.status(401).send();
+            } else if (e.message == "Mimetype not resolvable") {
+                res.status(400).send({
+                    "error": "Invalid Mimetype"
+                });
+            } else {
+                console.log(e);
+                res.status(500).send();
+            }
+        }
+    }
+ });
 
 /**
  * POST /posts/:id/reactions

@@ -94,7 +94,8 @@ router.get("/whoami", async function(req, res) {
         let userRows = await tokens.getUser(req);
         
         res.status(200).send({
-            "username": userRows[0].username
+            "username": userRows[0].username,
+            "id": userRows[0].id
         });
     } catch (e) {
         //Invalid token or no one logged in
