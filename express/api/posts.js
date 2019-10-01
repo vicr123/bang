@@ -130,9 +130,10 @@ router.post("/create", async function(req, res) {
  *              "user": ID of the user associated with this post
  *              "image": URL to image located on the server, or null if the post has been deleted
  *              "id": ID of this post,
- *              "comments": JSON Array [
- *                  Post IDs of each reply to this post
- *              ],
+ *              "comments": JSON Array [ JSON Object {
+ *                  "image": Image URL for this comment
+ *                  "id": Post ID for this comment
+ *              }],
  *              "parent": Post ID of the parent for this post, or null if this is a top level post,
  *              "reactions": JSON Array [
  *                  JSON Object {
@@ -170,7 +171,19 @@ router.post("/create", async function(req, res) {
          let comments = await db.select("Comments", ["id"], "replyTo = ?", [req.params.id]);
          let commentsReply = [];
          for (let comment of comments) {
-             commentsReply.push(comment.id);
+             let commentPosts = await db.select("Posts", ["image", "deleted"], "id = ?", [comment.id]);
+             if (commentPosts.length == 0) {
+                 //Ignore
+             } else {
+                 let resource = await resources.getResource(commentPosts[0].image);
+                 
+                 let commentReply = {
+                     id: comment.id,
+                     image: commentPosts[0].deleted == 0 ? `${settings.get('resourcesPublicDir')}/${resource}` : null
+                 };
+                 
+                 commentsReply.push(commentReply);
+             }
          }
          
          let parent = await db.select("Comments", ["replyTo"], "Comments.id = ?", [req.params.id])
@@ -199,6 +212,8 @@ router.post("/create", async function(req, res) {
          res.status(500).send();
      }
  });
+ 
+ 
  
 /**
  * POST /posts/:id

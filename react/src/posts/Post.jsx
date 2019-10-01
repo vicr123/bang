@@ -10,18 +10,22 @@ class Post extends Error {
         this.state = {
             metadata: {
                 image: ""
-            }
+            },
+            currentPostId: -1
         };
     }
 
     componentDidMount() {
-        this.componentDidUpdate({});;
+        this.componentDidUpdate({}, {});;
     }
 
-    componentDidUpdate(oldProps) {
+    componentDidUpdate(oldProps, oldState) {
         if (this.props.postId !== -1 && this.props.postId != oldProps.postId) {
-            console.log("get");
-            Fetch.getPost(this.props.postId).then((metadata) => {
+            this.setState({
+                currentPostId: this.props.postId
+            });
+        } else if (this.state.currentPostId !== -1 && oldState.currentPostId !== this.state.currentPostId) {
+            Fetch.getPost(this.state.currentPostId).then((metadata) => {
                 console.log("set");
                 this.setState({
                     metadata: metadata
@@ -55,7 +59,7 @@ class Post extends Error {
 			let mimetype = result.substr(5, result.indexOf(';') - 5);
 			result = result.substr(result.indexOf(',') + 1);
 
-			let response = await Fetch.post(`/posts/${this.props.postId}`, {
+			let response = await Fetch.post(`/posts/${this.state.currentPostId}`, {
 				"image": result,
 				"mime": mimetype
 			});
@@ -66,13 +70,43 @@ class Post extends Error {
 		})
 		reader.readAsDataURL(file);
 
-	}
+    }
+    
+    renderReplies() {
+        if (!this.state.metadata.comments) return [];
+
+        let replyDivs = [];
+        for (let comment of this.state.metadata.comments) {
+            let changeToPost = () => {
+                console.log("Change post to " + comment.id);
+                this.setState({
+                    currentPostId: comment.id
+                });
+            };
+            replyDivs.push(<img onClick={changeToPost} src={comment.image} className="postImage"></img>);
+        }
+
+        return replyDivs;
+    }
+
+    renderBackButton() {
+        if (this.state.metadata.parent === null) {
+            return [];
+        } else {
+            let changeToPost = () => {
+                this.setState({
+                    currentPostId: this.state.metadata.parent
+                });
+            };
+            return <button onClick={changeToPost}>Back</button>
+        }
+    }
 
     renderContent() {
         if (this.props.postId == -1) {
             return <div></div>
         } else {
-            return <div><img src={this.state.metadata.image} className="postImage"/>
+            return <div>{this.renderBackButton()}<img src={this.state.metadata.image} className="postImage"/>
                 <div className="HorizontalBox EmojiBox padded">
                     <button>👍</button>
                     <button>👎</button>
@@ -85,6 +119,9 @@ class Post extends Error {
                     <button onClick={this.showFlagDialog.bind(this)}>🚩</button>
                     <button onClick={this.uploadPhotoButtonHandler.bind(this)}>Reply</button>
                     <input type="file" style={{"display": "none"}} id="replyFileSelect" onChange={this.performUpload.bind(this)} />
+                </div>
+                <div>
+                    {this.renderReplies()}
                 </div>
             </div>
         }
