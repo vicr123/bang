@@ -24,6 +24,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Account from './account/Account';
 
 let modalShown = false;
 
@@ -98,6 +99,29 @@ class Modal extends React.Component {
     static unmount() {
         ReactDOM.render(null, document.getElementById('modalContainer'));
         modalShown = false;
+    }
+
+    static checkLoggedIn() {
+        let token = localStorage.getItem("loginToken");
+		if (token == null) {
+            //Ask the user to log in
+
+            let onLoginChanged = () => {
+                Modal.unmount();
+                window.bang.appLoginChangedHandler()();
+            };
+
+            Modal.mount(<Modal cancelable={true}>
+                <Account
+                    currentLogin={window.bang.appState().login}
+                    onLoginChanged={onLoginChanged}
+                />
+            </Modal>)
+            return false;
+        } else {
+            //We're logged in
+            return true;
+        }
     }
 }
 

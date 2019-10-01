@@ -23,6 +23,10 @@ class App extends Error {
 	constructor(props) {
 		super(props);
 
+		window.bang = {};
+		window.bang.appState = () => this.state;
+		window.bang.appLoginChangedHandler = () => this.loginChanged.bind(this);
+
 		this.state = {
 			currentView: this.stateForCurrentUrl(),
 			login: {}
