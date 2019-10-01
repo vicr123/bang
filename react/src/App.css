@@ -260,6 +260,7 @@ div.modalBox {
 	padding-left: 9px;
     height: 100%;
     background-color: var(--bg-color);
+    max-width: calc(100vw - 100px);
 }
 
 html div.modalBox {
@@ -267,8 +268,8 @@ html div.modalBox {
 }
 
 .postListItems {
-	height: 80px;
-    min-height: 80px;
+	height: 20vh;
+    min-height: 20vh;
 }
 
 .returnToPostListButton {
@@ -276,7 +277,7 @@ html div.modalBox {
 }
 
 /* Media queries for smaller windows */
-@media (max-width: 600px) {
+@media (max-width: 900px) {
     div.sidebar {
         width: 32px;
         min-width: 32px;
