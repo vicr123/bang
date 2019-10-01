@@ -1,6 +1,7 @@
 import Loader from './Loader';
 
 let posts = {};
+let user = {};
 
 class Fetch {
     static headers() {
@@ -36,6 +37,22 @@ class Fetch {
         });
         if (showLoader) Loader.unmount();
         
+        if (result.status == 204) return {};
+
+        return await result.json();
+    }
+    
+    static async patch(url, data, showLoader = true) {
+        if (showLoader) Loader.mount();
+        let result = await fetch("/api" + url, {
+            method: "PATCH",
+            headers: Fetch.headers(),
+            body: JSON.stringify(data)
+        });
+        if (showLoader) Loader.unmount();
+        
+        if (result.status == 204) return {};
+
         return await result.json();
     }
     
@@ -43,11 +60,22 @@ class Fetch {
         return Fetch.performRequest("GET", url, showLoader);
     }
 
+    static delete(url, showLoader = true) {
+        return Fetch.performRequest("DELETE", url, showLoader);
+    }
+
     static async getPost(id) {
         if (!posts[id]) {
             posts[id] = await Fetch.get(`/posts/${id}`);
         }
         return posts[id];
+    }
+
+    static async getUser(id) {
+        if (!user[id]) {
+            user[id] = await Fetch.get(`/users/${id}`);
+        }
+        return user[id];
     }
 }
 

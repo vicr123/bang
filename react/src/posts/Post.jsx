@@ -25,9 +25,10 @@ class Post extends Error {
                 currentPostId: this.props.postId
             });
         } else if (this.state.currentPostId !== -1 && oldState.currentPostId !== this.state.currentPostId) {
-            Fetch.getPost(this.state.currentPostId).then((metadata) => {
+            Fetch.getPost(this.state.currentPostId).then(async (metadata) => {
                 this.setState({
-                    metadata: metadata
+                    metadata: metadata,
+                    userMetadata: await Fetch.getUser(metadata.user)
                 });
             });
         }
@@ -39,7 +40,6 @@ class Post extends Error {
                 <span>What's wrong with this post?</span>
                 <button>Contains Text</button>
                 <button>Contains Unfortunate Content</button>
-                <hr />
                 <span>This report will be sent to the administrators of this board; not the author of this post.</span>
             </div>
         </Modal>)
@@ -139,6 +139,7 @@ class Post extends Error {
                     <button onClick={() => this.setReaction("😠")}>😠 {this.getReaction("😠")}</button>
                     <button onClick={() => this.setReaction("😂")}>😂 {this.getReaction("😂")}</button>
                     <div style={{'flex-grow': '1'}} />
+                    <p>Posted by: {this.state.userMetadata ? this.state.userMetadata.username : "A user"}</p>
                     <button onClick={this.showFlagDialog.bind(this)}>🚩</button>
                     <button onClick={this.uploadPhotoButtonHandler.bind(this)}>Reply</button>
                     <input type="file" style={{"display": "none"}} id="replyFileSelect" onChange={this.performUpload.bind(this)} />
