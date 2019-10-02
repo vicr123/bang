@@ -77,6 +77,14 @@ class Modal extends React.Component {
         }
     }
     
+    renderCloseButton() {
+        if (this.props.cancelable) {
+            return <button className="closeButton">×</button>
+        } else {
+            return null;
+        }
+    }
+    
     render() {
         let backgroundClickHandler = () => {
             if (this.props.cancelable) Modal.unmount();
@@ -87,13 +95,14 @@ class Modal extends React.Component {
         };
         
         return <div className="modalBackground" onClick={backgroundClickHandler}>
-                <div className="modalBox" style={{"width": this.props.width}} onClick={dummyHandler} >
-                    {this.renderTitle()}
-                    <div>
-                        {this.props.children}
-                    </div>
+            {this.renderCloseButton()}
+            <div className="modalBox" style={{"width": this.props.width}} onClick={dummyHandler} >
+                {this.renderTitle()}
+                <div>
+                    {this.props.children}
                 </div>
             </div>
+        </div>
     }
     
 
@@ -116,7 +125,7 @@ class Modal extends React.Component {
                 Modal.unmount();
                 window.bang.appLoginChangedHandler()();
             };
-
+            
             Modal.mount(<Modal cancelable={true}>
                 <Account
                     currentLogin={window.bang.appState().login}

@@ -69,14 +69,14 @@ class Fetch {
 
     static async getPost(id) {
         if (!posts[id]) {
-            posts[id] = await Fetch.get(`/posts/${id}`);
+            posts[id] = await Fetch.get(`/posts/${id}`, false);
         }
         return posts[id];
     }
 
     static async getUser(id) {
         if (!user[id]) {
-            user[id] = await Fetch.get(`/users/${id}`);
+            user[id] = await Fetch.get(`/users/${id}`, false);
         }
         return user[id];
     }
