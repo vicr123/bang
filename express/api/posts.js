@@ -82,7 +82,7 @@ async function createPost(req, res, postId = null) {
  *
  */
  router.get("/trending", async function(req, res) {
-     let rows = await db.select("Posts, Reactions", ["id", "COUNT(*) AS count"], "Posts.id = Reactions.postId", [], "GROUP BY Posts.id ORDER BY count DESC");
+     let rows = await db.select("Posts, Reactions", ["id", "COUNT(*) AS count"], "Posts.id = Reactions.postId AND id NOT IN (SELECT DISTINCT id FROM comments)", [], "GROUP BY Posts.id ORDER BY count DESC");
      
      let response = [];
      for (let row of rows) {
