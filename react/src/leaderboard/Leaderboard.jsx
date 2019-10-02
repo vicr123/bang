@@ -1,6 +1,7 @@
 import React from "react";
 import Error from "../Error";
 import Fetch from '../fetch';
+import AccountLB from './AccountLB';
 
 // Displays the top accounts on the site
 class Leaderboard extends Error {
@@ -25,20 +26,20 @@ class Leaderboard extends Error {
 				<h1>
 					Leaderboard
 				</h1>
-				<div>
+				<div className="LBBoxContainer">
 					{this.mapLeaders()}
 				</div>
 			</div>
 		);
 	}
 
+	// Returns top users based on reactions
 	async getLeaders(){
 		let result = await Fetch.get("/leaderboard");
-		console.log(result);
-		console.log(typeof result);
 		return result;
 	}
 
+	// map each id to an AccountLB for render
 	mapLeaders(){
 		return this.state.leaders.map(person => {
 			return <AccountLB person = {person}/>

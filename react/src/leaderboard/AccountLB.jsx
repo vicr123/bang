@@ -1,33 +1,48 @@
 import React from "react";
 import Error from "../Error";
+import Fetch from "../fetch";
 
 // rendered based on user profile on the leaderboard
 class AccountLB extends Error {
 	constructor(props) {
 		super(props);
-
 		this.state = {
-			userId: -1,
-			reacts: 0
+			username: null
 		};
 
+		this.getAccountDetails().then((user) => {
+			this.setState({
+				username: user
+			});
+		})
 
 	}
 	render() {
 		console.log(this.props.person);
 
-		if(this.state.userId !== -1)
-			this.accountRender();
+		if(this.props.person !== -1)
+			return this.accountRender();
 		else 
-			this.defaultRender();
+			return this.defaultRender();
 	}
 
 	accountRender(){
-		return <React.Fragment>An Account should be here {this.props.person}</React.Fragment>;
+		return (
+			<div className="LBBox">USERID:  {this.props.person}
+				USERNAME: {this.state.username}
+			</div>
+		);
 	}
 
 	defaultRender(){
 		return <React.Fragment>No Account to be found :'(</React.Fragment>;
+	}
+
+	async getAccountDetails(){
+		let userName = await Fetch.getUser(this.props.person);
+		console.log(userName);
+		console.log(typeof userName);
+		return userName[0]; 
 	}
 
 }
