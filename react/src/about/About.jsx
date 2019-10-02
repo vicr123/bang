@@ -31,7 +31,7 @@ class About extends Error {
         </div>
         <div className="ContactUs padded">
           <h1>Contact Us</h1>
-          <button>Email</button>
+          <button onClick={() => window.location = "mailto:hello@vicr123.com"}>Email</button>
         </div>
       </div>
     );
