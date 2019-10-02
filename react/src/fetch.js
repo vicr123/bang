@@ -24,11 +24,9 @@ class Fetch {
             headers: Fetch.headers()
         });
         if (showLoader) Loader.unmount();
-        
         if (result.status == 204) return {};
 
         if (result.status < 200 || result.status > 299) throw result;
-        
         return await result.json();
     }
     
@@ -58,7 +56,6 @@ class Fetch {
         
         if (result.status == 204) return {};
 
-        if (result.status < 200 || result.status > 299) throw result;
         return await result.json();
     }
     
@@ -84,8 +81,12 @@ class Fetch {
         return user[id];
     }
     
-    static invalidatePost(id) {
-        if (posts.hasOwnProperty(id)) delete posts[id];
+    static invalidatePost(id = -1) {
+        if (id === -1) {
+            posts = {};
+        } else if (posts.hasOwnProperty(id)) {
+            delete posts[id];
+        }
     }
     
     static invalidateUser(id) {

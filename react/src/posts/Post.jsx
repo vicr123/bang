@@ -73,6 +73,21 @@ class Post extends Error {
             currentPostId: -1
         };
     }
+    
+    invalidate() {
+//         Fetch.invalidatePost(this.state.currentPostId);
+        //Invalidate all posts
+        Fetch.invalidatePost();
+        this.getPost();
+    }
+    
+    async getPost() {
+        let metadata = await Fetch.getPost(this.state.currentPostId)
+        this.setState({
+            metadata: metadata,
+            userMetadata: await Fetch.getUser(metadata.user)
+        });
+    }
 
     componentDidMount() {
         this.componentDidUpdate({}, {});;
@@ -84,12 +99,7 @@ class Post extends Error {
                 currentPostId: this.props.postId
             });
         } else if (this.state.currentPostId !== -1 && oldState.currentPostId !== this.state.currentPostId) {
-            Fetch.getPost(this.state.currentPostId).then(async (metadata) => {
-                this.setState({
-                    metadata: metadata,
-                    userMetadata: await Fetch.getUser(metadata.user)
-                });
-            });
+            this.getPost();
         }
     }
 
@@ -151,11 +161,8 @@ class Post extends Error {
 				"image": result,
 				"mime": mimetype
 			});
-            if (isEdit) {
-                alert("Edited. Post needs to be reloaded!");
-            } else {
-                alert("Replied. Post needs to be reloaded!");
-            }
+
+            this.invalidate();
 		})
 		reader.readAsDataURL(file);
     }
