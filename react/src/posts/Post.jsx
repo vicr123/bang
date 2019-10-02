@@ -25,7 +25,7 @@ class EmojiButton extends Error {
 
     async setReaction(reaction) {
         if (!Modal.checkLoggedIn()) return;
-        
+
         try {
             let add = !this.hasUserReacted();
             
@@ -94,6 +94,7 @@ class Post extends Error {
     }
 
     showFlagDialog() {
+        if (!Modal.checkLoggedIn()) return;    
         Modal.mount(<Modal title="Flag" cancelable={true} style={{width: '400px'}}>
             <div className="VerticalBox">
                 <span>What's wrong with this post?</span>
@@ -105,29 +106,43 @@ class Post extends Error {
     }
 
     uploadPhotoButtonHandler() {
+        if (!Modal.checkLoggedIn()) return;
 		document.getElementById("replyFileSelect").click();
-	}
+    }
     
-    performUpload(event) {
-		let box = document.getElementById("replyFileSelect");
+    async trashButtonHandler() {
+        if (!Modal.checkLoggedIn()) return;
+        await Fetch.delete(`/posts/${this.state.currentPostId}`);
+        alert("Deleted. Reload to see changes.");
+    }
+
+    editButtonHandler() {
+        if (!Modal.checkLoggedIn()) return;
+        document.getElementById("editFileSelect").click();
+    }
+
+    postImage(isEdit) {
+		let box = isEdit ? document.getElementById("editFileSelect") : document.getElementById("replyFileSelect");
 		let file = box.files[0];
 		let reader = new FileReader();
 		reader.addEventListener("load", async () => {
 			let result = reader.result;
 			let mimetype = result.substr(5, result.indexOf(';') - 5);
-			result = result.substr(result.indexOf(',') + 1);
+            result = result.substr(result.indexOf(',') + 1);
+            
+            let functionToCall = isEdit ? Fetch.patch : Fetch.post;
 
-			let response = await Fetch.post(`/posts/${this.state.currentPostId}`, {
+			let response = await functionToCall(`/posts/${this.state.currentPostId}`, {
 				"image": result,
 				"mime": mimetype
 			});
-			// this.setState({
-			// 	newPostId: response.id
-            // })
-            alert("Replied. Post needs to be reloaded!");
+            if (isEdit) {
+                alert("Edited. Post needs to be reloaded!");
+            } else {
+                alert("Replied. Post needs to be reloaded!");
+            }
 		})
 		reader.readAsDataURL(file);
-
     }
     
     renderReplies() {
@@ -159,6 +174,15 @@ class Post extends Error {
         }
         return buttons;
     }
+
+    renderTrashButton() {
+        return <button onClick={this.trashButtonHandler.bind(this)}>🗑</button>
+    }
+
+    renderEditButton() {
+        if (this.state.metadata.canEdit) return <button onClick={this.editButtonHandler.bind(this)}>✏</button>
+        return [];
+    }
     
     className() {
         let classes = [];
@@ -167,11 +191,21 @@ class Post extends Error {
         return classes.join(" ");
     }
 
+    renderImage() {
+        if (this.state.metadata.deleted) {
+            return <div>Image Deleted.</div>
+        } else {
+            return <img src={this.state.metadata.image} className="postImage"/>
+        }
+    }
+
     renderContent() {
         if (this.props.postId == -1) {
             return <div></div>
         } else {
-            return <div>{this.renderBackButton()}<img src={this.state.metadata.image} className="postImage"/>
+            return <div>
+                <div className="HorizontalBox">{this.renderBackButton()}</div>
+                {this.renderImage()}
                 <div className="HorizontalBox EmojiBox padded">
                     <EmojiButton emoji="👍" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
                     <EmojiButton emoji="👎" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
@@ -181,10 +215,13 @@ class Post extends Error {
                     <EmojiButton emoji="😠" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
                     <EmojiButton emoji="😂" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
                     <div style={{'flex-grow': '1'}} />
-                    <p>Posted by: {this.state.userMetadata ? this.state.userMetadata.username : "A user"}</p>
+                    <p>Posted by: {this.state.userMetadata ? this.state.userMetadata.username : "Unidentified user"}</p>
                     <button onClick={this.showFlagDialog.bind(this)}>🚩</button>
-                    <button onClick={this.uploadPhotoButtonHandler.bind(this)}>Reply</button>
-                    <input type="file" style={{"display": "none"}} id="replyFileSelect" onChange={this.performUpload.bind(this)} />
+                    {this.renderEditButton()}
+                    {this.renderTrashButton()}
+                    <button onClick={this.uploadPhotoButtonHandler.bind(this)}>📨</button>
+                    <input type="file" style={{"display": "none"}} id="replyFileSelect" onChange={() => {this.postImage(false)}} />
+                    <input type="file" style={{"display": "none"}} id="editFileSelect" onChange={() => {this.postImage(true)}} />
                 </div>
                 <div>
                     {this.renderReplies()}
