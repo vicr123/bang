@@ -108,28 +108,43 @@ class Post extends Error {
     uploadPhotoButtonHandler() {
         if (!Modal.checkLoggedIn()) return;
 		document.getElementById("replyFileSelect").click();
-	}
+    }
     
-    performUpload(event) {
-		let box = document.getElementById("replyFileSelect");
+    trashButtonHandler() {
+        if (!Modal.checkLoggedIn()) return;
+
+    }
+
+    editButtonHandler() {
+        if (!Modal.checkLoggedIn()) return;
+        document.getElementById("editFileSelect").click();
+    }
+
+    postImage(isEdit) {
+		let box = isEdit ? document.getElementById("editFileSelect") : document.getElementById("replyFileSelect");
 		let file = box.files[0];
 		let reader = new FileReader();
 		reader.addEventListener("load", async () => {
 			let result = reader.result;
 			let mimetype = result.substr(5, result.indexOf(';') - 5);
-			result = result.substr(result.indexOf(',') + 1);
+            result = result.substr(result.indexOf(',') + 1);
+            
+            let functionToCall = isEdit ? Fetch.patch : Fetch.post;
 
-			let response = await Fetch.post(`/posts/${this.state.currentPostId}`, {
+			let response = await functionToCall(`/posts/${this.state.currentPostId}`, {
 				"image": result,
 				"mime": mimetype
 			});
 			// this.setState({
 			// 	newPostId: response.id
             // })
-            alert("Replied. Post needs to be reloaded!");
+            if (isEdit) {
+                alert("Edited. Post needs to be reloaded!");
+            } else {
+                alert("Replied. Post needs to be reloaded!");
+            }
 		})
 		reader.readAsDataURL(file);
-
     }
     
     renderReplies() {
@@ -163,11 +178,11 @@ class Post extends Error {
     }
 
     renderTrashButton() {
-        return <button onClick={this.uploadPhotoButtonHandler.bind(this)}>🗑</button>
+        return <button onClick={this.trashButtonHandler.bind(this)}>🗑</button>
     }
 
     renderEditButton() {
-        if (this.state.metadata.canEdit) return <button onClick={this.uploadPhotoButtonHandler.bind(this)}>✏</button>
+        if (this.state.metadata.canEdit) return <button onClick={this.editButtonHandler.bind(this)}>✏</button>
         return [];
     }
     
@@ -199,7 +214,8 @@ class Post extends Error {
                     {this.renderEditButton()}
                     {this.renderTrashButton()}
                     <button onClick={this.uploadPhotoButtonHandler.bind(this)}>📨</button>
-                    <input type="file" style={{"display": "none"}} id="replyFileSelect" onChange={this.performUpload.bind(this)} />
+                    <input type="file" style={{"display": "none"}} id="replyFileSelect" onChange={() => {this.postImage(false)}} />
+                    <input type="file" style={{"display": "none"}} id="editFileSelect" onChange={() => {this.postImage(true)}} />
                 </div>
                 <div>
                     {this.renderReplies()}
