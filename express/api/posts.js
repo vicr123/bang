@@ -82,7 +82,7 @@ async function createPost(req, res, postId = null) {
  *
  */
  router.get("/trending", async function(req, res) {
-     let rows = await db.select("Posts", ["id"], "1=1", [], "ORDER BY id DESC");
+     let rows = await db.select("Posts, Reactions", ["id", "COUNT(*) AS count"], "Posts.id = Reactions.postId", [], "GROUP BY Posts.id ORDER BY count DESC");
      
      let response = [];
      for (let row of rows) {
@@ -102,7 +102,7 @@ async function createPost(req, res, postId = null) {
  */
  router.get("/new", async function(req, res) {
      //let rows = await db.select("Posts", ["id"], "1=1", [], "ORDER BY id DESC");
-     let rows = await db.allQuery("SELECT id FROM posts WHERE id NOT IN (SELECT DISTINCT id FROM comments)");
+     let rows = await db.allQuery("SELECT id FROM posts WHERE id NOT IN (SELECT DISTINCT id FROM comments) ORDER BY id DESC");
      let response = [];
      for (let row of rows) {
          response.push(row.id);
