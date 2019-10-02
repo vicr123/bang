@@ -110,9 +110,10 @@ class Post extends Error {
 		document.getElementById("replyFileSelect").click();
     }
     
-    trashButtonHandler() {
+    async trashButtonHandler() {
         if (!Modal.checkLoggedIn()) return;
-
+        await Fetch.delete(`/posts/${this.state.currentPostId}`);
+        alert("Deleted. Reload to see changes.");
     }
 
     editButtonHandler() {
@@ -135,9 +136,6 @@ class Post extends Error {
 				"image": result,
 				"mime": mimetype
 			});
-			// this.setState({
-			// 	newPostId: response.id
-            // })
             if (isEdit) {
                 alert("Edited. Post needs to be reloaded!");
             } else {
@@ -193,13 +191,21 @@ class Post extends Error {
         return classes.join(" ");
     }
 
+    renderImage() {
+        if (this.state.metadata.deleted) {
+            return <div>Image Deleted.</div>
+        } else {
+            return <img src={this.state.metadata.image} className="postImage"/>
+        }
+    }
+
     renderContent() {
         if (this.props.postId == -1) {
             return <div></div>
         } else {
             return <div>
                 <div className="HorizontalBox">{this.renderBackButton()}</div>
-                <img src={this.state.metadata.image} className="postImage"/>
+                {this.renderImage()}
                 <div className="HorizontalBox EmojiBox padded">
                     <EmojiButton emoji="👍" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
                     <EmojiButton emoji="👎" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
