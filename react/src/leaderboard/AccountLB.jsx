@@ -38,11 +38,10 @@ class AccountLB extends Error {
 		return <React.Fragment>No Account to be found :'(</React.Fragment>;
 	}
 
+	// this works
 	async getAccountDetails(){
 		let userName = await Fetch.getUser(this.props.person);
-		console.log(userName);
-		console.log(typeof userName);
-		return userName[0]; 
+		return userName.username; 
 	}
 
 }
