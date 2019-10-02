@@ -137,15 +137,14 @@ class App extends Error {
 
 		return (
             <div className="appContainer">
-                <div id="loaderContainer">
-    		    </div>
-				<div id="modalContainer" />
 				<Sidebar
 					currentState={this.state.currentView}
 					onChangeView={changeView}
 					currentLogin={this.state.login}
 				/>
 				{this.currentMainView()}
+				<div id="modalContainer" />
+                <div id="loaderContainer" />
 			</div>
 		);
 	}

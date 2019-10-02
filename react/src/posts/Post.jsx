@@ -53,8 +53,10 @@ class EmojiButton extends Error {
     }
     
     className() {
-        if (this.hasUserReacted()) return "selected";
-        return "";
+        let classes = [];
+        classes.push("emojiButton");
+        if (this.hasUserReacted()) classes.push("selected");
+        return classes.join(" ");
     }
     
     render() {
@@ -212,12 +214,44 @@ class Post extends Error {
         if (!this.props.viewMobile) classes.push("mobileHide");
         return classes.join(" ");
     }
+    
+    renderSmallEmoji() {
+        if (!this.state.metadata.reactions) return null;
+        
+        let els = [];
+        for (let reaction in this.state.metadata.reactions) {
+            let count = this.state.metadata.reactions[reaction];
+            if (count > 0) els.push(<span>{reaction} {count}</span>);
+        }
+        
+        if (els.length > 0) {
+            return <div className="HorizontalBox SmallEmojiBox">
+                <div className="HorizontalBox SmallEmojiBoxInner">
+                    {els}
+                </div>
+            </div>
+        } else {
+            return null;
+        }
+    }
 
     renderImage() {
         if (this.state.metadata.deleted) {
             return <div>Image Deleted.</div>
         } else {
-            return <img src={this.state.metadata.image} className="postImage"/>
+            return <div className="postImageContainer">
+                {this.renderSmallEmoji()}
+                <div className="HorizontalBox EmojiBox">
+                    <EmojiButton emoji="👍" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="👎" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="🙂" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="💓" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="🙁" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="😠" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="😂" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                </div>
+                <img src={this.state.metadata.image} className="postImage"/>
+            </div>
         }
     }
 
@@ -228,14 +262,7 @@ class Post extends Error {
             return <div>
                 <div className="HorizontalBox">{this.renderBackButton()}</div>
                 {this.renderImage()}
-                <div className="HorizontalBox EmojiBox padded">
-                    <EmojiButton emoji="👍" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
-                    <EmojiButton emoji="👎" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
-                    <EmojiButton emoji="🙂" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
-                    <EmojiButton emoji="💓" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
-                    <EmojiButton emoji="🙁" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
-                    <EmojiButton emoji="😠" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
-                    <EmojiButton emoji="😂" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                <div className="HorizontalBox padded">
                     <div style={{'flex-grow': '1'}} />
                     <p>Posted by: {this.state.userMetadata ? this.state.userMetadata.username : "Unidentified user"}</p>
                     <button onClick={this.showFlagDialog.bind(this)}>🚩</button>

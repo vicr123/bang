@@ -172,6 +172,47 @@ div.loader {
 
 .EmojiBox {
 	flex-wrap: wrap;
+    height: 0px;
+    position: relative;
+    border: none;
+    
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.SmallEmojiBox {
+	flex-wrap: wrap;
+    height: 0px;
+    position: relative;
+    border: none;
+    
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+.SmallEmojiBoxInner {
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 25px;
+    border: none;
+    padding: 2px;
+    margin: 5px;
+    align-items: center;
+}
+
+.SmallEmojiBoxInner span {
+    margin: 3px;
+}
+
+div.postImageContainer:hover .EmojiBox {
+    opacity: 1;
+}
+
+div.postImageContainer:hover .SmallEmojiBox {
+    opacity: 0;
+}
+
+.emojiButton {
+    background-color: transparent;
 }
 
 .ContactUs button {
