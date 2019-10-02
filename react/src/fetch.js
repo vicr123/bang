@@ -78,6 +78,19 @@ class Fetch {
         }
         return user[id];
     }
+    
+    static invalidatePost(id) {
+        if (posts.hasOwnProperty(id)) delete posts[id];
+    }
+    
+    static invalidateUser(id) {
+        if (user.hasOwnProperty(id)) delete user[id];
+    }
+    
+    static invalidate() {
+        posts = {};
+        user = {};
+    }
 }
 
 export default Fetch;
