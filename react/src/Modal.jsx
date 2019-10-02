@@ -69,6 +69,14 @@ class Modal extends React.Component {
         return elements;
     }
     
+    renderTitle() {
+        if (this.props.title) {
+            return <h1>{this.props.title}</h1>
+        } else {
+            return null;
+        }
+    }
+    
     render() {
         let backgroundClickHandler = () => {
             if (this.props.cancelable) Modal.unmount();
@@ -80,7 +88,7 @@ class Modal extends React.Component {
         
         return <div className="modalBackground" onClick={backgroundClickHandler}>
                 <div className="modalBox" style={{"width": this.props.width}} onClick={dummyHandler} >
-                    <h1>{this.props.title}</h1>
+                    {this.renderTitle()}
                     <div>
                         {this.props.children}
                     </div>
@@ -88,8 +96,6 @@ class Modal extends React.Component {
             </div>
     }
     
-    // <Header title={this.props.title} leftElements={this.renderLeftElements()} rightElements={this.renderRightElements()}/>
-
 
     static mount(jsx) {
         ReactDOM.render(jsx, document.getElementById('modalContainer'));
@@ -115,6 +121,7 @@ class Modal extends React.Component {
                 <Account
                     currentLogin={window.bang.appState().login}
                     onLoginChanged={onLoginChanged}
+                    isInModal={true}
                 />
             </Modal>)
             return false;

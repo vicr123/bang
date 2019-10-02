@@ -27,7 +27,7 @@ class Account extends Error {
         this.props.onLoginChanged();
     }
     
-    render() {
+    renderMainSection() {
         if (this.props.currentLogin.username == null) {
             switch (this.state.currentPane) {
                 case "login":
@@ -37,6 +37,17 @@ class Account extends Error {
             }
         } else {
             return <ManageAccount onLoginChanged={this.onLoginChanged.bind(this)} currentLogin={this.props.currentLogin} />
+        }
+    }
+    
+    render() {
+        if (this.props.isInModal) {
+            return this.renderMainSection();
+        } else {
+            return <div class="AccountsContainer">
+                {this.renderMainSection()}
+                <div class="AccountsContainerFiller" />
+            </div>
         }
     }
 }

@@ -6,6 +6,17 @@
 		url("https://vicr123.com/typeface/Contemporary-Regular.ttf");
 }
 
+@import url('https://fonts.googleapis.com/css?family=Mansalva&display=swap');
+
+@keyframes blur-in {
+    from {
+        backdrop-filter: blur(0px);
+    }
+    to {
+        backdrop-filter: blur(20px);
+    }
+}
+
 :root {
 	--bg-color: rgb(40, 40, 40);
 	--bg-color-faded: rgba(40, 40, 40, 0.5);
@@ -28,6 +39,17 @@ body {
 	color: var(--fg-color);
 
 	font-family: Contemporary;
+}
+
+h1 {
+    margin-top: 0px;
+    margin-bottom: 40px;
+    font-weight: normal;
+    background: var(--fg-color);
+    color: var(--bg-color);
+    font-family: 'Mansalva';
+    padding: 3px;
+    transform: rotate(2deg) translateY(20px);
 }
 
 .padded {
@@ -160,19 +182,35 @@ div.loader {
 /* BELOW IS COPIED FROM Login.css. THEY LIVE HERE NOW */
 
 div.logIn {
+    padding: 9px;
 	display: flex;
 	flex-direction: column;
-	padding-left: 9px;
 	align-items: stretch;
 
 	width: 40%;
 	min-width: 300px;
 }
 
+div.modalBox div.logIn {
+    width: 100%;
+    padding: 0px;
+}
+
+div.AccountsContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+div.AccountsContainerFiller {
+    background: url(/background/login.jpg) center center/cover;
+    flex-grow: 1;
+}
+
 input[type="text"],
 input[type="password"] {
 	padding: 12px 20px;
-	margin: 8px;
+	margin: 3px;
 	display: inline-block;
 }
 
@@ -180,7 +218,7 @@ button {
 	color: white;
 	background-color: rgb(60, 60, 60);
 	padding: 12px 20px;
-	margin: 8px;
+	margin: 3px;
 	border-color: rgb(0, 150, 255);
 	border-style: solid;
 	border-width: 1px;
@@ -242,10 +280,16 @@ div.modalBackground {
     justify-content: flex-end;
     
     background-color: var(--bg-color-faded);
+    backdrop-filter: blur(20px);
+    animation: 0.5s blur-in;
+}
+
+div.loader {
+    backdrop-filter: blur(20px);
 }
 
 div.modalBox {
-	padding-left: 9px;
+	padding: 9px;
     height: 100%;
     background-color: var(--bg-color);
     max-width: calc(100vw - 100px);
