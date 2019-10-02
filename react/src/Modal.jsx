@@ -126,7 +126,7 @@ class Modal extends React.Component {
                 window.bang.appLoginChangedHandler()();
             };
             
-            Modal.mount(<Modal cancelable={true}>
+            Modal.mount(<Modal cancelable={true} width={500}>
                 <Account
                     currentLogin={window.bang.appState().login}
                     onLoginChanged={onLoginChanged}

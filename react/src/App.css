@@ -19,7 +19,7 @@
 
 :root {
 	--bg-color: rgb(40, 40, 40);
-	--bg-color-faded: rgba(40, 40, 40, 0.5);
+	--bg-color-faded: rgba(40, 40, 40, 0.75);
 	--fg-color: white;
 
 	--sidebar-bg-color: rgb(60, 60, 60);
@@ -187,7 +187,7 @@ div.logIn {
 	flex-direction: column;
 	align-items: stretch;
 
-	width: 40%;
+	width: 500px;
 	min-width: 300px;
 }
 
@@ -321,6 +321,10 @@ html div.modalBox {
 
 .returnToPostListButton {
     display: none;
+}
+
+.error {
+    color: rgb(255, 50, 50);
 }
 
 /* Media queries for smaller windows */
