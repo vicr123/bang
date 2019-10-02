@@ -292,6 +292,15 @@ html div.modalBox {
 
 .LBBox:first-child {
 	margin-top: 0px;
+	border: 2px solid gold; 
+}
+
+.LBBox:nth-child(2) {
+	border: 2px solid silver;
+}
+
+.LBBox:nth-child(3) {
+	border: 2px solid #ff8800;
 }
 
 .LBBox:last-child {
@@ -301,7 +310,7 @@ html div.modalBox {
 .LBBox {
 	width: 100%;
 	background-color: grey;
-	border-radius: 2px;
+	border-radius: 3px;
 	padding: 9px;
 
 	margin-top: 3px;

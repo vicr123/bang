@@ -25,20 +25,19 @@ class AccountLB extends Error {
 		else 
 			return this.defaultRender();
 	}
-
+	// Render the account with details
 	accountRender(){
 		return (
-			<div className="LBBox">USERID:  {this.props.person}
-				USERNAME: {this.state.username}
+			<div className="LBBox">USERID:  {this.props.person} USERNAME: {this.state.username}
 			</div>
 		);
 	}
-
+	// Render based on userID error
 	defaultRender(){
 		return <React.Fragment>No Account to be found :'(</React.Fragment>;
 	}
 
-	// this works
+	// Retrieves the username based on the user id 
 	async getAccountDetails(){
 		let userName = await Fetch.getUser(this.props.person);
 		return userName.username; 
