@@ -83,22 +83,6 @@ div.postbar div.listItem.selected {
 	background-color: var(--sidebar-hv-color);
 }
 
-/* THE BELOW STYLING IS PLACEHOLDER */
-
-.userPlaceholder {
-	text-align: center;
-	margin: 25px 50px;
-	color: black;
-	background: white;
-	border-radius: 15px 50px 30px;
-	padding: 50px;
-}
-
-.userPlaceholder:hover {
-	color: red;
-	transform: scale(1.05);
-}
-
 .logo {
 	width: 75%;
 	display: block;
@@ -303,3 +287,33 @@ html div.modalBox {
         display: block;
     }
 }
+
+/* Leaderboard Styling */
+
+.LBBox:first-child {
+	margin-top: 0px;
+	border: 2px solid gold; 
+}
+
+.LBBox:nth-child(2) {
+	border: 2px solid silver;
+}
+
+.LBBox:nth-child(3) {
+	border: 2px solid #ff8800;
+}
+
+.LBBox:last-child {
+	margin-bottom: 0px;
+}
+
+.LBBox {
+	width: 100%;
+	background-color: grey;
+	border-radius: 3px;
+	padding: 9px;
+
+	margin-top: 3px;
+	margin-bottom: 3px;
+}
+

@@ -112,8 +112,23 @@ class Post extends Error {
     
     async trashButtonHandler() {
         if (!Modal.checkLoggedIn()) return;
-        await Fetch.delete(`/posts/${this.state.currentPostId}`);
-        alert("Deleted. Reload to see changes.");
+
+        let yesButtonHandler = async () => {
+            await Fetch.delete(`/posts/${this.state.currentPostId}`);
+            Modal.unmount();
+        }
+
+        Modal.mount(<Modal title="Delete" cancelable={true} style={{width: '400px'}}>
+            <div className="VerticalBox">
+                <span>You are about to delete this post.</span>
+                <span>This cannot be undone.</span>
+                <span>Are you sure you wish to continue?</span>
+                <div className="horizontalBox">
+                    <button onClick={yesButtonHandler}>Yes</button>
+                    <button onClick={Modal.unmount}>No</button>
+                </div>
+            </div>        
+        </Modal>)
     }
 
     editButtonHandler() {

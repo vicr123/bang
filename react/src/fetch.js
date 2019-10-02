@@ -25,6 +25,10 @@ class Fetch {
         });
         if (showLoader) Loader.unmount();
         
+        if (result.status == 204) return {};
+
+        if (result.status < 200 || result.status > 299) throw result;
+        
         return await result.json();
     }
     
@@ -54,6 +58,7 @@ class Fetch {
         
         if (result.status == 204) return {};
 
+        if (result.status < 200 || result.status > 299) throw result;
         return await result.json();
     }
     
