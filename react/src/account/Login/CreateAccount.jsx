@@ -1,5 +1,6 @@
 import React from 'react';
 import Error from '../../Error'
+import Fetch from '../../fetch'
 
 class CreateAccount extends Error {
     constructor(props) {
@@ -11,26 +12,19 @@ class CreateAccount extends Error {
         };
     }
     
-    registerButtonHandler() {
-        fetch("/api/users/create", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+    async registerButtonHandler() {
+        try {
+            let json = await Fetch.post("/users/create", {
                 username: this.state.currentUsername,
                 password: this.state.currentPassword
-            })
-        }).then((response) => {
-            if (!response.ok) throw new Error();
-            return response.json();
-        }).then((json) => {
+            });
+            
             //Log the user in given the token
             localStorage.setItem("loginToken", json.token)
             this.props.onLoginChanged();
-        }).catch(function() {
+        } catch (err) {
             alert("error Error!");
-        })
+        }
     }
     
     render() {
