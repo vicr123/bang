@@ -23,6 +23,10 @@ class App extends Error {
 	constructor(props) {
 		super(props);
 
+		window.bang = {};
+		window.bang.appState = () => this.state;
+		window.bang.appLoginChangedHandler = () => this.loginChanged.bind(this);
+
 		this.state = {
 			currentView: this.stateForCurrentUrl(),
 			login: {}
@@ -99,9 +103,9 @@ class App extends Error {
 			case "createPost":
 				return <CreatePost />;
 			case "trending":
-				return <TrendingView />;
+				return <TrendingView type="trending" />;
 			case "new":
-				return <NewView />;
+				return <TrendingView type="new" />;
 			case "leaderboard":
 				return <Leaderboard />;
 			case "about":

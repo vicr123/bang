@@ -2,6 +2,7 @@ import React from "react";
 import Error from "../Error";
 import Fetch from "../fetch";
 import Post from "../posts/Post";
+import Modal from "../Modal";
 
 class CreatePost extends Error {	
 	constructor(props) {
@@ -13,6 +14,7 @@ class CreatePost extends Error {
 	}
 
 	uploadPhotoButtonHandler() {
+		if (!Modal.checkLoggedIn()) return;
 		document.getElementById("inputFileSelect").click();
 	}
 

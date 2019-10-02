@@ -29,7 +29,7 @@ class SidebarItem extends Error {
 	render() {
 		return (
 			<div className={this.className()} onClick={this.props.onClick}>
-				{this.props.icon} {this.props.text}
+				{this.props.icon} <span class="sidebarText">{this.props.text}</span>
 			</div>
 		);
 	}
@@ -40,7 +40,6 @@ class Sidebar extends Error {
 	render() {
 		let isSelected = stateName => {
 			if (this.props.currentState === stateName) {
-				console.log("Got state");
 				return true;
 			} else {
 				return false;

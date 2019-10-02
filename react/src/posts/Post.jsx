@@ -3,6 +3,65 @@ import Error from '../Error';
 import Fetch from "../fetch";
 import Modal from "../Modal";
 
+class EmojiButton extends Error {
+    constructor(props) {
+        super(props)
+    }
+ 
+    getReaction(reaction) {
+        if (this.props.metadata.reactions && this.props.postId != -1) {
+            let num = this.props.metadata.reactions[reaction];
+            if (num == 0) return "";
+            return num;
+        } else {
+            return "";
+        }
+    }
+    
+    hasUserReacted() {
+        if (!this.props.metadata.myReactions) return false;
+        return this.props.metadata.myReactions.indexOf(this.props.emoji) !== -1;
+    }
+
+    async setReaction(reaction) {
+        if (!Modal.checkLoggedIn()) return;
+
+        try {
+            let add = !this.hasUserReacted();
+            
+            await Fetch.post(`/posts/${this.props.postId}/reactions`, {
+                reaction: reaction,
+                add: add
+            });
+    
+            let metadata = this.props.metadata;
+            if (!metadata.reactions[reaction]) metadata.reactions[reaction] = 0;
+            metadata.reactions[reaction] += (add ? 1 : -1);
+            
+            if (add) {
+                metadata.myReactions.push(this.props.emoji);
+            } else {
+                metadata.myReactions.splice(metadata.myReactions.indexOf(this.props.emoji), 1);
+            }
+            
+            this.props.onStateChange({
+                metadata: metadata
+            });
+        } catch (err) {
+            Modal.mount(<Modal cancelable={true}><h1>Error</h1><div>We couldn't post your reaction. Give it another go.</div></Modal>);
+        }
+    }
+    
+    className() {
+        if (this.hasUserReacted()) return "selected";
+        return "";
+    }
+    
+    render() {
+        return <button className={this.className()} onClick={() => this.setReaction(this.props.emoji)}>{this.props.emoji} {this.getReaction(this.props.emoji)}</button>
+    }
+}
+
 class Post extends Error {
     constructor(props) {
         super(constructor);
@@ -10,39 +69,44 @@ class Post extends Error {
         this.state = {
             metadata: {
                 image: ""
-            }
+            },
+            currentPostId: -1
         };
     }
 
     componentDidMount() {
-        this.componentDidUpdate({});;
+        this.componentDidUpdate({}, {});;
     }
 
-    componentDidUpdate(oldProps) {
+    componentDidUpdate(oldProps, oldState) {
         if (this.props.postId !== -1 && this.props.postId != oldProps.postId) {
-            console.log("get");
-            Fetch.getPost(this.props.postId).then((metadata) => {
-                console.log("set");
+            this.setState({
+                currentPostId: this.props.postId
+            });
+        } else if (this.state.currentPostId !== -1 && oldState.currentPostId !== this.state.currentPostId) {
+            Fetch.getPost(this.state.currentPostId).then(async (metadata) => {
                 this.setState({
-                    metadata: metadata
+                    metadata: metadata,
+                    userMetadata: await Fetch.getUser(metadata.user)
                 });
             });
         }
     }
 
     showFlagDialog() {
+        if (!Modal.checkLoggedIn()) return;    
         Modal.mount(<Modal title="Flag" cancelable={true} style={{width: '400px'}}>
             <div className="VerticalBox">
                 <span>What's wrong with this post?</span>
                 <button>Contains Text</button>
                 <button>Contains Unfortunate Content</button>
-                <hr />
                 <span>This report will be sent to the administrators of this board; not the author of this post.</span>
             </div>
         </Modal>)
     }
 
     uploadPhotoButtonHandler() {
+        if (!Modal.checkLoggedIn()) return;
 		document.getElementById("replyFileSelect").click();
 	}
     
@@ -55,7 +119,7 @@ class Post extends Error {
 			let mimetype = result.substr(5, result.indexOf(';') - 5);
 			result = result.substr(result.indexOf(',') + 1);
 
-			let response = await Fetch.post(`/posts/${this.props.postId}`, {
+			let response = await Fetch.post(`/posts/${this.state.currentPostId}`, {
 				"image": result,
 				"mime": mimetype
 			});
@@ -66,35 +130,88 @@ class Post extends Error {
 		})
 		reader.readAsDataURL(file);
 
-	}
+    }
+    
+    renderReplies() {
+        if (!this.state.metadata.comments) return [];
+
+        let replyDivs = [];
+        for (let comment of this.state.metadata.comments) {
+            let changeToPost = () => {
+                this.setState({
+                    currentPostId: comment.id
+                });
+            };
+            replyDivs.push(<img onClick={changeToPost} src={comment.image} className="postImage"></img>);
+        }
+
+        return replyDivs;
+    }
+
+    renderBackButton() {
+        let buttons = [];
+        buttons.push(<button className="returnToPostListButton" onClick={this.props.onReturnToPostList}>Back to post list</button>);
+        if (this.state.metadata.parent !== null) {
+            let changeToPost = () => {
+                this.setState({
+                    currentPostId: this.state.metadata.parent
+                });
+            };
+            buttons.push(<button onClick={changeToPost}>Back</button>);
+        }
+        return buttons;
+    }
+
+    renderTrashButton() {
+        return <button onClick={this.uploadPhotoButtonHandler.bind(this)}>🗑</button>
+    }
+
+    renderEditButton() {
+        if (this.state.metadata.canEdit) return <button onClick={this.uploadPhotoButtonHandler.bind(this)}>✏</button>
+        return [];
+    }
+    
+    className() {
+        let classes = [];
+        classes.push("scrollable");
+        if (!this.props.viewMobile) classes.push("mobileHide");
+        return classes.join(" ");
+    }
 
     renderContent() {
         if (this.props.postId == -1) {
             return <div></div>
         } else {
-            return <div><img src={this.state.metadata.image} className="postImage"/>
+            return <div>
+                <div className="HorizontalBox">{this.renderBackButton()}</div>
+                <img src={this.state.metadata.image} className="postImage"/>
                 <div className="HorizontalBox EmojiBox padded">
-                    <button>👍</button>
-                    <button>👎</button>
-                    <button>🙂</button>
-                    <button>💓</button>
-                    <button>🙁</button>
-                    <button>😠</button>
-                    <button>😂</button>
+                    <EmojiButton emoji="👍" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="👎" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="🙂" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="💓" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="🙁" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="😠" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
+                    <EmojiButton emoji="😂" metadata={this.state.metadata} postId={this.state.currentPostId} onStateChange={this.setState.bind(this)} />
                     <div style={{'flex-grow': '1'}} />
+                    <p>Posted by: {this.state.userMetadata ? this.state.userMetadata.username : "Unidentified user"}</p>
                     <button onClick={this.showFlagDialog.bind(this)}>🚩</button>
-                    <button onClick={this.uploadPhotoButtonHandler.bind(this)}>Reply</button>
+                    {this.renderEditButton()}
+                    {this.renderTrashButton()}
+                    <button onClick={this.uploadPhotoButtonHandler.bind(this)}>📨</button>
                     <input type="file" style={{"display": "none"}} id="replyFileSelect" onChange={this.performUpload.bind(this)} />
+                </div>
+                <div>
+                    {this.renderReplies()}
                 </div>
             </div>
         }
     }
 
     render() {
-        return <div className="scrollable" style={{'flex-grow': '1'}}>
+        return <div className={this.className()} style={{'flex-grow': '1'}}>
             {this.renderContent()}
         </div>
-        
     }
 
     
