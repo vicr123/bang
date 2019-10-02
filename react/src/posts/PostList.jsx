@@ -14,6 +14,13 @@ class PostList extends Error {
     componentDidMount() {
         this.grabPosts();
     }
+    
+    componentDidUpdate(prevProps) {
+        if (this.props.endpoint !== prevProps.endpoint) {
+            this.grabPosts();
+        }
+    }
+
 
     renderPosts() {
         let jsx = [];
