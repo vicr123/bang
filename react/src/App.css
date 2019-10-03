@@ -6,7 +6,7 @@
 		url("https://vicr123.com/typeface/Contemporary-Regular.ttf");
 }
 
-@import url('https://fonts.googleapis.com/css?family=Mansalva&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Carter+One&display=swap');
 
 @keyframes blur-in {
     from {
@@ -43,13 +43,12 @@ body {
 
 h1 {
     margin-top: 0px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     font-weight: normal;
     background: var(--fg-color);
     color: var(--bg-color);
-    font-family: 'Mansalva';
+    font-family: 'Carter One';
     padding: 3px;
-    /* transform: rotate(2deg) translateY(20px); */
 }
 
 .padded {
