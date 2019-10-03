@@ -270,8 +270,8 @@ class Post extends Error {
                     {this.renderEditButton()}
                     {this.renderTrashButton()}
                     <Tooltip text="Reply"><button onClick={this.uploadPhotoButtonHandler.bind(this)}>📨</button></Tooltip>
-                    <input type="file" style={{"display": "none"}} id="replyFileSelect" onChange={() => {this.postImage(false)}} />
-                    <input type="file" style={{"display": "none"}} id="editFileSelect" onChange={() => {this.postImage(true)}} />
+                    <input type="file" accept="image/*" style={{"display": "none"}} id="replyFileSelect" onChange={() => {this.postImage(false)}} />
+                    <input type="file" accept="image/*" style={{"display": "none"}} id="editFileSelect" onChange={() => {this.postImage(true)}} />
                 </div>
                 <div>
                     {this.renderReplies()}

@@ -51,8 +51,10 @@ router.post("/getToken", async function(req, res) {
             "error": "Missing fields"
         });
     } else {
+        let username = req.body.username.trim();
+        
         //Retrieve the user from the database
-        let rows = await db.select("Users", ["id", "password"], "USERNAME = ?", [req.body.username]);
+        let rows = await db.select("Users", ["id", "password"], "USERNAME = ?", [username]);
         if (rows.length == 0) {
             res.status(401).send();
             return;
@@ -128,10 +130,24 @@ router.post("/create", function(req, res) {
         });
     } else {
         (async function() {
+            let username = req.body.username.trim();
+            
+            if (username === "") {
+                res.status(400).send({
+                    "error": "Empty Username"
+                });
+                return;
+            } else if (username.length > 20) {
+                res.status(400).send({
+                    "error": "Username greater than 20 characters"
+                });
+                return;
+            }
+            
             //Hash and salt the password
             let passwordHash = await bcrypt.hash(req.body.password, saltRounds);
             await db.insert("Users", {
-                username: req.body.username,
+                username: username,
                 password: passwordHash
             });
             
