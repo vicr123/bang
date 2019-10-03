@@ -38,6 +38,7 @@ class CreatePost extends Error {
 		reader.readAsDataURL(file);
 
 	}
+
 	render() {
 		if (this.state.newPostId == -1) {
 			return (
@@ -45,9 +46,9 @@ class CreatePost extends Error {
 					<div className="padded moreSpace postContainer">
 						<h2>Upload a photo to get started!</h2>
 						<button className="button" onClick={this.uploadPhotoButtonHandler.bind(this)}>📸 Upload Photo</button>
-						<input type="file"  style={{"display": "none"}} id="inputFileSelect" onChange={this.performUpload.bind(this)} />
+						<input type="file" accept="image/*" style={{"display": "none"}} id="inputFileSelect" onChange={this.performUpload.bind(this)} />
 						<p>
-							If you put text in the image we are gonna nuke your post from orbit so don't try it son.
+							You can upload any image you want, as long as it adheres to the rules on the <a href="/about" onClick={this.props.onShowAboutPage}>About page</a> (that means no text or unfortunate content)
 						</p>
 					</div>
 				</React.Fragment>

@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const imageType = require('image-type');
 const db = require('../db/db');
 const settings = require('../settings');
 const tokens = require('./helpers/token');
@@ -10,7 +11,8 @@ module.exports = router;
 
 async function canPatch(postId, userId) {
     let posts = await db.select("Posts", ["*"], "id = ?", postId);
-    if (posts.length == 0) return false;
+    if (posts.length === 0) return false;
+    if (posts[0].userId !== userId) return false;
     
     let reactions = await db.select("Reactions", ["*"], "postId = ?", posts[0].id);
     if (reactions.length > 0) return false;
@@ -31,8 +33,28 @@ async function createPost(req, res, postId = null) {
         try {
             let userRows = await tokens.getUser(req);
             
+            //Ensure that the uploaded resource is an image
+            let buf = Buffer.from(req.body.image, 'base64');
+            let type = imageType(buf.subarray(0, imageType.minimumBytes));
+            
+            if (type === null) {
+                t.discard();
+                res.status(400).send({
+                    "error": "Not an image"
+                });
+                return;
+            }
+            
+            if (req.body.mime !== type.mime) {
+                t.discard();
+                res.status(400).send({
+                    "error": "MIME type mismatch"
+                });
+                return;
+            }
+            
             //Put the resource into the filesystem
-            let resource = await resources.putResource(Buffer.from(req.body.image, 'base64'), req.body.mime);
+            let resource = await resources.putResource(buf, req.body.mime);
             
             //Add a new post to the database
             await db.insert("posts", {
@@ -90,7 +112,7 @@ async function createPost(req, res, postId = null) {
      }
      res.status(200).send(response);
  });
- 
+ 2
 /**
  * GET /posts/new
  * Gets posts ordered by date
