@@ -12,7 +12,7 @@ module.exports = router;
 async function canPatch(postId, userId) {
     let posts = await db.select("Posts", ["*"], "id = ?", postId);
     if (posts.length === 0) return false;
-    if (posts.userId !== userId) return false;
+    if (posts[0].userId !== userId) return false;
     
     let reactions = await db.select("Reactions", ["*"], "postId = ?", posts[0].id);
     if (reactions.length > 0) return false;
@@ -112,7 +112,7 @@ async function createPost(req, res, postId = null) {
      }
      res.status(200).send(response);
  });
- 
+ 2
 /**
  * GET /posts/new
  * Gets posts ordered by date
