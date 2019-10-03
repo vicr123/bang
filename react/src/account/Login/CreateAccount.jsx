@@ -9,7 +9,7 @@ class CreateAccount extends Error {
         this.state = {
             currentUsername: "",
             currentPassword: "",
-            errorState: false
+            errorState: ""
         };
     }
     
@@ -25,14 +25,14 @@ class CreateAccount extends Error {
             this.props.onLoginChanged();
         } catch (err) {
             this.setState({
-                errorState: true
+                errorState: "That didn't work. Someone else may already have that username."
             });
         }
     }
 
     renderErrorState() {
-        if (this.state.errorState) {
-            return <span className="error">That didn't work. Someone else may already have that username.</span>
+        if (this.state.errorState !== "") {
+            return <span className="error">{this.state.errorState}</span>
         } else {
             return null;
         }
@@ -59,6 +59,12 @@ class CreateAccount extends Error {
         return (
             <div className="logIn">
                 <h1>Create Account</h1>
+                <p>
+                    <li>Usernames must be less than 20 characters</li>
+                    <li>Usernames with leading or trailing whitespace will be trimmed</li>
+                    <li>Passwords must be 8 characters or greater</li>
+                    <li>Passwords must be 128 characters or less</li>
+                </p>
                 <input type="text" username="uname" value={this.state.currentUsername} onChange={usernameChange} onKeyDown={this.onKeyDown.bind(this)} placeholder="Username" />
                 <input type="password" password="pword" value={this.state.currentPassword} onChange={passwordChange} onKeyDown={this.onKeyDown.bind(this)} placeholder="Password" />
                 <button classname="button" onClick={this.registerButtonHandler.bind(this)}>Create Account</button>
