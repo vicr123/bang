@@ -49,7 +49,11 @@ class EmojiButton extends Error {
                 metadata: metadata
             });
         } catch (err) {
-            Modal.mount(<Modal cancelable={true}><h1>Error</h1><div>We couldn't post your reaction. Give it another go.</div></Modal>);
+            Modal.mount(<Modal cancelable={true} title="Couldn't post reaction">
+                <p>We couldn't post your reaction. Give it another go.</p>
+                <p>If you keep hitting problems, try reloading the page.</p>
+                <button onClick={Modal.unmount}>OK</button>
+            </Modal>);
         }
     }
     
@@ -108,7 +112,7 @@ class Post extends Error {
 
     showFlagDialog() {
         if (!Modal.checkLoggedIn()) return;    
-        Modal.mount(<Modal title="Flag" cancelable={true} style={{width: '400px'}}>
+        Modal.mount(<Modal title="Flag" cancelable={true} width={400}>
             <div className="VerticalBox">
                 <span>What's wrong with this post?</span>
                 <button>Contains Text</button>
@@ -131,7 +135,7 @@ class Post extends Error {
             Modal.unmount();
         }
 
-        Modal.mount(<Modal title="Delete" cancelable={true} style={{width: '400px'}}>
+        Modal.mount(<Modal title="Delete" cancelable={true} width={400}>
             <div className="VerticalBox">
                 <span>You are about to delete this post.</span>
                 <span>This cannot be undone.</span>
@@ -149,25 +153,13 @@ class Post extends Error {
         document.getElementById("editFileSelect").click();
     }
 
-    postImage(isEdit) {
+    async postImage(isEdit) {
 		let box = isEdit ? document.getElementById("editFileSelect") : document.getElementById("replyFileSelect");
-		let file = box.files[0];
-		let reader = new FileReader();
-		reader.addEventListener("load", async () => {
-			let result = reader.result;
-			let mimetype = result.substr(5, result.indexOf(';') - 5);
-            result = result.substr(result.indexOf(',') + 1);
-            
-            let functionToCall = isEdit ? Fetch.patch : Fetch.post;
-
-			let response = await functionToCall(`/posts/${this.state.currentPostId}`, {
-				"image": result,
-				"mime": mimetype
-			});
-
+        let method = isEdit ? "patch" : "post";
+        let response = await Fetch.uploadImage(method, `/posts/${this.state.currentPostId}`, box.files[0]);
+        if (response != null) {
             this.invalidate();
-		})
-		reader.readAsDataURL(file);
+        }
     }
     
     renderReplies() {

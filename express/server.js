@@ -27,7 +27,7 @@ module.exports = {
 			// Maximum requests body size
 			app.use(
 				express.json({
-					limit: "10mb"
+					limit: "13mb"
 				})
 			);
 
