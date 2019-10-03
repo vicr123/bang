@@ -2,6 +2,7 @@ import React from 'react';
 import Error from '../Error';
 import Fetch from "../fetch";
 import Modal from "../Modal";
+import Tooltip from '../Tooltip';
 
 class EmojiButton extends Error {
     constructor(props) {
@@ -200,11 +201,11 @@ class Post extends Error {
     }
 
     renderTrashButton() {
-        return <button onClick={this.trashButtonHandler.bind(this)}>🗑</button>
+        return <Tooltip text="Remove Post"><button onClick={this.trashButtonHandler.bind(this)}>🗑</button></Tooltip>
     }
 
     renderEditButton() {
-        if (this.state.metadata.canEdit) return <button onClick={this.editButtonHandler.bind(this)}>✏</button>
+        if (this.state.metadata.canEdit) return <Tooltip text="Edit Post"><button onClick={this.editButtonHandler.bind(this)}>✏</button></Tooltip>
         return [];
     }
     
@@ -265,10 +266,10 @@ class Post extends Error {
                 <div className="HorizontalBox padded">
                     <p>Posted by: {this.state.userMetadata ? this.state.userMetadata.username : "Unidentified user"}</p>                   
                     <div style={{'flex-grow': '1'}} />
-                    <button onClick={this.showFlagDialog.bind(this)}>🚩</button>
+                    <Tooltip text="Flag Post"><button onClick={this.showFlagDialog.bind(this)}>🚩</button></Tooltip>
                     {this.renderEditButton()}
                     {this.renderTrashButton()}
-                    <button onClick={this.uploadPhotoButtonHandler.bind(this)}>📨</button>
+                    <Tooltip text="Reply"><button onClick={this.uploadPhotoButtonHandler.bind(this)}>📨</button></Tooltip>
                     <input type="file" style={{"display": "none"}} id="replyFileSelect" onChange={() => {this.postImage(false)}} />
                     <input type="file" style={{"display": "none"}} id="editFileSelect" onChange={() => {this.postImage(true)}} />
                 </div>
