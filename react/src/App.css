@@ -411,15 +411,18 @@ html div.modalBox {
 }
 
 .LBBox {
-	background-color: grey;
+	background-color: #3c3c3c;
 	border-radius: 3px;
 	padding: 1.5em;
-
 	margin-top: 3px;
 	margin-bottom: 3px;
 	text-align: center;
 	font-size: 1.5em;
 
+}
+
+.LBBox:hover {
+	color: var(--sidebar-hv-color);
 }
 
 .LBBoxContainer {
