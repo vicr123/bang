@@ -11,7 +11,8 @@ module.exports = router;
 
 async function canPatch(postId, userId) {
     let posts = await db.select("Posts", ["*"], "id = ?", postId);
-    if (posts.length == 0) return false;
+    if (posts.length === 0) return false;
+    if (posts.userId !== userId) return false;
     
     let reactions = await db.select("Reactions", ["*"], "postId = ?", posts[0].id);
     if (reactions.length > 0) return false;
