@@ -18,25 +18,13 @@ class CreatePost extends Error {
 		document.getElementById("inputFileSelect").click();
 	}
 
-	performUpload(event) {
-		let box = document.getElementById("inputFileSelect");
-		let file = box.files[0];
-		let reader = new FileReader();
-		reader.addEventListener("load", async () => {
-			let result = reader.result;
-			let mimetype = result.substr(5, result.indexOf(';') - 5);
-			result = result.substr(result.indexOf(',') + 1);
-
-			let response = await Fetch.post("/posts/create", {
-				"image": result,
-				"mime": mimetype
-			});
+	async performUpload(event) {
+        let response = await Fetch.uploadImage("post", "/posts/create", document.getElementById("inputFileSelect").files[0]);
+        if (response != null) {
 			this.setState({
 				newPostId: response.id
-			})
-		})
-		reader.readAsDataURL(file);
-
+			});
+        }
 	}
 
 	render() {

@@ -390,8 +390,28 @@ router.delete("/:id", async function(req, res) {
                 return;
             }
             
+            //Ensure that the uploaded resource is an image
+            let buf = Buffer.from(req.body.image, 'base64');
+            let type = imageType(buf.subarray(0, imageType.minimumBytes));
+            
+            if (type === null) {
+                t.discard();
+                res.status(400).send({
+                    "error": "Not an image"
+                });
+                return;
+            }
+            
+            if (req.body.mime !== type.mime) {
+                t.discard();
+                res.status(400).send({
+                    "error": "MIME type mismatch"
+                });
+                return;
+            }
+            
             //Put the resource into the filesystem
-            let resource = await resources.putResource(Buffer.from(req.body.image, 'base64'), req.body.mime);
+            let resource = await resources.putResource(buf, req.body.mime);
             
             //Edit the post in the database
             await db.update("posts", {
