@@ -28,8 +28,7 @@ class AccountLB extends Error {
 	// Render the account with details
 	accountRender(){
 		return (
-			<div className="LBBox">USERID:  {this.props.person} USERNAME: {this.state.username}
-			</div>
+			<div className="LBBox">{this.state.username}</div>
 		);
 	}
 	// Render based on userID error

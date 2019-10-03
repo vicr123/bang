@@ -411,12 +411,18 @@ html div.modalBox {
 }
 
 .LBBox {
-	width: 100%;
 	background-color: grey;
 	border-radius: 3px;
-	padding: 9px;
+	padding: 1.5em;
 
 	margin-top: 3px;
 	margin-bottom: 3px;
+	text-align: center;
+	font-size: 1.5em;
+
+}
+
+.LBBoxContainer {
+	flex-grow: 1;
 }
 
