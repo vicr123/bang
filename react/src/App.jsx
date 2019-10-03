@@ -101,7 +101,9 @@ class App extends Error {
 	currentMainView() {
 		switch (this.state.currentView) {
 			case "createPost":
-				return <CreatePost />;
+				return <CreatePost onShowAboutPage={() => this.setState({
+					currentView: "about"
+				})}/>;
 			case "trending":
 				return <TrendingView type="trending" />;
 			case "new":

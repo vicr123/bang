@@ -420,3 +420,23 @@ html div.modalBox {
 	margin-bottom: 3px;
 }
 
+.tooltip {
+	display: none;
+	height: 0px;
+	width: 0px;
+	position: relative;
+	top: -30px;
+}
+
+.tooltipText {
+	background-color: var(--bg-color);
+	border: 1px solid var(--fg-color);
+	
+    white-space: nowrap;
+	width: fit-content;
+	padding: 3px;
+}
+
+.tooltipContainer:hover .tooltip {
+	display: block;
+}

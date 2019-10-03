@@ -8,7 +8,8 @@ class CreateAccount extends Error {
         
         this.state = {
             currentUsername: "",
-            currentPassword: ""
+            currentPassword: "",
+            errorState: false
         };
     }
     
@@ -23,7 +24,17 @@ class CreateAccount extends Error {
             localStorage.setItem("loginToken", json.token)
             this.props.onLoginChanged();
         } catch (err) {
-            alert("error Error!");
+            this.setState({
+                errorState: true
+            });
+        }
+    }
+
+    renderErrorState() {
+        if (this.state.errorState) {
+            return <span className="error">That didn't work. Someone else may already have that username.</span>
+        } else {
+            return null;
         }
     }
     
@@ -45,6 +56,7 @@ class CreateAccount extends Error {
                 <input type="text" username="uname" value={this.state.currentUsername} onChange={usernameChange} placeholder="Username" />
                 <input type="password" password="pword" value={this.state.currentPassword} onChange={passwordChange} placeholder="Password" />
                 <button classname="button" onClick={this.registerButtonHandler.bind(this)}>Create Account</button>
+                {this.renderErrorState()}
             </div>
         );
     }
