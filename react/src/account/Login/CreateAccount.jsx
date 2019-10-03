@@ -37,6 +37,12 @@ class CreateAccount extends Error {
             return null;
         }
     }
+
+    onKeyDown(event) {
+        if (event.key === 'Enter') {
+            this.registerButtonHandler();
+        }
+    }
     
     render() {
         let usernameChange = (e) => {
@@ -53,8 +59,8 @@ class CreateAccount extends Error {
         return (
             <div className="logIn">
                 <h1>Create Account</h1>
-                <input type="text" username="uname" value={this.state.currentUsername} onChange={usernameChange} placeholder="Username" />
-                <input type="password" password="pword" value={this.state.currentPassword} onChange={passwordChange} placeholder="Password" />
+                <input type="text" username="uname" value={this.state.currentUsername} onChange={usernameChange} onKeyDown={this.onKeyDown.bind(this)} placeholder="Username" />
+                <input type="password" password="pword" value={this.state.currentPassword} onChange={passwordChange} onKeyDown={this.onKeyDown.bind(this)} placeholder="Password" />
                 <button classname="button" onClick={this.registerButtonHandler.bind(this)}>Create Account</button>
                 {this.renderErrorState()}
             </div>

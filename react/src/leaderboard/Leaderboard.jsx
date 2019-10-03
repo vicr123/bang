@@ -22,11 +22,11 @@ class Leaderboard extends Error {
 
 	render() {
 		return (
-			<div className="scrollable padded">
+			<div className="scrollable padded LBBoxContainer">
 				<h1>
 					Leaderboard
 				</h1>
-				<div className="LBBoxContainer">
+				<div>
 					{this.mapLeaders()}
 				</div>
 			</div>
