@@ -263,8 +263,8 @@ class Post extends Error {
                 <div className="HorizontalBox">{this.renderBackButton()}</div>
                 {this.renderImage()}
                 <div className="HorizontalBox padded">
+                    <p>Posted by: {this.state.userMetadata ? this.state.userMetadata.username : "Unidentified user"}</p>                   
                     <div style={{'flex-grow': '1'}} />
-                    <p>Posted by: {this.state.userMetadata ? this.state.userMetadata.username : "Unidentified user"}</p>
                     <button onClick={this.showFlagDialog.bind(this)}>🚩</button>
                     {this.renderEditButton()}
                     {this.renderTrashButton()}

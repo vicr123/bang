@@ -49,7 +49,7 @@ h1 {
     color: var(--bg-color);
     font-family: 'Mansalva';
     padding: 3px;
-    transform: rotate(2deg) translateY(20px);
+    /* transform: rotate(2deg) translateY(20px); */
 }
 
 .padded {
@@ -212,9 +212,8 @@ div.postImageContainer:hover .SmallEmojiBox {
 }
 
 .emojiButton {
-    background-color: transparent;
+	background-color: rgba(0, 0, 0, 0.6);
 }
-
 .ContactUs button {
 	/*border-radius: 15px;*/
 	padding: 50px;
