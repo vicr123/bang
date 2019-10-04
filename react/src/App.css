@@ -362,6 +362,23 @@ html div.modalBox {
     display: none;
 }
 
+.deleteButton {
+	color: white;
+	background-color: rgb(60, 60, 60);
+	padding: 12px 20px;
+	margin: 3px;
+	border-color: rgb(255, 0, 0);
+	border-style: solid;
+	border-width: 1px;
+	text-align: center;
+	font-family: Contemporary;
+	font-size: 16px;
+}
+
+.deleteButton:hover {
+	background-color: rgb(255, 0, 0);
+}
+
 .error {
     color: rgb(255, 50, 50);
 }

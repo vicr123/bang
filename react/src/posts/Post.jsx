@@ -141,7 +141,7 @@ class Post extends Error {
                 <span>This cannot be undone.</span>
                 <span>Are you sure you wish to continue?</span>
                 <div className="horizontalBox">
-                    <button onClick={yesButtonHandler}>Yes</button>
+                    <button className="deleteButton" onClick={yesButtonHandler}>Yes</button>
                     <button onClick={Modal.unmount}>No</button>
                 </div>
             </div>        
