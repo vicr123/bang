@@ -43,6 +43,10 @@ async function generateTokenForUser(userId) {
  *              "id": User ID
  *          }
  *
+ * Returns: 400: JSON Object {
+ *              "error": Description of the error
+ *          }
+ *
  * Returns: 401: null
  */
 router.post("/getToken", async function(req, res) {
@@ -52,6 +56,27 @@ router.post("/getToken", async function(req, res) {
         });
     } else {
         let username = req.body.username.trim();
+        if (username === "") {
+            res.status(400).send({
+                "error": "Empty Username"
+            });
+            return;
+        } else if (username.length > 20) {
+            res.status(400).send({
+                "error": "Username greater than 20 characters"
+            });
+            return;
+        } else if (req.body.password.length > 128) {
+            res.status(400).send({
+                "error": "Password greater than 128 characters"
+            });
+            return;
+        } else if (req.body.password.length < 8) {
+            res.status(400).send({
+                "error": "Password less than 8 characters"
+            });
+            return;
+        }
         
         //Retrieve the user from the database
         let rows = await db.select("Users", ["id", "password"], "USERNAME = ?", [username]);
@@ -140,6 +165,16 @@ router.post("/create", function(req, res) {
             } else if (username.length > 20) {
                 res.status(400).send({
                     "error": "Username greater than 20 characters"
+                });
+                return;
+            } else if (req.body.password.length > 128) {
+                res.status(400).send({
+                    "error": "Password greater than 128 characters"
+                });
+                return;
+            } else if (req.body.password.length < 8) {
+                res.status(400).send({
+                    "error": "Password less than 8 characters"
                 });
                 return;
             }
