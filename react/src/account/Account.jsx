@@ -33,7 +33,7 @@ class Account extends Error {
                 case "login":
                     return <Login onPaneChange={this.onPaneChange.bind(this)} onLoginChanged={this.onLoginChanged.bind(this)} />
                 case "createAccount":
-                    return <CreateAccount onLoginChanged={this.onLoginChanged.bind(this)} />
+                    return <CreateAccount onPaneChange={this.onPaneChange.bind(this)} onLoginChanged={this.onLoginChanged.bind(this)} />
             }
         } else {
             return <ManageAccount onLoginChanged={this.onLoginChanged.bind(this)} currentLogin={this.props.currentLogin} />

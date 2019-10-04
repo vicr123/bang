@@ -2,6 +2,10 @@ import React from 'react';
 import Error from '../../Error'
 import Fetch from '../../fetch'
 
+// Code for handleKeyDown was based on code that can be found here:
+// https://stackoverflow.com/questions/31272207/to-call-onchange-event-after-pressing-enter-key
+// 
+
 class CreateAccount extends Error {
     constructor(props) {
         super(props);
@@ -25,7 +29,7 @@ class CreateAccount extends Error {
             this.props.onLoginChanged();
         } catch (err) {
             this.setState({
-                errorState: "That didn't work. Someone else may already have that username."
+                errorState: "That didn't work. Someone else may already have that username or you didn't enter a vaild username."
             });
         }
     }
@@ -43,7 +47,7 @@ class CreateAccount extends Error {
             this.registerButtonHandler();
         }
     }
-    
+
     render() {
         let usernameChange = (e) => {
             this.setState({
@@ -54,6 +58,10 @@ class CreateAccount extends Error {
             this.setState({
                 currentPassword: e.target.value
             });
+        }
+
+        let login = () => {
+            this.props.onPaneChange("login");
         }
         
         return (
@@ -68,6 +76,7 @@ class CreateAccount extends Error {
                 <input type="text" username="uname" value={this.state.currentUsername} onChange={usernameChange} onKeyDown={this.onKeyDown.bind(this)} placeholder="Username" />
                 <input type="password" password="pword" value={this.state.currentPassword} onChange={passwordChange} onKeyDown={this.onKeyDown.bind(this)} placeholder="Password" />
                 <button classname="button" onClick={this.registerButtonHandler.bind(this)}>Create Account</button>
+                <button classname="button" onClick={login.bind(this)}>Back to Log In</button>
                 {this.renderErrorState()}
             </div>
         );
