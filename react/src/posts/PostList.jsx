@@ -2,13 +2,26 @@ import React from 'react';
 import Error from '../Error';
 import Fetch from '../fetch';
 
+import ReachedEndImage from '../assets/reachedend.svg';
+import LoadErrorImage from '../assets/loaderror.svg';
+
+const limit = 10;
+const initialState = {
+    posts: [],
+    offset: 0,
+    finishedLoading: "no",
+    loading: false
+}
+
+//Preload images
+let image1 = new Image().src = ReachedEndImage;
+let image2 = new Image().src = LoadErrorImage;
+
 class PostList extends Error {
     constructor(props) {
         super(props);
 
-        this.state = {
-            posts: []
-        };
+        this.state = initialState;
     }
 
     componentDidMount() {
@@ -17,7 +30,9 @@ class PostList extends Error {
     
     componentDidUpdate(prevProps) {
         if (this.props.endpoint !== prevProps.endpoint) {
-            this.grabPosts();
+            //Re-initialize the state
+            //Defer the grabPosts call until the state has been set
+            this.setState(initialState, this.grabPosts);
         }
     }
 
@@ -25,9 +40,7 @@ class PostList extends Error {
     renderPosts() {
         let jsx = [];
 
-        let numberOfPosts = this.state.posts.length;
-        if (numberOfPosts > 50) numberOfPosts = 50;
-        for (let i = 0; i < numberOfPosts; i++) {
+        for (let i = 0; i < this.state.posts.length; i++) {
             jsx.push(<PostListItem onShowPost={this.props.onShowPost} postInfo={this.state.posts[i]} />)
         }
         return jsx;
@@ -41,37 +54,78 @@ class PostList extends Error {
         
         return classes.join(" ");
     }
+    
+    scrollHandler(e) {
+        let container = e.target;
+        if (container.clientHeight * 1.5 > container.scrollHeight - container.scrollTop) {
+            //Load the next set of images
+            this.grabPosts();
+        }
+    }
+    
+    renderLoader() {
+        if (this.state.finishedLoading == "yes") {
+            return <div class="postListEnd"><img src={ReachedEndImage} />You've reached the end!</div>
+        } else if (this.state.finishedLoading == "error") {
+            let loadPosts = () => {
+                this.setState({
+                    finishedLoading: "no"
+                }, this.grabPosts);
+            };
+            
+            return <div class="postListEnd"><img src={LoadErrorImage} />Take a deep breath and try again.<button onClick={loadPosts}>Give it another go</button></div>
+        } else {
+            return <div>Grabbing more posts...</div>
+        }
+    }
 
     render() {
-        
-        // <p>Empty 😔</p>
         return (
-            <div className={this.className()}>
+            <div className={this.className()} onScroll={this.scrollHandler.bind(this)}>
                 {this.renderPosts()}
+                {this.renderLoader()}
             </div>
         );
     }
-    // Grabs the necessary posts from the back end 
-    // check if current state is new or trending 
-    // returns a json obj or array?
-
-    //get posts new or trending
-    //get post ids
-    //get user ids
-    //get user names
+    // Grabs the necessary posts from the backend 
     async grabPosts() {
-        let posts = await Fetch.get(`/posts/${this.props.endpoint}`);
-
-        let postArray = [];
-        for (let post of posts) {
-            // let jsPost = await Fetch.get(`/posts/${post}`);
-            // postArray.push(jsPost);
-            postArray.push(await Fetch.getPost(post));
-        }
-
+        //Don't bother loading anything if we're currently loading, if we've loaded everything or if there was an error last time
+        if (this.state.loading || this.state.finishedLoading == "yes" || this.state.finishedLoading == "error") return;
+        
+        //Set the loading flag
         this.setState({
-            posts: postArray
+            loading: true
         });
+        
+        try {
+            let queryString = `limit=${limit}&from=${this.state.offset}`;
+            let posts = await Fetch.get(`/posts/${this.props.endpoint}?${queryString}`, false);
+            
+            let newPosts = [];
+            for (let post of posts) {
+                newPosts.push(await Fetch.getPost(post));
+            }
+            
+            this.setState(function(state, props) {
+                let postArray = state.posts;
+                
+                for (let post of newPosts) {
+                    postArray.push(post);
+                }
+                
+                return {
+                    posts: postArray,
+                    loading: false,
+                    offset: state.offset + posts.length,
+                    finishedLoading: posts.length != limit ? "yes" : "no"
+                }
+            });
+        } catch (err) {
+            this.setState({
+                finishedLoading: "error",
+                loading: false
+            });
+        }
     }
 
 }

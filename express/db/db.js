@@ -44,9 +44,9 @@ module.exports = {
     "runQuery": function(query) {
         return db.run(query);
     },
-    "allQuery": function(query) {
+    "allQuery": function(query, args = []) {
         return new Promise(function(res, rej) {
-            db.all(query, [], function(err, rows) {
+            db.all(query, args, function(err, rows) {
                 if (err) {
                     rej(err);
                 } else {

@@ -358,6 +358,22 @@ html div.modalBox {
     min-height: 20vh;
 }
 
+.postListEnd {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 9px;
+    text-align: center;
+    
+    user-select: none;
+}
+
+.postListEnd img {
+    width: 75%;
+    padding-bottom: 9px;
+}
+
 .returnToPostListButton {
     display: none;
 }

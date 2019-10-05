@@ -104,15 +104,32 @@ async function createPost(req, res, postId = null) {
  *
  */
  router.get("/trending", async function(req, res) {
-     let rows = await db.select("Posts, Reactions", ["id", "COUNT(*) AS count"], "Posts.id = Reactions.postId AND id NOT IN (SELECT DISTINCT id FROM comments)", [], "GROUP BY Posts.id ORDER BY count DESC");
-     
-     let response = [];
-     for (let row of rows) {
-         response.push(row.id);
+     try {
+         let limits = [];
+         let args = [];
+         
+         if (req.query.limit) {
+             limits.push("LIMIT ?");
+             args.push(req.query.limit);
+         }
+         
+         if (req.query.from) {
+             limits.push("OFFSET ?");
+             args.push(req.query.from);
+         }
+         
+         let rows = await db.select("Posts, Reactions", ["id", "COUNT(*) AS count"], "Posts.id = Reactions.postId AND id NOT IN (SELECT DISTINCT id FROM comments)", args, `GROUP BY Posts.id ORDER BY count DESC ${limits.join(" ")}`);
+         
+         let response = [];
+         for (let row of rows) {
+             response.push(row.id);
+         }
+         res.status(200).send(response);
+     } catch (err) {
+         res.status(500).send();
      }
-     res.status(200).send(response);
  });
- 2
+ 
 /**
  * GET /posts/new
  * Gets posts ordered by date
@@ -123,13 +140,30 @@ async function createPost(req, res, postId = null) {
  *
  */
  router.get("/new", async function(req, res) {
-     //let rows = await db.select("Posts", ["id"], "1=1", [], "ORDER BY id DESC");
-     let rows = await db.allQuery("SELECT id FROM posts WHERE id NOT IN (SELECT DISTINCT id FROM comments) ORDER BY id DESC");
-     let response = [];
-     for (let row of rows) {
-         response.push(row.id);
+     try {
+         let limits = [];
+         let args = [];
+         
+         if (req.query.limit) {
+             limits.push("LIMIT ?");
+             args.push(req.query.limit);
+         }
+         
+         if (req.query.from) {
+             limits.push("OFFSET ?");
+             args.push(req.query.from);
+         }
+         
+    
+         let rows = await db.allQuery(`SELECT id FROM posts WHERE id NOT IN (SELECT DISTINCT id FROM comments) ORDER BY id DESC ${limits.join(" ")}`, args);
+         let response = [];
+         for (let row of rows) {
+             response.push(row.id);
+         }
+         res.status(200).send(response);
+     } catch (err) {
+         res.status(500).send();
      }
-     res.status(200).send(response);
  });
  
 /**
