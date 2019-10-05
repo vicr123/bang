@@ -371,6 +371,7 @@ html div.modalBox {
 
 .postListEnd img {
     width: 75%;
+    max-width: 256px;
     padding-bottom: 9px;
 }
 

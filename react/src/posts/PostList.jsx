@@ -21,7 +21,12 @@ class PostList extends Error {
     constructor(props) {
         super(props);
 
-        this.state = initialState;
+        this.state = {
+            posts: [],
+            offset: 0,
+            finishedLoading: "no",
+            loading: false
+        };
     }
 
     componentDidMount() {
@@ -32,7 +37,12 @@ class PostList extends Error {
         if (this.props.endpoint !== prevProps.endpoint) {
             //Re-initialize the state
             //Defer the grabPosts call until the state has been set
-            this.setState(initialState, this.grabPosts);
+            this.setState({
+                posts: [],
+                offset: 0,
+                finishedLoading: "no",
+                loading: false
+            }, this.grabPosts);
         }
     }
 
