@@ -11,8 +11,12 @@ while read row; do
     
     case $(echo $row | cut -d'|' -f3) in
         0) reason="Contains Text";;
-        1) reason="Contains Unfortunate Content";;
-        2) reason="Undefined (???)";;
+        1) reason="Contains Advertising";;
+        2) reason="Contains Graphic Content";;
+        3) reason="Contains Explicit Content";;
+        4) reason="Contains Hateful Content";;
+        5) reason="Contains Other Unfortunate Content";;
+        *) reason="Undefined (???)";;
     esac
     
     echo

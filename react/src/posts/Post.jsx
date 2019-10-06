@@ -152,7 +152,7 @@ class Post extends Error {
                     if (json.error === "Already Flagged") {
                         Modal.mount(<Modal title="Flag" cancelable={true} width={400}>
                             <div className="VerticalBox">
-                                <span>You've already tried to flag this message and we're looking into it. Thanks for the report!</span>
+                                <span>You've already flagged this message and we're looking into it. Thanks for the report!</span>
                                 <button onClick={Modal.unmount}>OK</button>
                             </div>
                         </Modal>)
@@ -173,7 +173,11 @@ class Post extends Error {
             <div className="VerticalBox">
                 <span>What's wrong with this post?</span>
                 <button onClick={() => flagPost(0)}>Contains Text</button>
-                <button onClick={() => flagPost(1)}>Contains Unfortunate Content</button>
+                <button onClick={() => flagPost(1)}>Contains Advertising</button>
+                <button onClick={() => flagPost(2)}>Contains Graphic Content</button>
+                <button onClick={() => flagPost(3)}>Contains Explicit Content</button>
+                <button onClick={() => flagPost(4)}>Contains Hateful Content</button>
+                <button onClick={() => flagPost(5)}>Contains Other Unfortunate Content</button>
                 <span>This report will be sent to the administrators of this board; not the author of this post.</span>
             </div>
         </Modal>)

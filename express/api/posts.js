@@ -520,7 +520,7 @@ router.post("/:id/flag", async function(req, res) {
                 return;
             }
             
-            if (req.body.reason < 0 || req.body.reason > 1) {
+            if (req.body.reason < 0 || req.body.reason > 5 || !Number.isInteger(req.body.reason)) {
                 res.status(400).send({
                     "error": "Invalid Reason"
                 });

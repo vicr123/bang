@@ -20,44 +20,57 @@ class Fetch {
     }
     
     static async performRequest(method, url, showLoader) {
+        let err = null;
         if (showLoader) Loader.mount();
         let result = await fetch("/api" + url, {
             method: method,
             headers: Fetch.headers()
+        }).catch((error) => {
+            err = error;
+        }).finally(() => {
+            if (showLoader) Loader.unmount();
         });
-        if (showLoader) Loader.unmount();
+        
+        if (err) throw err;
         if (result.status == 204) return {};
-
         if (result.status < 200 || result.status > 299) throw result;
         return await result.json();
     }
     
     static async post(url, data, showLoader = true) {
+        let err = null;
         if (showLoader) Loader.mount();
         let result = await fetch("/api" + url, {
             method: "POST",
             headers: Fetch.headers(),
             body: JSON.stringify(data)
+        }).catch((error) => {
+            err = error;
+        }).finally(() => {
+            if (showLoader) Loader.unmount();
         });
-        if (showLoader) Loader.unmount();
         
+        if (err) throw err;
         if (result.status == 204) return {};
-
         if (result.status < 200 || result.status > 299) throw result;
         return await result.json();
     }
     
     static async patch(url, data, showLoader = true) {
+        let err = null;
         if (showLoader) Loader.mount();
         let result = await fetch("/api" + url, {
             method: "PATCH",
             headers: Fetch.headers(),
             body: JSON.stringify(data)
+        }).catch((error) => {
+            err = error;
+        }).finally(() => {
+            if (showLoader) Loader.unmount();
         });
-        if (showLoader) Loader.unmount();
         
+        if (err) throw err;
         if (result.status == 204) return {};
-
         if (result.status < 200 || result.status > 299) throw result;
         return await result.json();
     }
