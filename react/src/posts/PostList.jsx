@@ -113,9 +113,14 @@ class PostList extends Error {
             let posts = await Fetch.get(`/posts/${this.props.endpoint}?${queryString}`, false);
             
             let newPosts = [];
+            let newPostPromises = [];
             for (let post of posts) {
-                newPosts.push(await Fetch.getPost(post));
+                newPostPromises.push(Fetch.getPost(post).then(function(postData) {
+                    newPosts.push(postData);
+                }));
             }
+            
+            await Promise.all(newPostPromises);
             
             this.setState(function(state, props) {
                 let postArray = state.posts;
