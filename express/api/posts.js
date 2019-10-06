@@ -339,7 +339,19 @@ router.post("/:id", async function(req, res) {
 router.delete("/:id", async function(req, res) {
     let t = db.transaction();
     try {
-        let userRows = await tokens.getUser(req);
+        //Check for special delete override
+        if (req.connection.remoteAddress == "::1" && req.get("Authorization") == "Application ADMINFLAG") {
+            //This is definitely the admin flag application; we can bypass the authorization check
+        } else {
+            let userRows = await tokens.getUser(req);
+            
+            if (posts[0].userId != userRows[0].id) {
+                res.status(401).send();
+                t.discard();
+                return;
+            }
+        }
+        
         let posts = await db.select("Posts", ["userId", "deleted"], "id = ?", [req.params.id]);
         if (posts.length == 0) {
              res.status(404).send();
@@ -349,12 +361,6 @@ router.delete("/:id", async function(req, res) {
         
         if (posts[0].deleted != 0) {
             res.status(404).send();
-            t.discard();
-            return;
-        }
-        
-        if (posts[0].userId != userRows[0].id) {
-            res.status(401).send();
             t.discard();
             return;
         }
@@ -470,6 +476,78 @@ router.delete("/:id", async function(req, res) {
         }
     }
  });
+ 
+/**
+ * POST /posts/:id/flag
+ * Flag a post
+ * Requires authentication
+ * 
+ * Body: JSON Object {
+ *           "reason": Reason for flagging this post (see remarks)
+ *       }
+ *
+ * Returns: 204 (No Content): Success
+ *
+ * Returns: 400: JSON Object {
+ *              "error": Description of the error
+ *          }
+ *
+ * Remarks:
+ * The reason parameter should take one of the following values:
+ * - 0: "Contains Text"
+ * - 1: "Contains Unfortunate Content"
+ *
+ */
+router.post("/:id/flag", async function(req, res) {
+    if (!req.body.hasOwnProperty("reason")) {
+        res.status(400).send({
+            "error": "Missing fields"
+        });
+    } else {
+        let t = db.transaction();
+        try {
+            let userRows = await tokens.getUser(req);
+            let posts = await db.select("Posts", ["id", "userId", "deleted"], "id = ?", [req.params.id]);
+            if (posts.length == 0) {
+                 res.status(404).send();
+                 t.discard();
+                 return;
+            }
+            
+            if (posts[0].deleted != 0) {
+                res.status(404).send();
+                t.discard();
+                return;
+            }
+            
+            if (req.body.reason < 0 || req.body.reason > 1) {
+                res.status(400).send({
+                    "error": "Invalid Reason"
+                });
+                t.discard();
+                return;
+            }
+            
+            db.insert("Flags", {
+                postId: posts[0].id,
+                userId: userRows[0].id,
+                flagType: req.body.reason
+            });
+            
+            t.commit();
+            res.status(204).send();
+        } catch (e) {
+            t.discard();
+            if (e.message == "Invalid Token") {
+                //Invalid token or no one logged in
+                res.status(403).send();
+            } else {
+                console.log(e);
+                res.status(500).send();
+            }
+        }
+    }
+});
 
 /**
  * POST /posts/:id/reactions
