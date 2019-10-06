@@ -8,3 +8,13 @@ Please remove when finished.
 - Require email for users
 - Global error handler
 - Implement user profiles???
+
+
+Minor Edits 
+- Make post deletion confirm to user visually 
+- Display posts on account page 
+- Make the 'new' sidebar item bounce on user upload to signify where it has been posted 
+
+
+Experimental Edits 
+- Enforce image resolution limits on click, allow a further full resolution button
