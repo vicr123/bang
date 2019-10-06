@@ -3,6 +3,12 @@ import Error from '../Error';
 import Fetch from "../fetch";
 import Modal from "../Modal";
 import Tooltip from '../Tooltip';
+import Spinner from '../Spinner';
+
+import LoadErrorImage from '../assets/loaderror.svg';
+
+//Preload image
+let image = new Image().src = LoadErrorImage;
 
 class EmojiButton extends Error {
     constructor(props) {
@@ -77,7 +83,8 @@ class Post extends Error {
             metadata: {
                 image: ""
             },
-            currentPostId: -1
+            currentPostId: -1,
+            loading: "no"
         };
     }
     
@@ -88,12 +95,23 @@ class Post extends Error {
         this.getPost();
     }
     
-    async getPost() {
-        let metadata = await Fetch.getPost(this.state.currentPostId)
+    getPost() {
         this.setState({
-            metadata: metadata,
-            userMetadata: await Fetch.getUser(metadata.user)
-        });
+            loading: "yes"
+        }, async () => {
+            try {
+                let metadata = await Fetch.getPost(this.state.currentPostId)
+                this.setState({
+                    metadata: metadata,
+                    userMetadata: await Fetch.getUser(metadata.user),
+                    loading: "no"
+                });
+            } catch (err) {
+                this.setState({
+                    loading: "error"
+                });
+            }
+        })
     }
 
     componentDidMount() {
@@ -106,6 +124,9 @@ class Post extends Error {
                 currentPostId: this.props.postId
             });
         } else if (this.state.currentPostId !== -1 && oldState.currentPostId !== this.state.currentPostId) {
+            this.setState({
+                
+            })
             this.getPost();
         }
     }
@@ -217,7 +238,7 @@ class Post extends Error {
     renderBackButton() {
         let buttons = [];
         buttons.push(<button className="returnToPostListButton" onClick={this.props.onReturnToPostList}>Back to post list</button>);
-        if (this.state.metadata.parent !== null) {
+        if (this.state.metadata.parent != null) {
             let changeToPost = () => {
                 this.setState({
                     currentPostId: this.state.metadata.parent
@@ -285,9 +306,9 @@ class Post extends Error {
     }
 
     renderContent() {
-        if (this.props.postId == -1) {
-            return <div></div>
-        } else {
+        if (this.state.loading == "no") {
+            if (this.state.currentPostId == -1) return <div></div>
+            
             return <div>
                 <div className="HorizontalBox">{this.renderBackButton()}</div>
                 {this.renderImage()}
@@ -305,6 +326,15 @@ class Post extends Error {
                     {this.renderReplies()}
                 </div>
             </div>
+        } else if (this.state.loading == "error") {
+            return <div class="postError">
+                <img src={LoadErrorImage} />
+                Take a deep breath and try again.
+                <button onClick={this.getPost.bind(this)}>Give it another go</button>
+                {this.renderBackButton()}
+            </div>
+        } else {
+            return <div class="postError"><Spinner /></div>
         }
     }
 

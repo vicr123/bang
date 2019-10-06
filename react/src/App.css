@@ -382,6 +382,23 @@ html div.modalBox {
     padding-top: 9px;
 }
 
+.postError {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    
+    user-select: none;
+}
+
+.postError img {
+    width: 25%;
+    max-width: 256px;
+    padding-bottom: 9px;
+}
+
 .returnToPostListButton {
     display: none;
 }
