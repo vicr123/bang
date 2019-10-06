@@ -2,7 +2,6 @@ Website TODO
 
 Please remove when finished.
 
-- Get flag buttons to send a message to admins
 - Make create post return to create post screen every time it is clicked (currently doesn't work after an upload)
 - Make responses only show some posts to reduce load (max of 5 for responses)
 - Invalidate cache after deleting (50% progress)
