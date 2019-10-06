@@ -528,7 +528,7 @@ router.post("/:id/flag", async function(req, res) {
                 return;
             }
             
-            db.insert("Flags", {
+            await db.insert("Flags", {
                 postId: posts[0].id,
                 userId: userRows[0].id,
                 flagType: req.body.reason
@@ -538,7 +538,11 @@ router.post("/:id/flag", async function(req, res) {
             res.status(204).send();
         } catch (e) {
             t.discard();
-            if (e.message == "Invalid Token") {
+            if (e.code == "SQLITE_CONSTRAINT" && e.errno == 19) {
+                res.status(400).send({
+                    "error": "Already Flagged"
+                });
+            } else if (e.message == "Invalid Token") {
                 //Invalid token or no one logged in
                 res.status(403).send();
             } else {

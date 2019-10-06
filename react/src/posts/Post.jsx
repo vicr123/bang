@@ -111,12 +111,48 @@ class Post extends Error {
     }
 
     showFlagDialog() {
-        if (!Modal.checkLoggedIn()) return;    
+        if (!Modal.checkLoggedIn()) return;
+        
+        let flagPost = async (flagType) => {
+            try {
+                await Fetch.post(`/posts/${this.state.currentPostId}/flag`, {
+                    reason: flagType
+                });
+                Modal.mount(<Modal title="Flag" cancelable={true} width={400}>
+                    <div className="VerticalBox">
+                        <span>Thanks for the report. We'll look into it.</span>
+                        <button onClick={Modal.unmount}>OK</button>
+                    </div>
+                </Modal>)
+            } catch (err) {
+                let showDefaultError = true;
+                if (err.status === 400) {
+                    let json = await err.json();
+                    if (json.error === "Already Flagged") {
+                        Modal.mount(<Modal title="Flag" cancelable={true} width={400}>
+                            <div className="VerticalBox">
+                                <span>You've already tried to flag this message and we're looking into it. Thanks for the report!</span>
+                                <button onClick={Modal.unmount}>OK</button>
+                            </div>
+                        </Modal>)
+                        showDefaultError = false;
+                    }
+                }
+                
+                if (showDefaultError) Modal.mount(<Modal title="Flag" cancelable={true} width={400}>
+                    <div className="VerticalBox">
+                        <span>We couldn't flag this message. Please try again in a few minutes.</span>
+                        <button onClick={Modal.unmount}>OK</button>
+                    </div>
+                </Modal>)
+            }
+        }
+        
         Modal.mount(<Modal title="Flag" cancelable={true} width={400}>
             <div className="VerticalBox">
                 <span>What's wrong with this post?</span>
-                <button>Contains Text</button>
-                <button>Contains Unfortunate Content</button>
+                <button onClick={() => flagPost(0)}>Contains Text</button>
+                <button onClick={() => flagPost(1)}>Contains Unfortunate Content</button>
                 <span>This report will be sent to the administrators of this board; not the author of this post.</span>
             </div>
         </Modal>)

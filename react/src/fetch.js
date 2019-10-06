@@ -75,7 +75,7 @@ class Fetch {
             posts[id] = await Fetch.get(`/posts/${id}`, false);
         }
         return posts[id];
-    }"/posts/create"
+    }
 
     static async getUser(id) {
         if (!user[id]) {

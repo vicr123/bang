@@ -107,6 +107,7 @@ class Modal extends React.Component {
     
 
     static mount(jsx) {
+        if (modalShown) Modal.unmount();
         ReactDOM.render(jsx, document.getElementById('modalContainer'));
         modalShown = true;
     }
