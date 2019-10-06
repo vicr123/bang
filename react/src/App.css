@@ -375,6 +375,13 @@ html div.modalBox {
     padding-bottom: 9px;
 }
 
+.postListEnd .spinner {
+    width: 25%;
+    max-width: 64;
+    padding-bottom: 9px;
+    padding-top: 9px;
+}
+
 .returnToPostListButton {
     display: none;
 }

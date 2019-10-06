@@ -1,6 +1,7 @@
 import React from 'react';
 import Error from '../Error';
 import Fetch from '../fetch';
+import Spinner from '../Spinner';
 
 import ReachedEndImage from '../assets/reachedend.svg';
 import LoadErrorImage from '../assets/loaderror.svg';
@@ -85,7 +86,7 @@ class PostList extends Error {
             
             return <div class="postListEnd"><img src={LoadErrorImage} />Take a deep breath and try again.<button onClick={loadPosts}>Give it another go</button></div>
         } else {
-            return <div>Grabbing more posts...</div>
+            return <div class="postListEnd"><Spinner /></div>
         }
     }
 
