@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from 'react-dom';
 import Error from "./Error";
+import Spinner from "./Spinner";
 
 class Loader extends Error {
     constructor(props) {
@@ -9,7 +10,7 @@ class Loader extends Error {
     
     render() {
         return <div className="loader">
-            Loading...
+            <Spinner />
         </div>
     }
     
