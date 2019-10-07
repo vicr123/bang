@@ -1,6 +1,8 @@
 import React from 'react';
 import Error from '../../Error'
 
+import LoginHandler from '../../LoginHandler'
+
 class ManageAccount extends Error {
     constructor(props) {
         super(props);
@@ -13,13 +15,13 @@ class ManageAccount extends Error {
     
     logOutButtonHandler() {
         localStorage.removeItem("loginToken");
-        this.props.onLoginChanged();
+        LoginHandler.reloadLogin();
     }
     
     render() {
         return (
             <div className="logIn">
-                <h1>Hi {this.props.currentLogin.username}</h1>
+                <h1>Hi {LoginHandler.loginDetails.username}</h1>
                 <button className="button" onClick={this.logOutButtonHandler.bind(this)}>Log Out</button>
             </div>
         );

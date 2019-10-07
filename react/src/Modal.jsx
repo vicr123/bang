@@ -25,12 +25,25 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Account from './account/Account';
+import Fetch from './fetch';
+import LoginHandler from './LoginHandler';
 
 let modalShown = false;
+let ModalUnmountHandler = () => {
+    Modal.unmount();
+}
 
 class Modal extends React.Component {
     constructor(props) {
         super(props);
+    }
+    
+    componentDidMount() {
+        LoginHandler.on("loginDetailsChanged", ModalUnmountHandler);
+    }
+    
+    componentWillUnmount() {
+        LoginHandler.removeListener("loginDetailsChanged", ModalUnmountHandler);
     }
     
     iconFromTheme(iconName) {
@@ -121,18 +134,9 @@ class Modal extends React.Component {
         let token = localStorage.getItem("loginToken");
 		if (token == null) {
             //Ask the user to log in
-
-            let onLoginChanged = () => {
-                Modal.unmount();
-                window.bang.appLoginChangedHandler()();
-            };
             
             Modal.mount(<Modal cancelable={true} width={500}>
-                <Account
-                    currentLogin={window.bang.appState().login}
-                    onLoginChanged={onLoginChanged}
-                    isInModal={true}
-                />
+                <Account isInModal={true} />
             </Modal>)
             return false;
         } else {

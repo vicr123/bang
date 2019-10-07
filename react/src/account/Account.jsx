@@ -5,6 +5,7 @@ import Fetch from "../fetch";
 import Login from "./Login/Login";
 import CreateAccount from "./Login/CreateAccount";
 import ManageAccount from "./Manage/ManageAccount";
+import LoginHandler from "../LoginHandler"
 
 class Account extends Error {
     constructor(props) {
@@ -13,6 +14,10 @@ class Account extends Error {
         this.state = {
             currentPane: "login"
         }
+        
+        LoginHandler.on("loginDetailsChanged", () => {
+            this.forceUpdate();
+        })
     }
     
     onPaneChange(pane) {
@@ -21,22 +26,16 @@ class Account extends Error {
         });
     }
     
-    onLoginChanged() {
-        //Invalidate the cache
-        Fetch.invalidate();
-        this.props.onLoginChanged();
-    }
-    
     renderMainSection() {
-        if (this.props.currentLogin.username == null) {
+        if (LoginHandler.loginDetails.username == null) {
             switch (this.state.currentPane) {
                 case "login":
-                    return <Login onPaneChange={this.onPaneChange.bind(this)} onLoginChanged={this.onLoginChanged.bind(this)} />
+                    return <Login onPaneChange={this.onPaneChange.bind(this)}/>
                 case "createAccount":
-                    return <CreateAccount onPaneChange={this.onPaneChange.bind(this)} onLoginChanged={this.onLoginChanged.bind(this)} />
+                    return <CreateAccount />
             }
         } else {
-            return <ManageAccount onLoginChanged={this.onLoginChanged.bind(this)} currentLogin={this.props.currentLogin} />
+            return <ManageAccount />
         }
     }
     

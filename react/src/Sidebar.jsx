@@ -2,6 +2,8 @@ import React from "react";
 import Error from "./Error";
 import Logo from "./assets/logo.PNG";
 
+import LoginHandler from './LoginHandler'
+
 // Component that renders the logo
 class SidebarHeader extends Error {
 	render() {
@@ -37,6 +39,13 @@ class SidebarItem extends Error {
 
 // Renders sidebar elements
 class Sidebar extends Error {
+    constructor(props) {
+        super(props);
+        LoginHandler.on("loginDetailsChanged", () => {
+            this.forceUpdate();
+        });
+    }
+    
 	render() {
 		let isSelected = stateName => {
 			if (this.props.currentState === stateName) {
@@ -47,10 +56,10 @@ class Sidebar extends Error {
 		};
 
 		let userItemText;
-		if (this.props.currentLogin.username == null) {
+		if (LoginHandler.loginDetails.username == null) {
 			userItemText = "Account";
 		} else {
-			userItemText = this.props.currentLogin.username;
+			userItemText = LoginHandler.loginDetails.username;
 		}
 
 		return (

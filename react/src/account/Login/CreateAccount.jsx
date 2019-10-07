@@ -2,9 +2,7 @@ import React from 'react';
 import Error from '../../Error'
 import Fetch from '../../fetch'
 
-// Code for handleKeyDown was based on code that can be found here:
-// https://stackoverflow.com/questions/31272207/to-call-onchange-event-after-pressing-enter-key
-// 
+import LoginHandler from '../../LoginHandler'
 
 class CreateAccount extends Error {
     constructor(props) {
@@ -26,7 +24,7 @@ class CreateAccount extends Error {
             
             //Log the user in given the token
             localStorage.setItem("loginToken", json.token)
-            this.props.onLoginChanged();
+            LoginHandler.reloadLogin();
         } catch (err) {
             let showGenericError = true;
             if (err.status === 400) {
@@ -68,7 +66,7 @@ class CreateAccount extends Error {
             this.registerButtonHandler();
         }
     }
-
+    
     render() {
         let usernameChange = (e) => {
             this.setState({
