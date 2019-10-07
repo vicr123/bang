@@ -110,9 +110,11 @@ class Modal extends React.Component {
         return <div className="modalBackground" onClick={backgroundClickHandler}>
             {this.renderCloseButton()}
             <div className="modalBox" style={{"width": this.props.width}} onClick={dummyHandler} >
-                {this.renderTitle()}
-                <div>
-                    {this.props.children}
+                <div className="modalBoxContainer" style={{"width": this.props.width}}>
+                    {this.renderTitle()}
+                    <div>
+                        {this.props.children}
+                    </div>
                 </div>
             </div>
         </div>

@@ -10,10 +10,18 @@
 
 @keyframes blur-in {
     from {
+        opacity: 0;
         backdrop-filter: blur(0px);
     }
     to {
+        opacity: 1;
         backdrop-filter: blur(20px);
+    }
+}
+
+@keyframes size-in-x {
+    from {
+        width: 0px;
     }
 }
 
@@ -350,7 +358,7 @@ div.modalBackground {
     
     background-color: var(--bg-color-faded);
     backdrop-filter: blur(20px);
-    animation: 0.5s blur-in;
+    animation: 0.25s blur-in ease-out;
 }
 
 div.loader {
@@ -362,6 +370,11 @@ div.modalBox {
     height: 100%;
     background-color: var(--bg-color);
     max-width: calc(100vw - 112px);
+    animation: size-in-x 0.25s ease-out;
+}
+
+div.modalBoxContainer {
+    
 }
 
 html div.modalBox {
