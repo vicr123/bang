@@ -7,9 +7,11 @@ import Spinner from '../Spinner';
 import LoginHandler from '../LoginHandler';
 
 import LoadErrorImage from '../assets/loaderror.svg';
+import DeletedImage from '../assets/deleted.svg';
 
 //Preload image
 let image = new Image().src = LoadErrorImage;
+let image2 = new Image().src = DeletedImage;
 
 class EmojiButton extends Error {
     constructor(props) {
@@ -194,8 +196,29 @@ class Post extends Error {
         if (!Modal.checkLoggedIn()) return;
 
         let yesButtonHandler = async () => {
-            await Fetch.delete(`/posts/${this.state.currentPostId}`);
-            Modal.unmount();
+            try {
+                await Fetch.delete(`/posts/${this.state.currentPostId}`);
+                Modal.unmount();
+                
+                if (this.state.metadata.comments.length === 0) {
+                    this.setState({
+                        loading: "deleted"
+                    });
+                } else {
+                    //Rerender this post
+                    Fetch.invalidatePost(this.state.currentPostId);
+                    this.getPost();
+                }
+            } catch (err) {
+                Modal.mount(<Modal title="Delete" cancelable={true} width={400}>
+                    <div className="VerticalBox">
+                        <span>We couldn't delete your post. Give it another go.</span>
+                        <div className="horizontalBox">
+                            <button onClick={Modal.unmount}>OK</button>
+                        </div>
+                    </div>
+                </Modal>)
+            }
         }
 
         Modal.mount(<Modal title="Delete" cancelable={true} width={400}>
@@ -207,7 +230,7 @@ class Post extends Error {
                     <button className="deleteButton" onClick={yesButtonHandler}>Yes</button>
                     <button onClick={Modal.unmount}>No</button>
                 </div>
-            </div>        
+            </div>
         </Modal>)
     }
 
@@ -294,7 +317,10 @@ class Post extends Error {
 
     renderImage() {
         if (this.state.metadata.deleted) {
-            return <div>Image Deleted.</div>
+            return <div className="postImageContainer deleted">
+                <img src={DeletedImage} />
+                It's gone. Someone (probably the poster) got rid of this image.
+            </div>
         } else {
             return <div className="postImageContainer">
                 {this.renderSmallEmoji()}
@@ -334,14 +360,20 @@ class Post extends Error {
                 </div>
             </div>
         } else if (this.state.loading == "error") {
-            return <div class="postError">
+            return <div className="postError">
                 <img src={LoadErrorImage} />
                 Take a deep breath and try again.
                 <button onClick={this.getPost.bind(this)}>Give it another go</button>
                 {this.renderBackButton()}
             </div>
+        } else if (this.state.loading == "deleted") {
+            return <div className="postError">
+                <img src={DeletedImage} />
+                It's gone.
+                {this.renderBackButton()}
+            </div>
         } else {
-            return <div class="postError"><Spinner /></div>
+            return <div className="postError"><Spinner /></div>
         }
     }
 

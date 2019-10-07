@@ -339,6 +339,14 @@ router.post("/:id", async function(req, res) {
 router.delete("/:id", async function(req, res) {
     let t = db.transaction();
     try {
+        
+        let posts = await db.select("Posts", ["userId", "deleted"], "id = ?", [req.params.id]);
+        if (posts.length == 0) {
+             res.status(404).send();
+             t.discard();
+             return;
+        }
+        
         //Check for special delete override
         if (req.connection.remoteAddress == "::1" && req.get("Authorization") == "Application ADMINFLAG") {
             //This is definitely the admin flag application; we can bypass the authorization check
@@ -350,13 +358,6 @@ router.delete("/:id", async function(req, res) {
                 t.discard();
                 return;
             }
-        }
-        
-        let posts = await db.select("Posts", ["userId", "deleted"], "id = ?", [req.params.id]);
-        if (posts.length == 0) {
-             res.status(404).send();
-             t.discard();
-             return;
         }
         
         if (posts[0].deleted != 0) {

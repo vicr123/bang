@@ -210,6 +210,21 @@ div.postImageContainer:hover .SmallEmojiBox {
     opacity: 0;
 }
 
+div.postImageContainer.deleted {
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+div.postImageContainer.deleted img {
+    width: 25%;
+    max-width: 256px;
+    padding-bottom: 9px;
+}
+
 .emojiButton {
 	background-color: rgba(0, 0, 0, 0.6);
 }
