@@ -114,9 +114,11 @@ class PostList extends Error {
             
             let newPosts = [];
             let newPostPromises = [];
-            for (let post of posts) {
+            for (let i = 0; i < posts.length; i++) {
+                let index = i;
+                let post = posts[i];
                 newPostPromises.push(Fetch.getPost(post).then(function(postData) {
-                    newPosts.push(postData);
+                    newPosts[index] = postData;
                 }));
             }
             
