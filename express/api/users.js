@@ -112,6 +112,7 @@ router.post("/getToken", async function(req, res) {
  *
  * Returns: 200: JSON Object {
  *              "username": Username of the logged in user
+ *              "id": ID of the logged in user
  *          }
  *
  * Returns: 401 (Unauthorized)

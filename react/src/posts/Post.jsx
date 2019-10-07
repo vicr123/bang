@@ -4,6 +4,7 @@ import Fetch from "../fetch";
 import Modal from "../Modal";
 import Tooltip from '../Tooltip';
 import Spinner from '../Spinner';
+import LoginHandler from '../LoginHandler';
 
 import LoadErrorImage from '../assets/loaderror.svg';
 
@@ -86,6 +87,10 @@ class Post extends Error {
             currentPostId: -1,
             loading: "no"
         };
+        
+        LoginHandler.on("loginDetailsChanged", () => {
+            Promise.resolve().then(() => this.getPost());
+        });
     }
     
     invalidate() {
@@ -124,9 +129,6 @@ class Post extends Error {
                 currentPostId: this.props.postId
             });
         } else if (this.state.currentPostId !== -1 && oldState.currentPostId !== this.state.currentPostId) {
-            this.setState({
-                
-            })
             this.getPost();
         }
     }
@@ -254,12 +256,13 @@ class Post extends Error {
     }
 
     renderTrashButton() {
-        return <Tooltip text="Remove Post"><button onClick={this.trashButtonHandler.bind(this)}>🗑</button></Tooltip>
+        if (LoginHandler.loginDetails.id === this.state.metadata.user) return <Tooltip text="Remove Post"><button onClick={this.trashButtonHandler.bind(this)}>🗑</button></Tooltip>
+        return null;
     }
 
     renderEditButton() {
         if (this.state.metadata.canEdit) return <Tooltip text="Edit Post"><button onClick={this.editButtonHandler.bind(this)}>✏</button></Tooltip>
-        return [];
+        return null;
     }
     
     className() {
