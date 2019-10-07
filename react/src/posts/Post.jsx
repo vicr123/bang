@@ -279,12 +279,17 @@ class Post extends Error {
     }
 
     renderTrashButton() {
-        if (LoginHandler.loginDetails.id === this.state.metadata.user) return <Tooltip text="Remove Post"><button onClick={this.trashButtonHandler.bind(this)}>🗑</button></Tooltip>
+        if (LoginHandler.loginDetails.id === this.state.metadata.user && !this.state.metadata.deleted) return <Tooltip text="Remove Post"><button onClick={this.trashButtonHandler.bind(this)}>🗑</button></Tooltip>
         return null;
     }
 
     renderEditButton() {
-        if (this.state.metadata.canEdit) return <Tooltip text="Edit Post"><button onClick={this.editButtonHandler.bind(this)}>✏</button></Tooltip>
+        if (this.state.metadata.canEdit && !this.state.metadata.deleted) return <Tooltip text="Edit Post"><button onClick={this.editButtonHandler.bind(this)}>✏</button></Tooltip>
+        return null;
+    }
+    
+    renderFlagButton() {
+        if (!this.state.metadata.deleted) return <Tooltip text="Flag Post"><button onClick={this.showFlagDialog.bind(this)}>🚩</button></Tooltip>;
         return null;
     }
     
@@ -348,7 +353,7 @@ class Post extends Error {
                 <div className="HorizontalBox padded">
                     <p>Posted by: {this.state.userMetadata ? this.state.userMetadata.username : "Unidentified user"}</p>                   
                     <div style={{'flex-grow': '1'}} />
-                    <Tooltip text="Flag Post"><button onClick={this.showFlagDialog.bind(this)}>🚩</button></Tooltip>
+                    {this.renderFlagButton()}
                     {this.renderEditButton()}
                     {this.renderTrashButton()}
                     <Tooltip text="Reply"><button onClick={this.uploadPhotoButtonHandler.bind(this)}>📨</button></Tooltip>
