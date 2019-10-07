@@ -87,7 +87,8 @@ class Post extends Error {
                 image: ""
             },
             currentPostId: -1,
-            loading: "no"
+            loading: "no",
+            maxReplies: 5
         };
         
         LoginHandler.on("loginDetailsChanged", () => {
@@ -111,7 +112,8 @@ class Post extends Error {
                 this.setState({
                     metadata: metadata,
                     userMetadata: await Fetch.getUser(metadata.user),
-                    loading: "no"
+                    loading: "no",
+                    maxReplies: 5
                 });
             } catch (err) {
                 this.setState({
@@ -248,11 +250,31 @@ class Post extends Error {
         }
     }
     
+    scrollHandler(e) {
+        let container = e.target;
+        if (container.clientHeight * 1.5 > container.scrollHeight - container.scrollTop) {
+            //Load the next set of replies
+            this.setState(function(state) {
+                if (!state.metadata.comments) return {};
+                let replies = state.maxReplies;
+                replies += 5;
+                if (replies > state.metadata.comments.length) replies = state.metadata.comments.length;
+                return {
+                    maxReplies: replies
+                }
+            });
+        }
+    }
+    
     renderReplies() {
         if (!this.state.metadata.comments) return [];
 
         let replyDivs = [];
-        for (let comment of this.state.metadata.comments) {
+        let numReplies = this.state.metadata.comments.length;
+        if (numReplies > this.state.maxReplies) numReplies = this.state.maxReplies;
+        
+        for (let i = 0; i < numReplies; i++) {
+            let comment = this.state.metadata.comments[i];
             let changeToPost = () => {
                 this.setState({
                     currentPostId: comment.id
@@ -383,7 +405,7 @@ class Post extends Error {
     }
 
     render() {
-        return <div className={this.className()} style={{'flex-grow': '1'}}>
+        return <div className={this.className()} onScroll={this.scrollHandler.bind(this)} style={{'flex-grow': '1'}}>
             {this.renderContent()}
         </div>
     }
