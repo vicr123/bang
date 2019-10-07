@@ -33,6 +33,7 @@ class App extends Error {
 
 		this.state = {
 			currentView: this.stateForCurrentUrl(),
+            key: 0,
             error: false
 		};
 
@@ -53,12 +54,24 @@ class App extends Error {
 		}
 	}
 
+    changeView(view) {
+        this.setState(function(state) {
+            //Invalidate the key so the component gets recreated
+            let randomNum;
+            do {
+                randomNum = Math.random();
+            } while (randomNum == state.key);
+            
+            return {
+                currentView: view,
+                key: randomNum
+            }
+        });
+    }
+
 	popState(e) {
 		let state = this.stateForCurrentUrl();
-		if (state != null)
-			this.setState({
-				currentView: state
-			});
+		if (state != null) this.changeView(state);
 	}
 
 	/**
@@ -68,21 +81,19 @@ class App extends Error {
 	currentMainView() {
 		switch (this.state.currentView) {
 			case "createPost":
-				return <CreatePost onShowAboutPage={() => this.setState({
+				return <CreatePost key={this.state.key} onShowAboutPage={() => this.setState({
 					currentView: "about"
 				})}/>;
 			case "trending":
-				return <TrendingView type="trending" />;
+				return <TrendingView key={this.state.key} type="trending" />;
 			case "new":
-				return <TrendingView type="new" />;
+				return <TrendingView key={this.state.key} type="new" />;
 			case "leaderboard":
-				return <Leaderboard />;
+				return <Leaderboard key={this.state.key} />;
 			case "about":
-				return <About />;
+				return <About key={this.state.key} />;
 			case "user":
-				return (
-					<Account />
-				);
+				return <Account key={this.state.key} />
 			default:
 				return <Error />;
 		}
@@ -102,11 +113,8 @@ class App extends Error {
 
 	render() {
 		let changeView = view => {
-			this.setState({
-				currentView: view
-			});
-
-			this.pushView(view);
+            this.changeView(view);
+            this.pushView(view);
 		};
 
         if (this.state.error) {
