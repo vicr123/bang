@@ -27,7 +27,12 @@ class Login extends Error {
             });
             
             localStorage.setItem("loginToken", json.token)
-            LoginHandler.reloadLogin();
+            
+            //Clear the textboxes
+            this.setState({
+                currentUsername: "",
+                currentPassword: ""
+            }, () => LoginHandler.reloadLogin());
         } catch (err) {
             this.setState({
                 errorState: true

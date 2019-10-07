@@ -24,7 +24,12 @@ class CreateAccount extends Error {
             
             //Log the user in given the token
             localStorage.setItem("loginToken", json.token)
-            LoginHandler.reloadLogin();
+            
+            //Clear the textboxes
+            this.setState({
+                currentUsername: "",
+                currentPassword: ""
+            }, () => LoginHandler.reloadLogin());
         } catch (err) {
             let showGenericError = true;
             if (err.status === 400) {

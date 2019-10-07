@@ -1,9 +1,8 @@
 import React from 'react';
 import Error from '../../Error'
 
+import Modal from '../../Modal'
 import LoginHandler from '../../LoginHandler'
-import Modal from '../../Modal.jsx'
-import TrendingView from '../../posts/TrendingView';
 
 class ManageAccount extends Error {
     constructor(props) {
@@ -16,8 +15,18 @@ class ManageAccount extends Error {
     }
     
     logOutButtonHandler() {
-        localStorage.removeItem("loginToken");
-        LoginHandler.reloadLogin();
+        let performLogOut = () => {
+            localStorage.removeItem("loginToken");
+            LoginHandler.reloadLogin();
+            //Modal unmounts automatically when the login changes
+        }
+        Modal.mount(<Modal title="Log Out" cancelable={true} width={400}>
+            <div class="VerticalBox">
+                <span>Log out of your account now?</span>
+                <button className="deleteButton" onClick={performLogOut}>Log Out</button>
+                <button onClick={Modal.unmount}>Cancel</button>
+            </div>
+        </Modal>)
     }
     
     render() {
