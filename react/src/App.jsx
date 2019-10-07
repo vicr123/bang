@@ -12,6 +12,8 @@ import CreatePost from "./create-post/CreatePost";
 import Fetch from "./fetch";
 import LoginHandler from "./LoginHandler";
 
+import DeadImage from "./assets/dead.svg"
+
 class App extends Error {
 	urlStates = {
 		createPost: "/createpost",
@@ -30,7 +32,8 @@ class App extends Error {
 		window.bang.appLoginChangedHandler = () => this.loginChanged.bind(this);
 
 		this.state = {
-			currentView: this.stateForCurrentUrl()
+			currentView: this.stateForCurrentUrl(),
+            error: false
 		};
 
 		//Log the user in if we have a token stored
@@ -89,6 +92,14 @@ class App extends Error {
 		window.history.pushState({}, "", this.urlStates[view]);
 	}
 
+    componentDidCatch(error, info) {
+        console.log(error);
+        console.log(info);
+        this.setState({
+            error: true
+        });
+    }
+
 	render() {
 		let changeView = view => {
 			this.setState({
@@ -98,17 +109,25 @@ class App extends Error {
 			this.pushView(view);
 		};
 
-		return (
-            <div className="appContainer">
-				<Sidebar
-					currentState={this.state.currentView}
-					onChangeView={changeView}
-				/>
-				{this.currentMainView()}
-				<div id="modalContainer" />
-                <div id="loaderContainer" />
-			</div>
-		);
+        if (this.state.error) {
+            return <div className="scrollable postError" style={{height: '100vh'}}>
+                <img src={DeadImage} />
+                Ouch, that hurt!
+                <button onClick={() => window.location.reload()}>Reload</button>
+            </div>
+        } else {
+    		return (
+                <div className="appContainer">
+    				<Sidebar
+    					currentState={this.state.currentView}
+    					onChangeView={changeView}
+    				/>
+    				{this.currentMainView()}
+    				<div id="modalContainer" />
+                    <div id="loaderContainer" />
+    			</div>
+    		);
+        }
 	}
 }
 

@@ -369,6 +369,7 @@ class Post extends Error {
         if (this.state.loading == "no") {
             if (this.state.currentPostId == -1) return <div></div>
             
+            throw new Error;
             return <div>
                 <div className="HorizontalBox">{this.renderBackButton()}</div>
                 {this.renderImage()}
