@@ -20,8 +20,8 @@ class App extends Error {
 		leaderboard: "/leaderboard",
 		about: "/about",
 		user: "/me",
-		trending: "/",
-		new: "/new"
+		new: "/new",
+		trending: "/"
 	};
 
 	constructor(props) {

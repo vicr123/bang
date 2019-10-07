@@ -6,6 +6,7 @@ import Login from "./Login/Login";
 import CreateAccount from "./Login/CreateAccount";
 import ManageAccount from "./Manage/ManageAccount";
 import LoginHandler from "../LoginHandler"
+import TrendingView from '../posts/TrendingView';
 
 class Account extends Error {
     constructor(props) {
@@ -16,6 +17,9 @@ class Account extends Error {
         }
         
         LoginHandler.on("loginDetailsChanged", () => {
+            this.setState({
+                currentPane: "login"
+            });
             this.forceUpdate();
         })
     }
@@ -32,11 +36,21 @@ class Account extends Error {
                 case "login":
                     return <Login onPaneChange={this.onPaneChange.bind(this)}/>
                 case "createAccount":
-                    return <CreateAccount />
+                    return <CreateAccount onPaneChange={this.onPaneChange.bind(this)}/>
             }
         } else {
-            return <ManageAccount />
+            switch (this.state.currentPane) {
+                case "login":
+                    return <ManageAccount onPaneChange={this.onPaneChange.bind(this)}/>
+                case "myposts":
+                    return <TrendingView type="mine" />
+            }
         }
+    }
+    
+    renderFiller() {
+        if (this.state.currentPane != "myposts") return <div class="AccountsContainerFiller" />;
+        return null;
     }
     
     render() {
@@ -45,7 +59,7 @@ class Account extends Error {
         } else {
             return <div class="AccountsContainer">
                 {this.renderMainSection()}
-                <div class="AccountsContainerFiller" />
+                {this.renderFiller()}
             </div>
         }
     }

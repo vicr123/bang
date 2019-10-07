@@ -167,6 +167,50 @@ async function createPost(req, res, postId = null) {
  });
  
 /**
+ * GET /posts/mine
+ * Gets user's ordered by date
+ * Requires Authentication
+ *
+ * Returns: 200: JSON Array [
+ *              Post IDs for each post
+ *          ]
+ *
+ */
+ router.get("/mine", async function(req, res) {
+     try {
+         let userRows = await tokens.getUser(req);
+         let limits = [];
+         let args = [userRows[0].id];
+         
+         if (req.query.limit) {
+             limits.push("LIMIT ?");
+             args.push(req.query.limit);
+         }
+         
+         if (req.query.from) {
+             limits.push("OFFSET ?");
+             args.push(req.query.from);
+         }
+         
+    
+         let rows = await db.allQuery(`SELECT id FROM posts WHERE userId = ? ORDER BY id DESC ${limits.join(" ")}`, args);
+         let response = [];
+         for (let row of rows) {
+             response.push(row.id);
+         }
+         res.status(200).send(response);
+     } catch (e) {
+        if (e.message == "Invalid Token") {
+            //Invalid token or no one logged in
+            res.status(401).send();
+        } else {
+            console.log(e);
+            res.status(500).send();
+        }
+     }
+ });
+ 
+/**
  * POST /posts/create
  * Create a new post
  * Requires authentication
