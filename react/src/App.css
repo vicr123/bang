@@ -475,7 +475,7 @@ html div.modalBox {
         display: block;
     }
     
-    div.accountsContainer {
+    div.AccountsContainer {
         max-width: calc(100vw - 33px);
     }
 }
