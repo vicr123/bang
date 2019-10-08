@@ -18,7 +18,6 @@ class AccountLB extends Error {
 
 	}
 	render() {
-		console.log(this.props.person);
 
 		if(this.props.person !== -1)
 			return this.accountRender();
