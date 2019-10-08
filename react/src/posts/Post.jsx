@@ -202,13 +202,14 @@ class Post extends Error {
                 await Fetch.delete(`/posts/${this.state.currentPostId}`);
                 Modal.unmount();
                 
+                Fetch.invalidatePost(this.state.currentPostId);
+                
                 if (this.state.metadata.comments.length === 0) {
                     this.setState({
                         loading: "deleted"
                     });
                 } else {
                     //Rerender this post
-                    Fetch.invalidatePost(this.state.currentPostId);
                     this.getPost();
                 }
             } catch (err) {

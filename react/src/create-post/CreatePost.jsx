@@ -43,7 +43,7 @@ class CreatePost extends Error {
 			);
 		} else {
 			return (
-				<Post postId={this.state.newPostId}/>
+				<Post viewMobile={true} postId={this.state.newPostId}/>
 			);
 		}
 	}
