@@ -259,7 +259,7 @@ div.modalBox div.logIn {
 }
 
 div.AccountsContainer {
-    width: 100%;
+    flex-grow: 1;
     display: flex;
     flex-direction: row;
 }
@@ -374,7 +374,7 @@ div.modalBox {
 }
 
 div.modalBoxContainer {
-    
+    max-width: 100%;
 }
 
 html div.modalBox {
@@ -473,6 +473,10 @@ html div.modalBox {
     
     .returnToPostListButton {
         display: block;
+    }
+    
+    div.accountsContainer {
+        max-width: calc(100vw - 33px);
     }
 }
 
