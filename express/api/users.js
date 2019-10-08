@@ -3,6 +3,7 @@ const db = require('../db/db');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const tokens = require('./helpers/token');
+const validator = require("email-validator");
 
 //bcrypt options
 const saltRounds = 12;
@@ -150,7 +151,7 @@ router.get("/whoami", async function(req, res) {
  *          }
  */
 router.post("/create", function(req, res) {
-    if (!req.body.username || !req.body.password) {
+    if (!req.body.username || !req.body.password || !req.body.email) {
         res.status(400).send({
             "error": "Missing fields"
         });
@@ -178,13 +179,19 @@ router.post("/create", function(req, res) {
                     "error": "Password less than 8 characters"
                 });
                 return;
+            } else if (!validator.validate(req.body.email)) {
+                res.status(400).send({
+                    "error": "Invalid Email"
+                });
+                return;
             }
             
             //Hash and salt the password
             let passwordHash = await bcrypt.hash(req.body.password, saltRounds);
             await db.insert("Users", {
                 username: username,
-                password: passwordHash
+                password: passwordHash,
+                email: req.body.email
             });
             
             //Get the user ID

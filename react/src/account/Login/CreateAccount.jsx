@@ -11,6 +11,7 @@ class CreateAccount extends Error {
         this.state = {
             currentUsername: "",
             currentPassword: "",
+            currentEmail: "",
             errorState: ""
         };
     }
@@ -19,7 +20,8 @@ class CreateAccount extends Error {
         try {
             let json = await Fetch.post("/users/create", {
                 username: this.state.currentUsername,
-                password: this.state.currentPassword
+                password: this.state.currentPassword,
+                email: this.state.currentEmail
             });
             
             //Log the user in given the token
@@ -28,7 +30,8 @@ class CreateAccount extends Error {
             //Clear the textboxes
             this.setState({
                 currentUsername: "",
-                currentPassword: ""
+                currentPassword: "",
+                currentEmail: ""
             }, () => LoginHandler.reloadLogin());
         } catch (err) {
             let showGenericError = true;
@@ -39,7 +42,8 @@ class CreateAccount extends Error {
                     "Empty Username": "Username cannot be empty",
                     "Username greater than 20 characters": "Username must be 20 characters or less",
                     "Password greater than 128 characters": "Password must be 128 characters or less",
-                    "Password less than 8 characters": "Password must be 8 characters or greater"
+                    "Password less than 8 characters": "Password must be 8 characters or greater",
+                    "Invalid Email": "Use a valid email"
                 };
                 
                 if (state.hasOwnProperty(json.error)) {
@@ -78,6 +82,11 @@ class CreateAccount extends Error {
                 currentUsername: e.target.value
             });
         }
+        let emailChange = (e) => {
+            this.setState({
+                currentEmail: e.target.value
+            });
+        }
         let passwordChange = (e) => {
             this.setState({
                 currentPassword: e.target.value
@@ -97,8 +106,9 @@ class CreateAccount extends Error {
                     <li>Passwords must be 8 characters or greater</li>
                     <li>Passwords must be 128 characters or less</li>
                 </ul>
-                <input type="text" username="uname" value={this.state.currentUsername} onChange={usernameChange} onKeyDown={this.onKeyDown.bind(this)} placeholder="Username" />
-                <input type="password" password="pword" value={this.state.currentPassword} onChange={passwordChange} onKeyDown={this.onKeyDown.bind(this)} placeholder="Password" />
+                <input type="text" value={this.state.currentUsername} onChange={usernameChange} onKeyDown={this.onKeyDown.bind(this)} placeholder="Username" />
+                <input type="text" value={this.state.currentEmail} onChange={emailChange} onKeyDown={this.onKeyDown.bind(this)} placeholder="Email" />
+                <input type="password" value={this.state.currentPassword} onChange={passwordChange} onKeyDown={this.onKeyDown.bind(this)} placeholder="Password" />
                 <button classname="button" onClick={this.registerButtonHandler.bind(this)}>Create Account</button>
                 <button classname="button" onClick={login.bind(this)}>Back to Log In</button>
                 {this.renderErrorState()}

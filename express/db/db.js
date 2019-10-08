@@ -32,7 +32,7 @@ module.exports = {
             //Turn on foreign keys
             db.get("PRAGMA foreign_keys = ON");
             
-            db.run(`CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT)`);
+            db.run(`CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, email TEXT UNIQUE, password TEXT)`);
             db.run(`CREATE TABLE IF NOT EXISTS Tokens(token TEXT PRIMARY KEY, userId INTEGER, date INTEGER, CONSTRAINT fk_tokens_user_id FOREIGN KEY(userId) REFERENCES Users(id) ON DELETE CASCADE)`);
             db.run(`CREATE TABLE IF NOT EXISTS Resources(id INTEGER PRIMARY KEY, filename TEXT)`);
             db.run(`CREATE TABLE IF NOT EXISTS Posts(id INTEGER PRIMARY KEY AUTOINCREMENT, userId INTEGER, image INTEGER, deleted INTEGER, FOREIGN KEY(userId) REFERENCES Users(id), FOREIGN KEY (image) REFERENCES Resources(id))`);
