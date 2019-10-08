@@ -1,5 +1,7 @@
 import React from 'react';
 
+// Makes tooltip appear when hovering over an item. Used in buttons under posts
+
 class Tooltip extends React.Component {
     render() {
         return <div class="tooltipContainer">

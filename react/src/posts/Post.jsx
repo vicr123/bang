@@ -97,8 +97,8 @@ class Post extends Error {
     }
     
     invalidate() {
-//         Fetch.invalidatePost(this.state.currentPostId);
-        //Invalidate all posts
+        // Fetch.invalidatePost(this.state.currentPostId);
+        // Invalidate all posts
         Fetch.invalidatePost();
         this.getPost();
     }
@@ -137,6 +137,7 @@ class Post extends Error {
         }
     }
 
+    // Shows dialog for the Flag modal.
     showFlagDialog() {
         if (!Modal.checkLoggedIn()) return;
         
@@ -189,11 +190,13 @@ class Post extends Error {
         </Modal>)
     }
 
+    // Starts upload process for reply button
     uploadPhotoButtonHandler() {
         if (!Modal.checkLoggedIn()) return;
 		document.getElementById("replyFileSelect").click();
     }
     
+    // Handles trash button. Calls functions to begin deletion and displays appropriate messages.
     async trashButtonHandler() {
         if (!Modal.checkLoggedIn()) return;
 
@@ -237,11 +240,13 @@ class Post extends Error {
         </Modal>)
     }
 
+    // Handles edit button
     editButtonHandler() {
         if (!Modal.checkLoggedIn()) return;
         document.getElementById("editFileSelect").click();
     }
 
+    // Wrapper to post the image for reply
     async postImage(isEdit) {
 		let box = isEdit ? document.getElementById("editFileSelect") : document.getElementById("replyFileSelect");
         let method = isEdit ? "patch" : "post";
@@ -251,6 +256,7 @@ class Post extends Error {
         }
     }
     
+    // Limits the number of replies that load under a post
     scrollHandler(e) {
         let container = e.target;
         if (container.clientHeight * 1.5 > container.scrollHeight - container.scrollTop) {
@@ -267,6 +273,7 @@ class Post extends Error {
         }
     }
     
+    // Render replies when user scrolls.
     renderReplies() {
         if (!this.state.metadata.comments) return [];
 
@@ -286,6 +293,11 @@ class Post extends Error {
 
         return replyDivs;
     }
+
+/* 
+    Render functions. These handle the redering of buttons under posts and the emojis in them.
+    Handles the cases that these buttons should render.
+*/
 
     renderBackButton() {
         let buttons = [];

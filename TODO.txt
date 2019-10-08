@@ -3,4 +3,8 @@ Website TODO
 Please remove when finished.
 
 - README MUST BE POPULATED
+    - Include start.sh etc. Might be interesting.
 - COMMENT EVERYTHING
+    - Not actually EVERYTHING
+    - Just the methods, reference all the things.
+    - Especially fetch.

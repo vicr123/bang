@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Error from "./Error";
 import Spinner from "./Spinner";
 
+// Used to process loader requests when the user scrolls down a list to see more posts. Calls spinner when doing this.
 class Loader extends Error {
     constructor(props) {
         super(props);

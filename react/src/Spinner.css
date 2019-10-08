@@ -1,4 +1,13 @@
-.spinner {
+/**
+ * This file is adapted from a codepen by jczimm located here:
+ * https://codepen.io/jczimm/pen/vEBpoL
+ */
+ 
+ /*
+ * Styling specifically for the spinner. Separated due to it's complexity.
+ */
+
+ .spinner {
     position: relative;
     margin: 0 auto;
     width: 50px;

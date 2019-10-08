@@ -33,11 +33,20 @@ let ModalUnmountHandler = () => {
     Modal.unmount();
 }
 
+/*
+//This class handles modals that appear when clicking buttons unde
+*/
+
 class Modal extends React.Component {
     constructor(props) {
         super(props);
     }
     
+    /*
+        componentDidMount() called when the modal appears
+        componentWillUnmount() called when the modal disappears
+    */
+
     componentDidMount() {
         LoginHandler.on("loginDetailsChanged", ModalUnmountHandler);
     }
@@ -46,42 +55,8 @@ class Modal extends React.Component {
         LoginHandler.removeListener("loginDetailsChanged", ModalUnmountHandler);
     }
     
-    iconFromTheme(iconName) {
-        return "theweb://sysicons/?width=16&height=16&icons=" + encodeURIComponent("sys:" + iconName)
-    }
-    
-    renderLeftElements() {
-        if (this.props.cancelable) {
-            return <div className="headerButton" onClick={Modal.unmount}>
-                <img key="image" src={this.iconFromTheme("go-previous")} />
-            </div>
-        }
-    }
-    
-    renderRightElements() {
-        let elements = [];
-        
-        for (let button of this.props.buttons) {
-            let icon;
-            let clickHandler;
-            if (button === "ok") {
-                icon = "dialog-ok";
-                clickHandler = this.props.onOk;
-            } else if (button === "no") {
-                icon = "dialog-cancel";
-                clickHandler = this.props.onNo;
-            } else {
-                continue;
-            }
-            
-            elements.push(<div key={button} className="headerButton" onClick={clickHandler}>
-                <img key="image" src={this.iconFromTheme(icon)} />
-            </div>)
-        }
-        
-        return elements;
-    }
-    
+
+    // Reders title of the Modal    
     renderTitle() {
         if (this.props.title) {
             return <h1>{this.props.title}</h1>
@@ -89,7 +64,7 @@ class Modal extends React.Component {
             return null;
         }
     }
-    
+    // Renders Close button of Modal
     renderCloseButton() {
         if (this.props.cancelable) {
             return <button className="closeButton">×</button>
@@ -120,18 +95,20 @@ class Modal extends React.Component {
         </div>
     }
     
-
+    // Used to call modal.
     static mount(jsx) {
         if (modalShown) Modal.unmount();
         ReactDOM.render(jsx, document.getElementById('modalContainer'));
         modalShown = true;
     }
     
+    // Used to uncall modal.
     static unmount() {
         ReactDOM.render(null, document.getElementById('modalContainer'));
         modalShown = false;
     }
 
+    //Checks if the user is logged in. If not, display log in screen as a modal
     static checkLoggedIn() {
         let token = localStorage.getItem("loginToken");
 		if (token == null) {

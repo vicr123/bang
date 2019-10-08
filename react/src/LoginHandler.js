@@ -3,7 +3,9 @@ import Events from 'events';
 
 let loginDetails = {};
 
+// State handler for log in
 class LoginHandler extends Events.EventEmitter {
+    
     async reloadLogin() {
         let setDetails = (details) => {
             loginDetails = details;
@@ -19,7 +21,6 @@ class LoginHandler extends Events.EventEmitter {
             } catch (err) {
                 setDetails({});
                 localStorage.removeItem("loginToken");
-                //TODO: Inform the user that we couldn't log them back in
             }
 		}
     }

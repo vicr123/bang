@@ -5,6 +5,8 @@ import Modal from './Modal';
 let posts = {};
 let user = {};
 
+
+//Fetch is a wrapper around the fetch api.
 class Fetch {
     static headers() {
         let headers = {

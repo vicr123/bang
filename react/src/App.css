@@ -1,3 +1,7 @@
+/* 
+    This file handles most of the CSS in !Bang
+*/
+
 @font-face {
 	font-family: "Contemporary";
 	font-style: normal;
@@ -237,11 +241,10 @@ div.postImageContainer.deleted img {
 	background-color: rgba(0, 0, 0, 0.6);
 }
 .ContactUs button {
-	/*border-radius: 15px;*/
 	padding: 50px;
 }
 
-/* BELOW IS COPIED FROM Login.css. THEY LIVE HERE NOW */
+/* CSS for log in*/
 
 div.logIn {
     padding: 9px;

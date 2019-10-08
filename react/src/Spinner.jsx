@@ -3,6 +3,9 @@
  * https://codepen.io/jczimm/pen/vEBpoL
  */
 
+ /*
+ * This class handles the loading screen spinner.
+ */
 import React from 'react';
 import './Spinner.css';
 
