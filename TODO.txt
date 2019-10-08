@@ -2,6 +2,5 @@ Website TODO
 
 Please remove when finished.
 
-
-- Accessibility 
-- Sock Puppets 
+- README MUST BE POPULATED
+- COMMENT EVERYTHING
