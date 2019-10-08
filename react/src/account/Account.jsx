@@ -1,13 +1,13 @@
 import React from 'react';
 import Error from '../Error'
 
-import Fetch from "../fetch";
 import Login from "./Login/Login";
 import CreateAccount from "./Login/CreateAccount";
 import ManageAccount from "./Manage/ManageAccount";
 import LoginHandler from "../LoginHandler"
 import TrendingView from '../posts/TrendingView';
 
+// Handles the Account page. 
 class Account extends Error {
     constructor(props) {
         super(props);
@@ -15,7 +15,7 @@ class Account extends Error {
         this.state = {
             currentPane: "login"
         }
-        
+        // If user is logged in, update details.
         LoginHandler.on("loginDetailsChanged", () => {
             this.setState({
                 currentPane: "login"
@@ -30,6 +30,7 @@ class Account extends Error {
         });
     }
     
+    // Render the log in screen or account screen depending on current state.
     renderMainSection() {
         if (LoginHandler.loginDetails.username == null) {
             switch (this.state.currentPane) {
@@ -48,6 +49,7 @@ class Account extends Error {
         }
     }
     
+    //Renders image on Log In screen.
     renderFiller() {
         if (this.state.currentPane != "myposts") return <div class="AccountsContainerFiller" />;
         return null;

@@ -24,10 +24,10 @@ class CreateAccount extends Error {
                 email: this.state.currentEmail
             });
             
-            //Log the user in given the token
+            // Log the user in given the token
             localStorage.setItem("loginToken", json.token)
             
-            //Clear the textboxes
+            // Clear the textboxes
             this.setState({
                 currentUsername: "",
                 currentPassword: "",
@@ -37,6 +37,7 @@ class CreateAccount extends Error {
             let showGenericError = true;
             if (err.status === 400) {
                 let json = await err.json();
+                // Show different error messages depending on error
                 let state = {
                     "Missing fields": "Fill in all fields to continue",
                     "Empty Username": "Username cannot be empty",
@@ -62,6 +63,7 @@ class CreateAccount extends Error {
         }
     }
 
+    // Renders error messages
     renderErrorState() {
         if (this.state.errorState !== "") {
             return <span className="error">{this.state.errorState}</span>
@@ -70,6 +72,7 @@ class CreateAccount extends Error {
         }
     }
 
+    // Allow enter to be used for create account
     onKeyDown(event) {
         if (event.key === 'Enter') {
             this.registerButtonHandler();

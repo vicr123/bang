@@ -19,6 +19,7 @@ class Login extends Error {
         };
     }
     
+    // When logging in, get the username and password from the fields and attempt log in
     async logInButtonHandler() {  
         try {
             let json = await Fetch.post("/users/getToken", {
@@ -40,6 +41,7 @@ class Login extends Error {
         }
     }
     
+    // If log in fails, show an error message
     renderErrorState() {
         if (this.state.errorState) {
             return <span className="error">We couldn't log you in with those details.</span>
@@ -48,6 +50,7 @@ class Login extends Error {
         }
     }
 
+    // Referenced above. Allows enter key to be used when logging in
     onKeyDown(event) {
         if (event.key === 'Enter') {
             this.logInButtonHandler();

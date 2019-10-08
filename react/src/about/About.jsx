@@ -1,6 +1,7 @@
 import React from "react";
 import Error from "../Error";
 
+// The About page on the site.
 class About extends Error {
   render() {
     return (

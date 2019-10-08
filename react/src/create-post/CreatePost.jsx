@@ -4,6 +4,7 @@ import Fetch from "../fetch";
 import Post from "../posts/Post";
 import Modal from "../Modal";
 
+// Handles the view that allows the user to create a post.
 class CreatePost extends Error {	
 	constructor(props) {
 		super(props);
@@ -13,11 +14,13 @@ class CreatePost extends Error {
 		}
 	}
 
+	// If logged in and button clicked, open a window for the user to select a photo to upload.
 	uploadPhotoButtonHandler() {
 		if (!Modal.checkLoggedIn()) return;
 		document.getElementById("inputFileSelect").click();
 	}
 
+	// Upload selected image as a post.
 	async performUpload(event) {
         let response = await Fetch.uploadImage("post", "/posts/create", document.getElementById("inputFileSelect").files[0]);
         if (response != null) {
