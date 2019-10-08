@@ -12,7 +12,9 @@ class Leaderboard extends Error {
 		this.state = {
 			leaders: []
 		};
+	}
 
+	componentWillMount() {
 		this.getLeaders().then((leaders) => {
 			this.setState({
 				leaders: leaders
@@ -35,7 +37,7 @@ class Leaderboard extends Error {
 
 	// Returns top users based on reactions
 	async getLeaders(){
-		let result = await Fetch.get("/leaderboard");
+		let result = await Fetch.get("/leaderboard", false);
 		return result;
 	}
 
