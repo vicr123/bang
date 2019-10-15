@@ -6,13 +6,16 @@ let posts = {};
 let user = {};
 
 
-//Fetch is a wrapper around the fetch api.
+// Fetch is a custom wrapper around the fetch API.
 class Fetch {
+    /**
+     * Define and create custom headers for Fetch requests
+     */
     static headers() {
         let headers = {
             "Content-Type": "application/json"
         };
-        
+        // look for token in local storage, create new token if null
         let token = localStorage.getItem("loginToken");
         if (token != null) {
             headers["Authorization"] = "Token " + token;
@@ -20,9 +23,15 @@ class Fetch {
         
         return headers;
     }
-    
+    /**
+     * Uses fetch to make a request to the in-house API
+     * @param {string} method Type of request to make
+     * @param {string} url endpoint for the API call
+     * @param {boolean} showLoader if true displays a loading animation
+     */
     static async performRequest(method, url, showLoader) {
         let err = null;
+        // Display loading animation for the user
         if (showLoader) Loader.mount();
         let result = await fetch("/api" + url, {
             method: method,
@@ -38,7 +47,12 @@ class Fetch {
         if (result.status < 200 || result.status > 299) throw result;
         return await result.json();
     }
-    
+    /**
+     * Use fetch's post request 
+     * @param {string} url endpoint for fetch request
+     * @param {Object} data payload of information
+     * @param {boolean} showLoader if true displays a loading animation
+     */
     static async post(url, data, showLoader = true) {
         let err = null;
         if (showLoader) Loader.mount();
@@ -57,7 +71,12 @@ class Fetch {
         if (result.status < 200 || result.status > 299) throw result;
         return await result.json();
     }
-    
+    /**
+     * Use fetch's patch request 
+     * @param {string} url API endpoint to access
+     * @param {Object} data Payload to patch with
+     * @param {boolean} showLoader if true displays a loading animation 
+     */
     static async patch(url, data, showLoader = true) {
         let err = null;
         if (showLoader) Loader.mount();
@@ -76,29 +95,46 @@ class Fetch {
         if (result.status < 200 || result.status > 299) throw result;
         return await result.json();
     }
-    
+    /**
+     * GET request to specific url, used to access in-house API
+     * @param {string} url url to perform API request
+     * @param {boolean} showLoader boolean value to display loading animation
+     */
     static get(url, showLoader = true) {
         return Fetch.performRequest("GET", url, showLoader);
     }
-
+    /**
+     * DELETE request to specified url
+     * @param {string} url url to perform API request
+     * @param {boolean} showLoader boolean value to display loading animation
+     */
     static delete(url, showLoader = true) {
         return Fetch.performRequest("DELETE", url, showLoader);
     }
-
+    /**
+     * Retrieves post based on postID 
+     * @param {number} id postID
+     */
     static async getPost(id) {
         if (!posts[id]) {
             posts[id] = await Fetch.get(`/posts/${id}`, false);
         }
         return posts[id];
     }
-
+    /**
+     * Get the user based on userID
+     * @param {number} id userID from the backend
+     */
     static async getUser(id) {
         if (!user[id]) {
             user[id] = await Fetch.get(`/users/${id}`, false);
         }
         return user[id];
     }
-    
+    /**
+     * Remove garbage posts with an illegal ID 
+     * @param {number} id postID
+     */
     static invalidatePost(id = -1) {
         if (id === -1) {
             posts = {};
@@ -110,12 +146,19 @@ class Fetch {
     static invalidateUser(id) {
         if (user.hasOwnProperty(id)) delete user[id];
     }
-    
+    /**
+     * Reset objects
+     */
     static invalidate() {
         posts = {};
         user = {};
     }
-    
+    /**
+     * Upload the image to the database with either a PATCH or POST request
+     * @param {string} method Fetch method to be called 
+     * @param {string} endpoint API routing 
+     * @param {string} file 
+     */
     static uploadImage(method, endpoint, file) {
         return new Promise(async function(res, rej) {
     		let reader = new FileReader();
@@ -125,7 +168,7 @@ class Fetch {
         			let mimetype = result.substr(5, result.indexOf(';') - 5);
         			result = result.substr(result.indexOf(',') + 1);
         
-                   let methodToCall = (method == "patch" ? Fetch.patch : Fetch.post)
+                   let methodToCall = (method == "patch" ? Fetch.patch : Fetch.post);
         
         			let response = await methodToCall(endpoint, {
         				"image": result,
