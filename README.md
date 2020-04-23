@@ -34,7 +34,7 @@ Allows admins to view and respond to flags that users have created. The server m
 ## `Design Points`
 
 - Braces on same line.
-- 4 space indentaion. No tabs.
+- 4 space indentation. No tabs.
 - Keep stylesheets simple. All CSS must be in App.css unless it is more simple to inclide it in other sheets.
 - Include a simple comment before each method so it is easy to understand how they work. If necessary, include comments in the method as well.
 - Declare all new variables on a separate line.
