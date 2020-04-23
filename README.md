@@ -1,3 +1,13 @@
+# !BANG
+
+Welcome to !BANG, home of the best image-only fun you can find.<br>
+<br>
+Bang was created by Victor Tran, Ethan Scavia and Michael Noss as part of an assignment for Advanced Internet Programming at UTS. It is a simple, image-only social media site.<br>
+<br>
+It is our baby and we hope you enjoy it as much as we do.<br>
+<br>
+!BANG is currently available at https://bang.vicr123.com/
+
 ## Available Scripts
 
 In the project directory, you can run:
